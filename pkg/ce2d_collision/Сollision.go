@@ -1,0 +1,3 @@
+type RTree struct{
+	Rects
+}

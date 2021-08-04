@@ -11,8 +11,8 @@ type Vector2D struct {
 	lenght float64
 }
 
-func CreateVector2D(x, y float64) *Vector2D {
-	return &Vector2D{
+func CreateVector2D(x, y float64) Vector2D {
+	return Vector2D{
 		X:      x,
 		Y:      y,
 		lenght: lenght(x, y),
@@ -22,14 +22,50 @@ func CreateVector2D(x, y float64) *Vector2D {
 func (v *Vector2D) Set(x, y float64) {
 	v.X = x
 	v.Y = y
-	v.lenght = lenght(x, y)
+	v.lenght = lenght(v.X, v.Y)
 }
 
-func (v *Vector2D) Normilize() *Vector2D {
+func (v *Vector2D) Sub(other Vector2D) Vector2D {
+	return CreateVector2D(v.X-other.X, v.Y-other.Y)
+}
+
+func (v *Vector2D) Scal(other Vector2D) float64 {
+	return v.X*other.X+v.Y*other.Y
+}
+
+func (v *Vector2D) Sum(other Vector2D) {
+	v.X += other.X
+	v.Y += other.Y
+	v.lenght = lenght(v.X, v.Y)
+}
+
+func (v *Vector2D) SumNum(num float64) {
+	v.X += num
+	v.Y += num
+	v.lenght = lenght(v.X, v.Y)
+}
+
+func (v *Vector2D) SubNum(num float64) {
+	v.X -= num
+	v.Y -= num
+	v.lenght = lenght(v.X, v.Y)
+}
+
+func (v *Vector2D) Mult(num float64) {
+	v.X *= num
+	v.Y *= num
+	v.lenght = lenght(v.X, v.Y)
+}
+
+func (v *Vector2D) Compare(other Vector2D) bool {
+	return v.X == other.X && v.Y == other.Y 
+}
+
+func (v *Vector2D) Normilize() Vector2D{
 	if v.lenght == 0 {
 		return CreateVector2D(0, 0)
 	} else {
-		return CreateVector2D(v.X/v.lenght, v.Y/v.lenght)
+		return CreateVector2D(v.X / v.lenght, v.Y / v.lenght)
 	}
 
 }
@@ -40,18 +76,6 @@ func (v *Vector2D) Rotate(angle int16) {
 	y := v.X*math.Sin(radian) + v.Y*math.Cos(radian)
 	v.X = x
 	v.Y = y
-}
-
-func (v *Vector2D) Compare(other *Vector2D) bool {
-	return v.X == other.X && v.Y == other.Y
-}
-
-func (v *Vector2D) Sub(other *Vector2D) *Vector2D {
-	return CreateVector2D(v.X-other.X, v.Y-other.Y)
-}
-
-func (v *Vector2D) Scal(other *Vector2D) float64 {
-	return v.X*other.X + v.Y*other.Y
 }
 
 func (v *Vector2D) Angle() int16 {
