@@ -27,6 +27,7 @@ func (k *PlayerControl) Execute() {
 		if gdl.KeyPress(sdl.SCANCODE_W) {
 			c.(*component.Transform).Direction.Set(0, -1)
 			sm.(*component.SMAnimation).Play("Up")
+			s.(*component.Sprite).Flip = sdl.FLIP_NONE
 		}
 		if gdl.KeyPress(sdl.SCANCODE_D) {
 			c.(*component.Transform).Direction.Set(1, 0)
@@ -36,6 +37,7 @@ func (k *PlayerControl) Execute() {
 		if gdl.KeyPress(sdl.SCANCODE_S) {
 			c.(*component.Transform).Direction.Set(0, 1)
 			sm.(*component.SMAnimation).Play("Down")
+			s.(*component.Sprite).Flip = sdl.FLIP_NONE
 		}
 		if gdl.KeyPress(sdl.SCANCODE_A) {
 			c.(*component.Transform).Direction.Set(-1, 0)
@@ -54,6 +56,7 @@ func (k *PlayerControl) Execute() {
 			c.(*component.Transform).Direction.Set(0, -1)
 			c.(*component.Transform).Direction.Rotate(45)
 			sm.(*component.SMAnimation).Play("Right")
+			s.(*component.Sprite).Flip = sdl.FLIP_NONE
 		}
 
 		if gdl.KeyPressMod(sdl.SCANCODE_D, sdl.SCANCODE_S) {

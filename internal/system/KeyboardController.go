@@ -1,7 +1,6 @@
 package system
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/Falldot/ce2d/internal/component"
@@ -59,7 +58,6 @@ func (k *KeyboardController) SetPool(pool *ecs.Pool) {
 
 		pool.CreateEvent(
 			func(event *ecs.Event) bool {
-				fmt.Println(c.(*component.Transform).Speed)
 				return ((c.(*component.Transform).Direction.Angle() >= -45 && c.(*component.Transform).Direction.Angle() <= 0) ||
 					(c.(*component.Transform).Direction.Angle() <= 22 && c.(*component.Transform).Direction.Angle() >= 0)) &&
 					c.(*component.Transform).Speed > 0
@@ -128,10 +126,10 @@ func (k *KeyboardController) SetPool(pool *ecs.Pool) {
 
 		pool.CreateEvent(
 			func(event *ecs.Event) bool {
-				return c.(*component.Transform).Position.X+float64(s.(*component.Sprite).Dst.W/2) > w.(*component.Control).Route.X-3 &&
-					c.(*component.Transform).Position.X+float64(s.(*component.Sprite).Dst.W/2) < w.(*component.Control).Route.X+3 &&
-					c.(*component.Transform).Position.Y+float64(s.(*component.Sprite).Dst.H/2) > w.(*component.Control).Route.Y-3 &&
-					c.(*component.Transform).Position.Y+float64(s.(*component.Sprite).Dst.H/2) < w.(*component.Control).Route.Y+3
+				return c.(*component.Transform).Position.X+float64(s.(*component.Sprite).Dst.W/2) > w.(*component.Control).Route.X-5 &&
+					c.(*component.Transform).Position.X+float64(s.(*component.Sprite).Dst.W/2) < w.(*component.Control).Route.X+5 &&
+					c.(*component.Transform).Position.Y+float64(s.(*component.Sprite).Dst.H/2) > w.(*component.Control).Route.Y-5 &&
+					c.(*component.Transform).Position.Y+float64(s.(*component.Sprite).Dst.H/2) < w.(*component.Control).Route.Y+5
 			},
 			func(event *ecs.Event) {
 				c.(*component.Transform).Speed = 0
