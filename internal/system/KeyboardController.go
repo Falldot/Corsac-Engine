@@ -1,7 +1,6 @@
 package system
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/Falldot/ce2d/internal/component"
@@ -59,7 +58,6 @@ func (k *KeyboardController) SetPool(pool *ecs.Pool) {
 
 		pool.CreateEvent(
 			func(event *ecs.Event) bool {
-				fmt.Println(c.(*component.Transform).Speed)
 				return ((c.(*component.Transform).Direction.Angle() >= -45 && c.(*component.Transform).Direction.Angle() <= 0) ||
 					(c.(*component.Transform).Direction.Angle() <= 22 && c.(*component.Transform).Direction.Angle() >= 0)) &&
 					c.(*component.Transform).Speed > 0
