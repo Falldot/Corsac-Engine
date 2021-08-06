@@ -30,7 +30,7 @@ func (v *Vector2D) Sub(other Vector2D) *Vector2D {
 }
 
 func (v *Vector2D) Scal(other Vector2D) float64 {
-	return v.X*other.X+v.Y*other.Y
+	return v.X*other.X + v.Y*other.Y
 }
 
 func (v *Vector2D) Sum(other Vector2D) {
@@ -58,14 +58,18 @@ func (v *Vector2D) Mult(num float64) {
 }
 
 func (v *Vector2D) Compare(other Vector2D) bool {
-	return v.X == other.X && v.Y == other.Y 
+	return v.X == other.X && v.Y == other.Y
 }
 
+<<<<<<< HEAD
 func (v *Vector2D) Normilize() *Vector2D{
+=======
+func (v *Vector2D) Normilize() *Vector2D {
+>>>>>>> 0179bbc7dfaa698c321351d2148816b3f662c980
 	if v.lenght == 0 {
 		return CreateVector2D(0, 0)
 	} else {
-		return CreateVector2D(v.X / v.lenght, v.Y / v.lenght)
+		return CreateVector2D(v.X/v.lenght, v.Y/v.lenght)
 	}
 
 }

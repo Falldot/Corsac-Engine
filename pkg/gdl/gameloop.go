@@ -10,29 +10,38 @@ var (
 	gameEvent      sdl.Event
 	mouseX, mouseY int32
 	mouseEvent     uint32
-	keys           []uint8
 	typeEvent      uint32
 
-	keyDown [512]bool
-	keyKeep [512]bool
-	keyUp   [512]bool
+	FramePerSecond string
+
+	keys []uint8
+
+	keyDown  [512]bool
+	keyPress [512]bool
+	keyUp    [512]bool
 )
 
-func (app *App) Start(fps uint16, update func(float64), render func()) {
+func (app *App) Start(fps uint16, limitfps uint32, update func(float64), render func()) {
 
 	secsPerUpdate := 1 / float64(fps)
 	var IdleThreshold, current, elapsed float64
 	IdleThreshold = 1
-
 	previous := float64(sdl.GetTicks()) * 0.001
 	lag := 0.0
+
+	var frameStart, frameTime uint32
+	limitFps := limitfps
+	frameDelay := uint32(1000 / limitFps)
 
 	//keys := sdl.GetKeyboardState()
 
 	for quit := false; !quit; {
+		frameStart = sdl.GetTicks()
 		current = float64(sdl.GetTicks()) * 0.001
 		elapsed = current - previous
 		previous = current
+
+		FramePerSecond = fmt.Sprintf("%.0f", 1/elapsed)
 
 		if elapsed > IdleThreshold {
 			continue
@@ -41,18 +50,17 @@ func (app *App) Start(fps uint16, update func(float64), render func()) {
 		lag += elapsed
 
 		for gameEvent = sdl.PollEvent(); gameEvent != nil; gameEvent = sdl.PollEvent() {
+			typeEvent = gameEvent.GetType()
 			if typeEvent == sdl.QUIT {
 				fmt.Println("QUIT")
 				quit = true
 			}
-			mouseX, mouseY, mouseEvent = sdl.GetMouseState()
-			typeEvent = gameEvent.GetType()
-
 			keys = sdl.GetKeyboardState()
-			keysManager()
+			mouseX, mouseY, mouseEvent = sdl.GetMouseState()
 		}
 
 		for lag >= secsPerUpdate {
+			keysManager()
 			update(secsPerUpdate)
 			lag -= secsPerUpdate
 		}
@@ -60,25 +68,17 @@ func (app *App) Start(fps uint16, update func(float64), render func()) {
 		Render.Clear()
 		render()
 		Render.Present()
+
+		frameTime = sdl.GetTicks() - frameStart
+
+		if frameDelay > frameTime {
+			sdl.Delay(frameDelay - frameTime)
+		}
 	}
 }
 
-func keysManager() {
-	for i, v := range keys {
-		if keyDown[i] {
-			keyDown[i] = false
-		}
-		if keyUp[i] {
-			keyUp[i] = false
-		}
-		if v != 0 {
-			keyDown[i] = true
-			keyKeep[i] = true
-		} else {
-			keyKeep[i] = false
-			keyUp[i] = true
-		}
-	}
+func GetFPS() string {
+	return FramePerSecond
 }
 
 func Mouse() (x, y int32) {
@@ -117,9 +117,50 @@ func MousePressMod(event ...uint32) bool {
 	return false
 }
 
-func KeyPress(event ...uint32) bool {
+func keysManager() {
+	for i, k := range keys {
+		keyUp[i] = false
+		keyDown[i] = false
+
+		if k != 0 {
+			if !keyPress[i] {
+				keyDown[i] = true
+			}
+			keyPress[i] = true
+		}
+
+		if k == 0 && keyPress[i] {
+			keyPress[i] = false
+			keyUp[i] = true
+		}
+	}
+}
+
+func KeyDown(event ...sdl.Keycode) bool {
 	for _, v := range event {
-		if keys[v] != 0 {
+		if keyDown[v] {
+			return true
+		}
+	}
+	return false
+}
+
+func KeyDownMod(event ...uint32) bool {
+	var count int
+	for _, v := range event {
+		if keyDown[v] {
+			count++
+		}
+		if count == len(event) {
+			return true
+		}
+	}
+	return false
+}
+
+func KeyPress(event ...sdl.Keycode) bool {
+	for _, v := range event {
+		if keyPress[v] {
 			return true
 		}
 	}
@@ -129,7 +170,29 @@ func KeyPress(event ...uint32) bool {
 func KeyPressMod(event ...uint32) bool {
 	var count int
 	for _, v := range event {
-		if keys[v] != 0 {
+		if keyPress[v] {
+			count++
+		}
+		if count == len(event) {
+			return true
+		}
+	}
+	return false
+}
+
+func KeyUp(event ...sdl.Keycode) bool {
+	for _, v := range event {
+		if keyUp[v] {
+			return true
+		}
+	}
+	return false
+}
+
+func KeyUpMod(event ...uint32) bool {
+	var count int
+	for _, v := range event {
+		if keyUp[v] {
 			count++
 		}
 		if count == len(event) {

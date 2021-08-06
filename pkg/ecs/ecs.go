@@ -15,11 +15,12 @@ type (
 	MapComponent map[TypeComponent]Component
 
 	Pool struct {
-		idIncEntity         uint32
-		idIncEvent          uint32
-		containerWithSystem ListSystem
-		containerWithEntity MapEntity
-		containerWithEvent  ListEvent
+		idIncEntity            uint32
+		idIncEvent             uint32
+		containerWithSystem    ListSystem
+		containerWithEntity    MapEntity
+		containerWithEvent     ListEvent
+		containerWithLazyEvent ListEvent
 	}
 
 	Entity struct {
@@ -35,8 +36,9 @@ type (
 
 func CreatePool() *Pool {
 	return &Pool{
-		containerWithEntity: make(MapEntity),
-		containerWithEvent:  make(ListEvent),
+		containerWithEntity:    make(MapEntity),
+		containerWithEvent:     make(ListEvent),
+		containerWithLazyEvent: make(ListEvent),
 	}
 }
 

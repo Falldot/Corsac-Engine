@@ -1,5 +1,6 @@
 package ce2d_collision
 
+<<<<<<< HEAD
 import (
 	"github.com/Falldot/ce2d/pkg/ce2d_math"
 )
@@ -19,4 +20,7 @@ func CreateAABB(x, y float64, width, height int) *AABB {
 
 func (aabb *AABB) chek(AABB) bool {
 	return true
+=======
+type RTree struct {
+>>>>>>> 0179bbc7dfaa698c321351d2148816b3f662c980
 }

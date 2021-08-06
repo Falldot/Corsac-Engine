@@ -1,6 +1,7 @@
 package testgame
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/Falldot/ce2d/internal/component"
@@ -30,11 +31,11 @@ func (s *Main) Load() {
 
 	s.pool.CreateEvent(
 		func(event *ecs.Event) bool {
-			return gdl.KeyPress(sdl.SCANCODE_Q)
+			return gdl.KeyDown(sdl.SCANCODE_Q)
 		},
 		func(event *ecs.Event) {
-			s.programStatus()
 			s.pool.DestroyEvent(event)
+			s.programStatus(event)
 		})
 
 	playerTex, err := s.app.LoadTexture("player", "./assets/fox.png")
@@ -73,18 +74,27 @@ func (s *Main) Load() {
 		},
 	)
 
+	s.pool.CreateEvent(
+		func(e *ecs.Event) bool {
+			return gdl.KeyDown(sdl.SCANCODE_T)
+		},
+		func(e *ecs.Event) {
+			fmt.Println("up")
+		},
+	)
+
 }
 func (s *Main) Loop() {
 
 	Translate := &system.Translate{}
-	//PlayerControl := &system.PlayerControl{}
-	KeyboardController := &system.KeyboardController{}
+	PlayerControl := &system.PlayerControl{}
+	//KeyboardController := &system.KeyboardController{}
 	Draw := &system.Draw{}
 	StopMotion := &system.StopMotion{}
 
 	s.pool.SetSystem(
-		//PlayerControl,
-		KeyboardController,
+		PlayerControl,
+		//KeyboardController,
 		Translate,
 		StopMotion,
 		Draw,
@@ -96,8 +106,9 @@ func (s *Main) Loop() {
 
 	s.app.Start(
 		60,
+		60,
 		func(dt float64) {
-			//PlayerControl.Execute()
+			PlayerControl.Execute()
 			Translate.Execute()
 
 			s.pool.ChangeEvents()
@@ -116,7 +127,21 @@ func (s *Main) UnLoad() {
 	s.app = nil
 }
 
-func (s *Main) programStatus() {
+func (s *Main) programStatus(creater *ecs.Event) {
+
+	/// Mouse
+
+	stringFps := gdl.GetFPS()
+
+	fps, fpsrect, _ := s.app.CreateTextTexture("Arial", 14, "fps", "FPS: "+stringFps, sdl.Color{0, 255, 0, 255})
+
+	fpsBoard := s.pool.CreateEntity()
+	s.pool.AddComponent(fpsBoard, component.TRANSFORM,
+		component.CreateTransform(0, 0, 0),
+	)
+	s.pool.AddComponent(fpsBoard, component.SPRITE,
+		component.CreateSprite(fps, fpsrect.W, fpsrect.H, 0, 1),
+	)
 
 	/// Mouse
 
@@ -127,7 +152,7 @@ func (s *Main) programStatus() {
 
 	mouseBoard := s.pool.CreateEntity()
 	s.pool.AddComponent(mouseBoard, component.TRANSFORM,
-		component.CreateTransform(0, 0, 0),
+		component.CreateTransform(0, float64(fpsrect.H), 0),
 	)
 	s.pool.AddComponent(mouseBoard, component.SPRITE,
 		component.CreateSprite(mouse, mouserect.W, mouserect.H, 0, 1),
@@ -142,7 +167,7 @@ func (s *Main) programStatus() {
 
 	ecsdStatus := s.pool.CreateEntity()
 	s.pool.AddComponent(ecsdStatus, component.TRANSFORM,
-		component.CreateTransform(0, float64(mouserect.H), 0),
+		component.CreateTransform(0, float64(mouserect.H)+float64(fpsrect.H), 0),
 	)
 	s.pool.AddComponent(ecsdStatus, component.SPRITE,
 		component.CreateSprite(ecsd, ecsdrect.W, ecsdrect.H, 0, 1),
@@ -157,7 +182,7 @@ func (s *Main) programStatus() {
 
 	resourceStatus := s.pool.CreateEntity()
 	s.pool.AddComponent(resourceStatus, component.TRANSFORM,
-		component.CreateTransform(0, float64(ecsdrect.H)+float64(mouserect.H), 0),
+		component.CreateTransform(0, float64(ecsdrect.H)+float64(mouserect.H)+float64(fpsrect.H), 0),
 	)
 	s.pool.AddComponent(resourceStatus, component.SPRITE,
 		component.CreateSprite(resource, resourcerect.W, resourcerect.H, 0, 1),
@@ -168,9 +193,15 @@ func (s *Main) programStatus() {
 			return true
 		},
 		func(event *ecs.Event) {
+
+			stringFps := gdl.GetFPS()
+			s.app.UnLoadTexture("fps")
+			fps, fpsrect, _ := s.app.CreateTextTexture("Arial", 14, "fps", "FPS: "+stringFps, sdl.Color{0, 255, 0, 255})
+			fpsBoard.Replace(component.SPRITE, component.CreateSprite(fps, fpsrect.W, fpsrect.H, 0, 1))
+
 			x, y := gdl.Mouse()
 			str := "X: " + strconv.Itoa(int(x)) + " / " + "Y: " + strconv.Itoa(int(y))
-			s.app.UnLoadTexture("FPS")
+			s.app.UnLoadTexture("mouseBoard")
 			mouse, mouserect, _ = s.app.CreateTextTexture("Arial", 14, "mouseBoard", str, sdl.Color{0, 255, 0, 255})
 			mouseBoard.Replace(component.SPRITE, component.CreateSprite(mouse, mouserect.W, mouserect.H, 0, 1))
 
@@ -188,47 +219,25 @@ func (s *Main) programStatus() {
 
 		})
 
-	s.pool.CreateEvent(
+	s.pool.LazyCreateEvent(
 		func(event *ecs.Event) bool {
-			return !gdl.KeyPressMod(sdl.SCANCODE_Q)
+			return gdl.KeyDown(sdl.SCANCODE_Q)
 		},
 		func(event *ecs.Event) {
+			s.pool.RemoveEntity(fpsBoard)
+			s.app.UnLoadTexture("fps")
+
+			s.pool.DestroyEvent(mouseMove)
+			s.pool.RemoveEntity(mouseBoard)
+			s.app.UnLoadTexture("mouseBoard")
+
+			s.pool.RemoveEntity(ecsdStatus)
+			s.app.UnLoadTexture("ecsd")
+
+			s.pool.RemoveEntity(resourceStatus)
+			s.app.UnLoadTexture("Resource")
 			s.pool.DestroyEvent(event)
-			s.pool.CreateEvent(
-				func(event *ecs.Event) bool {
-					return gdl.KeyPressMod(sdl.SCANCODE_Q)
-				},
-				func(event *ecs.Event) {
 
-					s.pool.DestroyEvent(mouseMove)
-					s.pool.RemoveEntity(mouseBoard)
-					s.app.UnLoadTexture("mouseBoard")
-
-					s.pool.RemoveEntity(ecsdStatus)
-					s.app.UnLoadTexture("ecsd")
-
-					s.pool.RemoveEntity(resourceStatus)
-					s.app.UnLoadTexture("Resource")
-					s.pool.DestroyEvent(event)
-
-					s.pool.CreateEvent(
-						func(event *ecs.Event) bool {
-							return !gdl.KeyPressMod(sdl.SCANCODE_Q)
-						},
-						func(event *ecs.Event) {
-							s.pool.DestroyEvent(event)
-							s.pool.CreateEvent(
-								func(event *ecs.Event) bool {
-									return gdl.KeyPress(sdl.SCANCODE_Q)
-								},
-								func(event *ecs.Event) {
-									s.pool.DestroyEvent(event)
-									s.programStatus()
-								})
-						},
-					)
-
-				})
+			s.pool.LazyRebornEvent(creater)
 		})
-
 }
