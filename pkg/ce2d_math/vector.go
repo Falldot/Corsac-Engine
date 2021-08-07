@@ -61,11 +61,7 @@ func (v *Vector2D) Compare(other Vector2D) bool {
 	return v.X == other.X && v.Y == other.Y
 }
 
-<<<<<<< HEAD
-func (v *Vector2D) Normilize() *Vector2D{
-=======
 func (v *Vector2D) Normilize() *Vector2D {
->>>>>>> 0179bbc7dfaa698c321351d2148816b3f662c980
 	if v.lenght == 0 {
 		return CreateVector2D(0, 0)
 	} else {

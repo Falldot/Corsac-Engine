@@ -15,9 +15,13 @@ type (
 	MapComponent map[TypeComponent]Component
 
 	Pool struct {
-		idIncEntity            uint32
-		idIncEvent             uint32
-		containerWithSystem    ListSystem
+		idIncEntity uint32
+		idIncEvent  uint32
+
+		*listSystem
+
+		countSystems int
+
 		containerWithEntity    MapEntity
 		containerWithEvent     ListEvent
 		containerWithLazyEvent ListEvent
@@ -27,15 +31,15 @@ type (
 		id         uint32
 		components MapComponent
 	}
-
-	System interface {
-		SetPool(pool *Pool)
-		Execute()
-	}
 )
 
-func CreatePool() *Pool {
+func CreatePool(sys ...System) *Pool {
+
+	listSystem, countSystems := newListSystem(sys)
+
 	return &Pool{
+		listSystem:             listSystem,
+		countSystems:           countSystems,
 		containerWithEntity:    make(MapEntity),
 		containerWithEvent:     make(ListEvent),
 		containerWithLazyEvent: make(ListEvent),
@@ -43,7 +47,7 @@ func CreatePool() *Pool {
 }
 
 func (pool *Pool) LenghtData() (int, int, int) {
-	s := len(pool.containerWithSystem)
+	s := pool.countSystems
 	e := int(pool.idIncEntity)
 	c := len(pool.containerWithEvent)
 	return s, e, c
@@ -54,7 +58,7 @@ func (pool *Pool) CreateEntity() *Entity {
 	return newEntity
 }
 
-func (pool *Pool) RegComponent(typeComponent ...TypeComponent) {
+func (pool *Pool) RegComponent(typeComponent []TypeComponent) {
 	for _, v := range typeComponent {
 		pool.containerWithEntity[v] = map[uint32]*Entity{}
 	}
@@ -92,12 +96,68 @@ func (e *Entity) Replace(typeComponent TypeComponent, newComponent Component) {
 	e.components[typeComponent] = newComponent
 }
 
-func (pool *Pool) SetSystem(syss ...System) {
-	pool.containerWithSystem = append(pool.containerWithSystem, syss...)
+func (pool *Pool) Init() {
+	pool.listSystem.Init(pool)
 }
 
-func (pool *Pool) SetPoolSystems() {
-	for _, v := range pool.containerWithSystem {
-		v.SetPool(pool)
+func (pool *Pool) Update(dt float64) {
+	pool.listSystem.Update(dt)
+}
+
+//////////////////////////////////////////////////////////////////
+// Односвязный список систем
+//////////////////////////////////////////////////////////////////
+
+type (
+	listSystem struct {
+		next *listSystem
+		System
+	}
+
+	System interface {
+		Init(pool *Pool)
+		Update(dt float64)
+	}
+)
+
+func newSystem(next *listSystem, sys System) *listSystem {
+	return &listSystem{
+		next:   next,
+		System: sys,
+	}
+}
+
+func newListSystem(sys []System) (*listSystem, int) {
+	len := len(sys)
+
+	root := newSystem(nil, sys[0])
+
+	for i := 1; i < len; i++ {
+		root.push(sys[i])
+	}
+
+	return root, len
+}
+
+func (list *listSystem) Next() *listSystem {
+	return list.next
+}
+
+func (list *listSystem) push(sys System) *listSystem {
+	newList := newSystem(list.next, sys)
+	list.next = newList
+	return newList
+}
+
+func (list *listSystem) Init(pool *Pool) {
+	for nextList := list; nextList != nil; nextList = nextList.Next() {
+		nextList.System.Init(pool)
+
+	}
+}
+
+func (list *listSystem) Update(dt float64) {
+	for nextList := list; nextList != nil; nextList = nextList.Next() {
+		nextList.System.Update(dt)
 	}
 }
