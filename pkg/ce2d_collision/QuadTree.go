@@ -41,11 +41,11 @@ func (q *QuadTree) AddColiders(Coliders []AABB) {
 			t = append(t, colider)
 		}
 	}
-	if len(t) > 0 {
-		q.addNodes()
-	}
 	if q.Deep < 5 && len(t) > 2 {
-		for i := 0; i < 4 && q.Nodes[i] != nil; i++ {
+		if q.Nodes[0] == nil {
+			q.addNodes()
+		}
+		for i := 0; i < 4; i++ {
 			q.Nodes[i].AddColiders(t)
 		}
 	} else if len(t) > 0 {
