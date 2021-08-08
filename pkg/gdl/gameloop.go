@@ -36,6 +36,7 @@ func (app *App) Start(fps uint16, limitfps uint32, update func(float64), render 
 	//keys := sdl.GetKeyboardState()
 
 	for quit := false; !quit; {
+
 		frameStart = sdl.GetTicks()
 		current = float64(sdl.GetTicks()) * 0.001
 		elapsed = current - previous
@@ -45,6 +46,12 @@ func (app *App) Start(fps uint16, limitfps uint32, update func(float64), render 
 
 		if elapsed > IdleThreshold {
 			continue
+		}
+
+		frameTime = sdl.GetTicks() - frameStart
+
+		if frameDelay > frameTime {
+			sdl.Delay(frameDelay - frameTime)
 		}
 
 		lag += elapsed
@@ -60,6 +67,7 @@ func (app *App) Start(fps uint16, limitfps uint32, update func(float64), render 
 		}
 
 		for lag >= secsPerUpdate {
+
 			keysManager()
 			update(secsPerUpdate)
 			lag -= secsPerUpdate
@@ -68,12 +76,6 @@ func (app *App) Start(fps uint16, limitfps uint32, update func(float64), render 
 		Render.Clear()
 		render()
 		Render.Present()
-
-		frameTime = sdl.GetTicks() - frameStart
-
-		if frameDelay > frameTime {
-			sdl.Delay(frameDelay - frameTime)
-		}
 	}
 }
 
