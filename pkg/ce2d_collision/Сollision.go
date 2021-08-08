@@ -9,7 +9,7 @@ type AABB struct {
 	callback                 func(self, other *AABB)
 }
 
-func CreateAABB(x, y, width, height float64, callback func(self, other *AABB)) *AABB {
+func CreateColider(x, y, width, height float64, callback func(self, other *AABB)) *AABB {
 	return &AABB{
 		MinPosition: ce2d_math.CreateVector2D(x, y),
 		MaxPosition: ce2d_math.CreateVector2D(x+width, y+height),
