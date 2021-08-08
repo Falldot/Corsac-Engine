@@ -62,7 +62,7 @@ func (q *QuadTree) Start() {
 	} else {
 		for index, item := range q.Coliders {
 			for i := index + 1; i < len(q.Coliders); i++ {
-				item.chek(&q.Coliders[index])
+				item.chek(&q.Coliders[i])
 			}
 		}
 	}
