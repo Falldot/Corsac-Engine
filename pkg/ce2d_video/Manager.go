@@ -1,5 +1,7 @@
 package ce2d_video
 
+import "github.com/Falldot/ce2d/pkg/ce2d_error"
+
 type VideoManager struct {
 	Textures [][]*Texture
 }
@@ -10,8 +12,16 @@ func Create() *VideoManager {
 	}
 }
 
+func (v *VideoManager) AddLevel() {
+	v.Textures = append(v.Textures, []*v.Textures{})
+}
+
 func (v *VideoManager) AddTexture(texture *Texture, level int) {
-	v.Textures[level] = append(v.Textures[level], texture)
+	if len(v.Textures) > level {
+		v.Textures[level] = append(v.Textures[level], texture)
+	} else {
+		ce2d_error.Error("Добавляете текстуру к уровню которого нет")
+	}
 }
 
 func (v *VideoManager) Draw() {
