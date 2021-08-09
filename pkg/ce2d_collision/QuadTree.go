@@ -34,7 +34,7 @@ func (q *QuadTree) addNodes() {
 		q.MaxPosition.X, q.MaxPosition.Y, q.Deep+1)
 }
 
-func (q *QuadTree) AddColiders(coliders []AABB) {
+func (q *QuadTree) AddColiders(coliders ...AABB) {
 	if len(coliders) > 1 && q.Deep < 5 {
 		if q.Nodes[0] == nil {
 			q.addNodes()
@@ -49,7 +49,7 @@ func (q *QuadTree) AddColiders(coliders []AABB) {
 			}
 		}
 		for i := 0; i < 4; i++ {
-			q.Nodes[i].AddColiders(t[i])
+			q.Nodes[i].AddColiders(t[i]...)
 		}
 	} else {
 		q.Coliders = append(q.Coliders, coliders...)
