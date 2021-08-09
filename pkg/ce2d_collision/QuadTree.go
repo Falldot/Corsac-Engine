@@ -34,24 +34,26 @@ func (q *QuadTree) addNodes() {
 		q.MaxPosition.X, q.MaxPosition.Y, q.Deep+1)
 }
 
-func (q *QuadTree) AddColiders(Coliders []AABB) {
-	t := make([]AABB, 0)
-	for _, colider := range Coliders {
-		if dividingAxisCheck(colider.MinPosition, colider.MaxPosition, q.MinPosition, q.MaxPosition) {
-			t = append(t, colider)
-		}
-	}
-	if q.Deep < 5 && len(t) > 2 {
+func (q *QuadTree) AddColiders(coliders []AABB) {
+	if len(coliders) > 1 && q.Deep < 5 {
 		if q.Nodes[0] == nil {
 			q.addNodes()
 		}
-		for i := 0; i < 4; i++ {
-			q.Nodes[i].AddColiders(t)
+		var t [4][]AABB
+		for _, colider := range coliders {
+			for i, node := range q.Nodes {
+				if dividingAxisCheck(colider.MinPosition, colider.MaxPosition, node.MinPosition, node.MaxPosition) {
+					t[i] = append(t[i], colider)
+					break
+				}
+			}
 		}
-	} else if len(t) > 0 {
-		q.Coliders = append(q.Coliders, t...)
+		for i := 0; i < 4; i++ {
+			q.Nodes[i].AddColiders(t[i])
+		}
+	} else {
+		q.Coliders = append(q.Coliders, coliders...)
 	}
-
 }
 
 func (q *QuadTree) Start() {
