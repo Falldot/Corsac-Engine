@@ -39,7 +39,7 @@ func (app *App) UnLoadMusic(tag string) {
 	delete(app.containerMusic, tag)
 }
 
-func (app *App) UnLoadAllMusic(tag string) {
+func (app *App) UnLoadAllMusic() {
 	for i, v := range app.containerMusic {
 		v.Free()
 		delete(app.containerMusic, i)
@@ -51,7 +51,7 @@ func (app *App) UnLoadChunk(tag string) {
 	delete(app.containerChunk, tag)
 }
 
-func (app *App) UnLoadAllChunk(tag string) {
+func (app *App) UnLoadAllChunk() {
 	for i, v := range app.containerChunk {
 		v.Free()
 		delete(app.containerChunk, i)

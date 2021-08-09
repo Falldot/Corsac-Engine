@@ -58,18 +58,10 @@ func CreateWindow() (*App, error) {
 }
 
 func (app *App) Destroy() {
-	for _, v := range app.containerFonts {
-		v.Close()
-	}
-	for _, v := range app.containerTexture {
-		v.Destroy()
-	}
-	for _, v := range app.containerMusic {
-		v.Free()
-	}
-	for _, v := range app.containerChunk {
-		v.Free()
-	}
+	app.UnLoadAllTexture()
+	app.UnLoadAllChunk()
+	app.UnLoadAllFonts()
+	app.UnLoadAllMusic()
 }
 
 func Destroy() {

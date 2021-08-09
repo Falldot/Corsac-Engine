@@ -13,7 +13,7 @@ func Create() *VideoManager {
 }
 
 func (v *VideoManager) AddLevel() {
-	v.Textures = append(v.Textures, []*v.Textures{})
+	v.Textures = append(v.Textures, []*Texture{})
 }
 
 func (v *VideoManager) AddTexture(texture *Texture, level int) {
