@@ -12,8 +12,16 @@ func Create() *VideoManager {
 	}
 }
 
-func (v *VideoManager) AddLevel() {
+func (v *VideoManager) AddLevel() int {
 	v.Textures = append(v.Textures, []*Texture{})
+	return len(v.Textures)
+}
+
+func (v *VideoManager) AddLevels(amount int) int {
+	for i := 0; i < amount; i++ {
+		v.Textures = append(v.Textures, []*Texture{})
+	}
+	return len(v.Textures)
 }
 
 func (v *VideoManager) AddTexture(texture *Texture, level int) {
