@@ -5,46 +5,48 @@ import (
 )
 
 type QuadTree struct {
-	MinPosition, MaxPosition *ce2d_math.Vector2D
+	MinPosition, MaxPosition *ce2d_math.Point
 	Nodes                    [4]*QuadTree
-	Coliders                 []AABB
+	Coliders                 []*AABB
 	Deep                     int
 }
 
-func CreateQuadTree(x, y, width, height float64, deep int) *QuadTree {
+func CreateQuadTree(x, y, width, height int32, deep int) *QuadTree {
 	return &QuadTree{
-		MinPosition: ce2d_math.CreateVector2D(x, y),
-		MaxPosition: ce2d_math.CreateVector2D(x+width, y+height),
-		Deep:        0,
+		MinPosition: ce2d_math.CreatePoint(x, y),
+		MaxPosition: ce2d_math.CreatePoint(x+width, y+height),
+		Deep:        deep,
 	}
 }
 
 func (q *QuadTree) addNodes() {
+	width := q.MaxPosition.X - q.MinPosition.X
+	height := q.MaxPosition.Y - q.MinPosition.Y
 	q.Nodes[0] = CreateQuadTree(
 		q.MinPosition.X, q.MinPosition.Y,
-		q.MaxPosition.X/2, q.MaxPosition.Y/2, q.Deep+1)
+		width/2, height/2, q.Deep+1)
 	q.Nodes[1] = CreateQuadTree(
-		q.MaxPosition.X/2, q.MinPosition.Y,
-		q.MaxPosition.X, q.MaxPosition.Y/2, q.Deep+1)
+		q.MinPosition.X+width/2, q.MinPosition.Y,
+		width/2, height/2, q.Deep+1)
 	q.Nodes[2] = CreateQuadTree(
-		q.MinPosition.X, q.MaxPosition.Y/2,
-		q.MaxPosition.X/2, q.MaxPosition.Y, q.Deep+1)
+		q.MinPosition.X, q.MinPosition.Y+height/2,
+		width/2, height/2, q.Deep+1)
 	q.Nodes[3] = CreateQuadTree(
-		q.MaxPosition.X/2, q.MaxPosition.Y/2,
-		q.MaxPosition.X, q.MaxPosition.Y, q.Deep+1)
+		q.MinPosition.X+width/2, q.MinPosition.Y+height/2,
+		width/2, height/2, q.Deep+1)
 }
 
-func (q *QuadTree) AddColiders(coliders ...AABB) {
+func (q *QuadTree) AddColiders(coliders ...*AABB) {
 	if len(coliders) > 1 && q.Deep < 5 {
 		if q.Nodes[0] == nil {
 			q.addNodes()
 		}
-		var t [4][]AABB
+		var t [4][]*AABB
 		for _, colider := range coliders {
 			for i, node := range q.Nodes {
 				if dividingAxisCheck(colider.MinPosition, colider.MaxPosition, node.MinPosition, node.MaxPosition) {
+
 					t[i] = append(t[i], colider)
-					break
 				}
 			}
 		}
@@ -56,15 +58,26 @@ func (q *QuadTree) AddColiders(coliders ...AABB) {
 	}
 }
 
+func (q *QuadTree) ForEach(callback func(q *QuadTree)) {
+	callback(q)
+
+	if q.Nodes[0] != nil {
+		for _, node := range q.Nodes {
+			node.ForEach(callback)
+		}
+	}
+}
+
 func (q *QuadTree) Start() {
 	if q.Nodes[0] != nil {
 		for _, i := range q.Nodes {
 			i.Start()
 		}
 	} else {
+
 		for index, item := range q.Coliders {
 			for i := index + 1; i < len(q.Coliders); i++ {
-				item.chek(&q.Coliders[i])
+				item.chek(q.Coliders[i])
 			}
 		}
 	}
