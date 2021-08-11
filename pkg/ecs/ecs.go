@@ -152,7 +152,6 @@ func (list *listSystem) push(sys System) *listSystem {
 func (list *listSystem) Init(pool *Pool) {
 	for nextList := list; nextList != nil; nextList = nextList.Next() {
 		nextList.System.Init(pool)
-
 	}
 }
 
