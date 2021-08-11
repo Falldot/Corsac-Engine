@@ -5,4 +5,6 @@ const (
 	PLAYER
 	SPRITE
 	ANIMATION
+	COLLIDER
+	WALL
 )

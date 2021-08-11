@@ -13,4 +13,5 @@ func Main(pool ecs.Pool) {
 	pool.AddSystem(system.RendererGetter, system.RendererExecuter)
 	pool.AddSystem(system.AnimatedGetter, system.AnimatedExecuter)
 	pool.AddSystem(system.ControlPlayerGetter, system.ControlPlayerExecuter)
+	pool.AddSystem(system.CollisionGetter, system.CollisionExecuter)
 }

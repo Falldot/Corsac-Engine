@@ -1,13 +1,15 @@
-package ce2d_collision
+package ce2d_quadTree
 
 import (
+	"github.com/Falldot/ce2d/internal/NewGame/Comp"
+	"github.com/Falldot/ce2d/pkg/ce2d_collision"
 	"github.com/Falldot/ce2d/pkg/ce2d_math"
 )
 
 type QuadTree struct {
 	MinPosition, MaxPosition *ce2d_math.Point
 	Nodes                    [4]*QuadTree
-	Coliders                 []*AABB
+	Coliders                 []*Comp.Colider
 	Deep                     int
 }
 
@@ -36,15 +38,15 @@ func (q *QuadTree) addNodes() {
 		width/2, height/2, q.Deep+1)
 }
 
-func (q *QuadTree) AddColiders(coliders ...*AABB) {
+func (q *QuadTree) AddColiders(coliders ...*Comp.Colider) {
 	if len(coliders) > 1 && q.Deep < 5 {
 		if q.Nodes[0] == nil {
 			q.addNodes()
 		}
-		var t [4][]*AABB
+		var t [4][]*Comp.Colider
 		for _, colider := range coliders {
 			for i, node := range q.Nodes {
-				if dividingAxisCheck(colider.MinPosition, colider.MaxPosition, node.MinPosition, node.MaxPosition) {
+				if ce2d_collision.DividingAxisCheck(colider.MinPosition, colider.MaxPosition, node.MinPosition, node.MaxPosition) {
 
 					t[i] = append(t[i], colider)
 				}
@@ -74,10 +76,9 @@ func (q *QuadTree) Start() {
 			i.Start()
 		}
 	} else {
-
 		for index, item := range q.Coliders {
 			for i := index + 1; i < len(q.Coliders); i++ {
-				item.chek(q.Coliders[i])
+				item.Chek(q.Coliders[i])
 			}
 		}
 	}

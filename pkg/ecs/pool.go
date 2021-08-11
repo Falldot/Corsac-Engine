@@ -115,9 +115,11 @@ func (p *pool) Init() {
 func (p *pool) Execute(dt float64) {
 	for _, sys := range p.systems {
 		group := sys.getter(p)
-		group = group.Filter(func(e Entity) bool {
-			return sys.filter(e)
-		})
+		if group != nil {
+			group = group.Filter(func(e Entity) bool {
+				return sys.filter(e)
+			})
+		}
 		if sys.trigger(p) {
 			sys.executer(p, group, dt)
 		}
