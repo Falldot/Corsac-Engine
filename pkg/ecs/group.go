@@ -3,8 +3,11 @@ package ecs
 type (
 	Group interface {
 		Entities() []Entity
-		HandleEntity(e Entity)
-		Matches(e Entity) bool
+		ForEach(callback func(e Entity))
+		Filter(callback func(e Entity) bool) Group
+
+		handleEntity(e Entity)
+		addEntity(e Entity)
 	}
 
 	group struct {
@@ -39,15 +42,31 @@ func (g *group) Entities() []Entity {
 	return cache
 }
 
-func (g *group) HandleEntity(e Entity) {
-	if g.Matches(e) {
+func (g *group) ForEach(callback func(e Entity)) {
+	for _, e := range g.entities {
+		callback(e)
+	}
+}
+
+func (g *group) Filter(callback func(e Entity) bool) Group {
+	newGroup := newGroup(nil)
+	for _, e := range g.entities {
+		if callback(e) {
+			newGroup.addEntity(e)
+		}
+	}
+	return newGroup
+}
+
+func (g *group) handleEntity(e Entity) {
+	if g.matches(e) {
 		g.addEntity(e)
 	} else {
 		g.removeEntity(e)
 	}
 }
 
-func (g *group) Matches(e Entity) bool {
+func (g *group) matches(e Entity) bool {
 	for _, m := range g.matchers {
 		if !m.Matches(e) {
 			return false

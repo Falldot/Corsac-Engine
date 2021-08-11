@@ -1,7 +1,7 @@
 package main
 
-import testgame "github.com/Falldot/ce2d/internal/TestGame"
+import newgame "github.com/Falldot/ce2d/internal/NewGame"
 
 func main() {
-	testgame.Play()
+	newgame.Play()
 }

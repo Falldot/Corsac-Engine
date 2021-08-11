@@ -42,7 +42,7 @@ func (rm *ResourceManager) CreateTextTexture(font string, size int, tag string, 
 	if err != nil {
 		return nil, nil, err
 	}
-	tex, err := rm.Renderer.CreateTextureFromSurface(surf)
+	tex, err := Renderer.CreateTextureFromSurface(surf)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -11,11 +11,21 @@ type (
 		CreateEntity() Entity
 
 		Entities() int
-		Cemetery() (int, int)
+		Cemetery() int
 		Systems() int
 
-		AddSystem(sys System)
-		ExecuteSystems(dt float64)
+		Initers() int
+		Cleaners() int
+		Exiters() int
+		Groups() int
+		GroupsIndex() int
+
+		AddSystem(actions ...interface{})
+
+		Init()
+		Execute(dt float64)
+		Clean()
+		Exit()
 
 		DestroyAllEntities()
 
@@ -31,25 +41,25 @@ type (
 		idIncEntity uint64
 
 		entities       map[uint64]Entity
-		entitiesCache  []Entity
 		entitiesUnused []Entity
-
-		cacheComponents [][]Component
 
 		groups      map[uint]Group
 		groupsIndex map[int][]Group
 
-		systems []System
+		initers  []Initer
+		cleaners []Cleaner
+		exiters  []Exiter
+
+		systems []*system
 	}
 )
 
 func CreatePool() Pool {
 	return &pool{
-		idIncEntity:     0,
-		entities:        make(map[uint64]Entity),
-		groups:          make(map[uint]Group),
-		groupsIndex:     make(map[int][]Group),
-		cacheComponents: make([][]Component, 32),
+		idIncEntity: 0,
+		entities:    make(map[uint64]Entity),
+		groups:      make(map[uint]Group),
+		groupsIndex: make(map[int][]Group),
 	}
 }
 
@@ -59,26 +69,70 @@ func (p *pool) CreateEntity() Entity {
 	e := p.getEntity()
 	// Записываем сущности в хэш таблицу Сущностей
 	p.entities[e.ID()] = e
-	// Записываем сущности в массива закэшированных Сущностей
-	if p.entitiesCache != nil {
-		p.entitiesCache = append(p.entitiesCache, e)
-	}
 
 	for _, g := range p.groups {
-		g.HandleEntity(e)
+		g.handleEntity(e)
 	}
 
 	// Возвращаем Сущность
 	return e
 }
 
-func (p *pool) AddSystem(sys System) {
-	p.systems = append(p.systems, sys)
+func (p *pool) AddSystem(actions ...interface{}) {
+	newSystem := createSystem()
+
+	for _, a := range actions {
+		switch a.(type) {
+		case Initer:
+			p.initers = append(p.initers, a.(Initer))
+		case Cleaner:
+			p.cleaners = append(p.cleaners, a.(Cleaner))
+		case Exiter:
+			p.exiters = append(p.exiters, a.(Exiter))
+
+		case Trigger:
+			newSystem.trigger = a.(Trigger)
+		case Filter:
+			newSystem.filter = a.(Filter)
+		case Getter:
+			newSystem.getter = a.(Getter)
+		case Executer:
+			newSystem.executer = a.(Executer)
+		}
+	}
+
+	if newSystem.executer != nil {
+		p.systems = append(p.systems, newSystem)
+	}
 }
 
-func (p *pool) ExecuteSystems(dt float64) {
-	for _, v := range p.systems {
-		v(p, dt)
+func (p *pool) Init() {
+	for _, v := range p.initers {
+		v(p)
+	}
+}
+
+func (p *pool) Execute(dt float64) {
+	for _, sys := range p.systems {
+		group := sys.getter(p)
+		group = group.Filter(func(e Entity) bool {
+			return sys.filter(e)
+		})
+		if sys.trigger(p) {
+			sys.executer(p, group, dt)
+		}
+	}
+}
+
+func (p *pool) Clean() {
+	for _, v := range p.cleaners {
+		v(p)
+	}
+}
+
+func (p *pool) Exit() {
+	for _, v := range p.exiters {
+		v(p)
 	}
 }
 
@@ -92,9 +146,29 @@ func (p *pool) Systems() int {
 	return len(p.systems)
 }
 
+func (p *pool) Initers() int {
+	return len(p.initers)
+}
+
+func (p *pool) Cleaners() int {
+	return len(p.cleaners)
+}
+
+func (p *pool) Exiters() int {
+	return len(p.exiters)
+}
+
+func (p *pool) Groups() int {
+	return len(p.groups)
+}
+
+func (p *pool) GroupsIndex() int {
+	return len(p.groupsIndex)
+}
+
 // Получить кол-во неактивных сущностей
-func (p *pool) Cemetery() (int, int) {
-	return len(p.entitiesUnused), len(p.cacheComponents)
+func (p *pool) Cemetery() int {
+	return len(p.entitiesUnused)
 }
 
 func (p *pool) HasEntity(e Entity) bool {
@@ -104,7 +178,6 @@ func (p *pool) HasEntity(e Entity) bool {
 
 func (p *pool) DestroyAllEntities() {
 	p.entities = make(map[uint64]Entity)
-	p.entitiesCache = nil
 }
 
 // Получаем экземпляр Сущности
@@ -131,32 +204,33 @@ func (p *pool) getEntity() Entity {
 
 func (p *pool) componentUpdate(e Entity, typeComponent ComponentType, c Component) {
 	p.forMatchingGroup(e, typeComponent, c, func(g Group) {
-		g.HandleEntity(e)
+		g.handleEntity(e)
 	})
 }
 
 func (p *pool) destroyEntity(e Entity) {
 
-	e.RemoveAll()
+	e.removeAll()
 
 	delete(p.entities, e.ID())
 
-	p.entitiesCache = nil
 	for _, g := range p.groups {
-		g.HandleEntity(e)
+		g.handleEntity(e)
 	}
+
 	p.entitiesUnused = append(p.entitiesUnused, e)
 }
 
 func (p *pool) GetGroup(matchers ...Matcher) Group {
 	hash := HashMatcher(matchers...)
+
 	if g, ok := p.groups[hash]; ok {
 		return g
 	}
 
 	g := newGroup(matchers...)
 	for _, e := range p.entities {
-		g.HandleEntity(e)
+		g.handleEntity(e)
 	}
 	p.groups[hash] = g
 

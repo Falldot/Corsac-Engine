@@ -1,36 +1,37 @@
 package ecs
 
 type (
-	// Интерфейс реализации Сущности
+	// Интерфейс реализации "Сущности"
 	Entity interface {
 
-		// Entity methods
-
+		// Public
 		ID() uint64
 		Destroy()
-
-		// Components methods
 
 		Add(ComponentType, Component) Entity
 		Get(ComponentType) Component
 		Remove(ComponentType) Entity
-		RemoveAll()
+
+		// Private
+		removeAll()
 
 		has(...int) bool
 	}
 
+	// Структура реализации "Сущности"
 	entity struct {
+		// "Уникальный индитификатор" (ID) "Сущности"
 		id uint64
 
+		// Набор "Компонентов" "Сущности"
 		components []Component
 
-		componentsCache    []Component
-		componentTypeCache []ComponentType
-
+		// Контекст
 		pool Pool
 	}
 )
 
+// Конструктор "Сущности"
 func createEntity(pool Pool, id uint64) Entity {
 	return &entity{
 		id:         id,
@@ -53,8 +54,8 @@ func (e *entity) ID() uint64 {
 //		Add(VELOCITY, &Velocity{70, 10}).
 //		Add(DIRECTION, &Direction{500, 0})
 func (e *entity) Add(typeComponent ComponentType, component Component) Entity {
-	e.pool.componentUpdate(e, typeComponent, e.components[typeComponent])
 	e.components[typeComponent] = component
+	e.pool.componentUpdate(e, typeComponent, e.components[typeComponent])
 	return e
 }
 
@@ -88,16 +89,9 @@ func (e *entity) has(componentTypes ...int) bool {
 //		Remove(VELOCITY).
 //		Remove(DIRECTION)
 func (e *entity) Remove(typeComponent ComponentType) Entity {
-	e.pool.componentUpdate(e, typeComponent, e.components[typeComponent])
 	e.components[typeComponent] = nil
+	e.pool.componentUpdate(e, typeComponent, e.components[typeComponent])
 	return e
-}
-
-// Удалить ВСЕ "Компоненты" из "Сущности"
-//
-// 	player.RemoveAllComponents()
-func (e *entity) RemoveAll() {
-	e.components = make([]Component, 32)
 }
 
 // Удалить "Сущность"
@@ -105,4 +99,9 @@ func (e *entity) RemoveAll() {
 // 	player.Destroy()
 func (e *entity) Destroy() {
 	e.pool.destroyEntity(e)
+}
+
+// Удалить ВСЕ "Компоненты" из "Сущности"
+func (e *entity) removeAll() {
+	e.components = make([]Component, 32)
 }

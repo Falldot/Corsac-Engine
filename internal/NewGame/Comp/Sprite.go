@@ -1,21 +1,22 @@
-package gdl
+package Comp
 
 import (
 	"github.com/Falldot/ce2d/pkg/ce2d_math"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
+// @Comp
 type Sprite struct {
-	Texture  *sdl.Texture
+	Tex      *sdl.Texture
 	Src, Dst *sdl.Rect
 	Angle    float64
 	Center   ce2d_math.Vector2D
 	Flip     sdl.RendererFlip
 }
 
-func (app *App) CreateSprite(tagTexture string, width, height int32, angle float64, scale int32) *Sprite {
-	return &Sprite{
-		Texture: app.GetTexture(tagTexture),
+func CreateSprite(tex *sdl.Texture, width int32, height int32, angle float64, scale int32) *Sprite {
+	s := &Sprite{
+		Tex: tex,
 		Src: &sdl.Rect{
 			W: width,
 			H: height,
@@ -26,4 +27,5 @@ func (app *App) CreateSprite(tagTexture string, width, height int32, angle float
 		},
 		Angle: angle,
 	}
+	return s
 }

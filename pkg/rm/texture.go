@@ -14,7 +14,7 @@ func (rm *ResourceManager) LoadTexture(tag string, path string) (*sdl.Texture, e
 	if err != nil {
 		return nil, err
 	}
-	tex, err := rm.Renderer.CreateTextureFromSurface(surf)
+	tex, err := Renderer.CreateTextureFromSurface(surf)
 	if err != nil {
 		return nil, err
 	}

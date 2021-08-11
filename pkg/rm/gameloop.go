@@ -21,7 +21,7 @@ var (
 	keyUp    [512]bool
 )
 
-func (rm *ResourceManager) Start(fps uint16, limitfps uint32, update func(float64), render func()) {
+func (rm *ResourceManager) Gameloop(fps uint16, limitfps uint32, update func(float64), render func()) {
 
 	secsPerUpdate := 1 / float64(fps)
 	var IdleThreshold, current, elapsed float64
@@ -67,12 +67,14 @@ func (rm *ResourceManager) Start(fps uint16, limitfps uint32, update func(float6
 		}
 
 		for lag >= secsPerUpdate {
+			Renderer.Clear()
 			keysManager()
 			update(secsPerUpdate)
 			lag -= secsPerUpdate
 		}
 
-		rm.Draw()
+		render()
+		Renderer.Present()
 	}
 }
 

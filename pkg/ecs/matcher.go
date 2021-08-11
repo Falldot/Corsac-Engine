@@ -1,6 +1,8 @@
 package ecs
 
-import "sort"
+import (
+	"sort"
+)
 
 const (
 	componentHashFactor uint = 647
@@ -51,6 +53,7 @@ type AllMatcher struct {
 
 func AllOf(types ...int) Matcher {
 	b := newBaseMatcher(types...)
+
 	b.hash = Hash(allHashFactor, b.ComponentTypes()...)
 	return &AllMatcher{b}
 }
@@ -70,8 +73,8 @@ func AnyOf(types ...int) Matcher {
 	return &AnyMatcher{b}
 }
 
-func (a *AnyMatcher) Matches(e Entity) bool {
-	return e.has(a.ComponentTypes()...)
+func (a *AnyMatcher) Matches(entity Entity) bool {
+	return entity.has(a.ComponentTypes()...)
 }
 
 // Utilities
