@@ -2,18 +2,18 @@ package system
 
 import (
 	"github.com/Falldot/ce2d/internal/NewGame/Comp"
-	"github.com/Falldot/ce2d/pkg/ecs"
+	"github.com/Falldot/ce2d/pkg/ECS"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-// @Getter [ANIMATED] -> Main
-var AnimatedGetter ecs.Getter = func(pool ecs.Pool) ecs.Group {
-	return pool.GetGroup(ecs.AllOf(Comp.ANIMATION))
+// @Getter [ANIMATED] -> GameController
+var AnimatedGetter ECS.Getter = func() ECS.Group {
+	return ECS.GetGroup(ECS.AllOf(Comp.ANIMATION))
 }
 
-// @Executer [ANIMATED] -> Main
-var AnimatedExecuter ecs.Executer = func(pool ecs.Pool, group ecs.Group, dt float64) {
-	group.ForEach(func(e ecs.Entity) {
+// @Executer [ANIMATED] -> GameController
+var AnimatedExecuter ECS.Executer = func(group ECS.Group, dt float64) {
+	group.ForEach(func(e ECS.Entity) {
 		s := e.Get(Comp.SPRITE)
 		sm := e.Get(Comp.ANIMATION)
 

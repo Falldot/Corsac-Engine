@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	ecs "github.com/Falldot/ce2d/pkg/newecs"
+	"github.com/Falldot/ce2d/pkg/ECS"
 )
 
 type Transform struct {
@@ -25,55 +25,55 @@ const (
 )
 
 // @Initor
-var Translate_Initor ecs.Initer = func(pool ecs.Pool) {
-	pool.CreateEntity().
+var Translate_Initor ECS.Initer = func() {
+	ECS.CreateEntity().
 		Add(TRANSFORM, &Transform{20, 30}).
 		Add(VELOCITY, &Velocity{70, 10}).
 		Add(DIRECTION, &Direction{500, 0})
 
-	pool.CreateEntity().
+	ECS.CreateEntity().
 		Add(TRANSFORM, &Transform{10, 1})
 }
 
 // @Getter
-var Translate_Getter ecs.Getter = func(pool ecs.Pool) ecs.Group {
-	return pool.GetGroup(ecs.AllOf(TRANSFORM))
+var Translate_Getter ECS.Getter = func() ECS.Group {
+	return ECS.GetGroup(ECS.AllOf(TRANSFORM))
 }
 
 // @Filter
-var Translate_Filter ecs.Filter = func(entity ecs.Entity) bool {
+var Translate_Filter ECS.Filter = func(entity ECS.Entity) bool {
 	return entity.Get(TRANSFORM).(*Transform).X >= 10
 }
 
 // @Trigger
-var Translate_Trigger ecs.Trigger = func(pool ecs.Pool) bool {
+var Translate_Trigger ECS.Trigger = func() bool {
 	return true
 }
 
 // @Executer
-var Translate_Executer ecs.Executer = func(pool ecs.Pool, group ecs.Group, dt float64) {
-	group.ForEach(func(e ecs.Entity) {
+var Translate_Executer ECS.Executer = func(group ECS.Group, dt float64) {
+	group.ForEach(func(e ECS.Entity) {
 		fmt.Println(e.Get(TRANSFORM))
 	})
 }
 
 // @Cleaner
-var Translate_Cleaner ecs.Cleaner = func(pool ecs.Pool) {
+var Translate_Cleaner ECS.Cleaner = func() {
 	fmt.Println("Cleaner")
 }
 
 // @Exiter
-var Translate_Exiter ecs.Exiter = func(pool ecs.Pool) {
+var Translate_Exiter ECS.Exiter = func() {
 	fmt.Println("Exiter")
 }
 
 func main() {
-	pool := ecs.CreatePool()
+	ECS.Init()
 
-	pool.AddSystem(Translate_Initor, Translate_Getter, Translate_Filter, Translate_Trigger, Translate_Executer, Translate_Cleaner, Translate_Exiter)
+	ECS.AddSystem(Translate_Initor, Translate_Getter, Translate_Filter, Translate_Trigger, Translate_Executer, Translate_Cleaner, Translate_Exiter)
 
-	pool.Init()
-	pool.Execute(1)
-	pool.Clean()
-	pool.Exit()
+	ECS.ExecuteIniters()
+	ECS.ExecuteExecuters(1)
+	ECS.ExecuteCleaners()
+	ECS.ExecuteExiters()
 }

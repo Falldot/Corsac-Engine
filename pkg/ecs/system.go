@@ -1,4 +1,4 @@
-package ecs
+package ECS
 
 type system struct {
 	getter   Getter
@@ -7,35 +7,34 @@ type system struct {
 	executer Executer
 }
 
-var getter Getter = func(pool Pool) Group { return nil }
-var filter Filter = func(entity Entity) bool { return true }
-var trigger Trigger = func(pool Pool) bool { return true }
+var getter Getter = func() Group { return nil }
+var trigger Trigger = func() bool { return true }
 
 func createSystem() *system {
 	return &system{
 		getter:  getter,
-		filter:  filter,
+		filter:  nil,
 		trigger: trigger,
 	}
 }
 
 // @Initer
-type Initer func(pool Pool)
+type Initer func()
 
 // @Getter
-type Getter func(pool Pool) Group
+type Getter func() Group
 
 // @Filter
 type Filter func(entity Entity) bool
 
 // @Trigger
-type Trigger func(pool Pool) bool
+type Trigger func() bool
 
 // @Executer
-type Executer func(pool Pool, group Group, dt float64)
+type Executer func(group Group, dt float64)
 
 // @Cleaner
-type Cleaner func(pool Pool)
+type Cleaner func()
 
 // @Exiter
-type Exiter func(pool Pool)
+type Exiter func()

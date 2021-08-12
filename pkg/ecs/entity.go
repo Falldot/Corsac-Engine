@@ -1,4 +1,4 @@
-package ecs
+package ECS
 
 type (
 	// Интерфейс реализации "Сущности"

@@ -6,12 +6,12 @@ type Animation struct {
 	Animations map[string]*animation
 }
 
-func CreateAnimation(action func(anim *Animation)) *Animation {
+func CreateAnimation(callback func(anim *Animation)) *Animation {
 	a := &Animation{
 		Current:    &animation{},
 		Animations: make(map[string]*animation),
 	}
-	action(a)
+	callback(a)
 	return a
 }
 

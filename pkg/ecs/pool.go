@@ -1,4 +1,4 @@
-package ecs
+package ECS
 
 import (
 	"sync/atomic"
@@ -54,7 +54,7 @@ type (
 	}
 )
 
-func CreatePool() Pool {
+func createPool() Pool {
 	return &pool{
 		idIncEntity: 0,
 		entities:    make(map[uint64]Entity),
@@ -108,33 +108,33 @@ func (p *pool) AddSystem(actions ...interface{}) {
 
 func (p *pool) Init() {
 	for _, v := range p.initers {
-		v(p)
+		v()
 	}
 }
 
 func (p *pool) Execute(dt float64) {
 	for _, sys := range p.systems {
-		group := sys.getter(p)
-		if group != nil {
+		group := sys.getter()
+		if group != nil && sys.filter != nil {
 			group = group.Filter(func(e Entity) bool {
 				return sys.filter(e)
 			})
 		}
-		if sys.trigger(p) {
-			sys.executer(p, group, dt)
+		if sys.trigger() {
+			sys.executer(group, dt)
 		}
 	}
 }
 
 func (p *pool) Clean() {
 	for _, v := range p.cleaners {
-		v(p)
+		v()
 	}
 }
 
 func (p *pool) Exit() {
 	for _, v := range p.exiters {
-		v(p)
+		v()
 	}
 }
 

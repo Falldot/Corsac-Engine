@@ -1,4 +1,4 @@
-package ecs
+package ECS
 
 type (
 	Group interface {
@@ -22,6 +22,7 @@ func newGroup(matchers ...Matcher) Group {
 	return &group{
 		entities: make(map[uint64]Entity),
 		matchers: matchers,
+		cache:    nil,
 	}
 }
 
@@ -32,7 +33,6 @@ func (g *group) Entities() []Entity {
 	cache := g.cache
 	if cache == nil {
 		cache = make([]Entity, 0, len(g.entities))
-
 		for _, v := range g.entities {
 			cache = append(cache, v)
 		}
@@ -43,14 +43,14 @@ func (g *group) Entities() []Entity {
 }
 
 func (g *group) ForEach(callback func(e Entity)) {
-	for _, e := range g.entities {
+	for _, e := range g.Entities() {
 		callback(e)
 	}
 }
 
 func (g *group) Filter(callback func(e Entity) bool) Group {
 	newGroup := newGroup(nil)
-	for _, e := range g.entities {
+	for _, e := range g.Entities() {
 		if callback(e) {
 			newGroup.addEntity(e)
 		}
