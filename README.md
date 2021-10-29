@@ -9,16 +9,22 @@
 
 ## Средства разработки
 
+## Новое
+
+- C 17
+- C++ 20
+- [CMake v3.21.3](https://cmake.org/)
+- [MinGW v8.1.0](https://www.mingw-w64.org/)
+- [API Windows](https://docs.microsoft.com/ru-ru/windows/win32/)
+- [OpenGL v4.6](https://www.opengl.org/)
+
+## Устаревшее
+
 - [Go v1.16.7](https://golang.org/dl/)
 - [Go sdl2 v0.4.8](https://github.com/veandco/go-sdl2)
 - [SDL2 v2.0.14](https://www.libsdl.org/download-2.0.php)
 - [SDL_image v2.0.5](https://www.libsdl.org/projects/SDL_image/)
 - [SDL_mixer v2.0.4](https://www.libsdl.org/projects/SDL_mixer/)
-- [MinGW v8.1.0](http://mingw-w64.org/doku.php)
-
-## Corsac ECS
-
-Шаблон проектирования ECS, представляет собой удобный инструмент для реализации любого игрового объекта, интуитивно понятен и переиспользует максимум вашего кода. Представляем реализацию шаблона, ипользуемого в Corsac Engine:
 
 ## Текущие результаты
 
