@@ -2,26 +2,39 @@ cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
 project(corsac_ecs VERSION 0.1.0 LANGUAGES CXX)
 
-get_directory_property(IS_SUBPROJECT PARENT_DIRECTORY)
+add_compile_options(
+    -Wall
+    -Wextra
+    -Wpedantic
 
-option(CORSAC_ECS_TESTING "Включить модульное тестирование" ON)
+    -Wcast-align
+    -Wcast-qual
+    -Wconversion
+    -Wctor-dtor-privacy
+    -Wenum-compare
+    -Wfloat-equal
+    -Wnon-virtual-dtor
+    -Wold-style-cast
+    -Woverloaded-virtual
+    -Wredundant-decls
+    -Wsign-conversion
+    -Wsign-promo
+)
 
 include_directories(
     include
+        include/internal
 )
 
 file(GLOB SOURCES "src/*.cpp" "src/**/*.cpp")
 
-if(NOT CORSAC_ECS_TESTING)
-    message(STATUS "Тестирование выключено")
-else()
-    add_subdirectory(test)
-endif()
+add_subdirectory(test)
 
-add_library(corsac_ecs STATIC ${SOURCES})
+add_library(${PROJECT_NAME} STATIC ${SOURCES})
 set_target_properties(
-    corsac_ecs PROPERTIES
+        ${PROJECT_NAME} PROPERTIES
     CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
 )
-add_library(corsac::corsac_ecs ALIAS corsac_ecs)
+add_library(corsac::corsac_ecs ALIAS ${PROJECT_NAME})
+

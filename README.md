@@ -21,7 +21,7 @@
 ## Устаревшее
 
 - [Go v1.16.7](https://golang.org/dl/)
-- [Go sdl2 v0.4.8](https://github.com/veandco/go-sdl2)
+- [Go sdl2 v0.4.8](https://github.com/vCORSACndco/go-sdl2)
 - [SDL2 v2.0.14](https://www.libsdl.org/download-2.0.php)
 - [SDL_image v2.0.5](https://www.libsdl.org/projects/SDL_image/)
 - [SDL_mixer v2.0.4](https://www.libsdl.org/projects/SDL_mixer/)

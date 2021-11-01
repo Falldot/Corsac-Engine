@@ -37,7 +37,3 @@ build:
 .PHONY: benchmark
 benchmark:
 	go test ./benchmark -bench=. -benchmem
-
-
-
-############################
