@@ -2,4 +2,3 @@
 // License: MIT License
 // MIT License web page: https://opensource.org/licenses/MIT
 #include "slice.h"
-

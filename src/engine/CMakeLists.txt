@@ -17,5 +17,5 @@ set_target_properties(
     CXX_STANDARD_REQUIRED ON
 )
 target_link_libraries(corsac_engine corsac::corsac_app)
-target_link_libraries(corsac_engine corsac::corsac_ecs)
+#target_link_libraries(corsac_engine corsac::corsac_ecs)
 

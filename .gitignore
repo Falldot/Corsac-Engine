@@ -1,2 +1,15 @@
 build
 .vscode
+.idea
+.idea/.gitignore
+.idea/.name
+.idea/Corsac-Engine.iml
+.idea/dictionaries/
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/sonarlint/
+.idea/vcs.xml
+cmake-build-debug/
+cmake-build-debug_clang/
+cmake-build-debug_gcc/
