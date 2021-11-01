@@ -3,20 +3,14 @@
 
 #include <time.h>
 
-#include "types.h"
+#include "types_fundamental_test.h"
 
 using namespace std;
 
-#define FAILED(M, ...) \
-    {                                                                                       \
-        fprintf(stderr, "\n[FAILED] (%s:%d) " M "\n\n", __FILE__, __LINE__, ##__VA_ARGS__);  \
-        exit(1);                                                                            \
-    }
-
-const size_t CORSAC_SLICE_INIT_SIZE = 0;
-
 int main() {
-    types();
+    auto assert = new CorsacTest();
+    assert->equal("types_fundamental_test", types_fundamental_test(assert), true);
+    assert->start();
 //    cout << "[TITLE] corsac::slice" << endl;
 //	{
 //		cout << "[TEST] init when not set size" << endl;

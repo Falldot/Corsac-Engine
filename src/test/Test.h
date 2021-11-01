@@ -171,11 +171,14 @@ class CorsacTest
 				}
 
 				std::cout << this->names[i] <<std::endl;
+<<<<<<< HEAD
+=======
 			}
 
 			for(auto i = 0; i < this->blocks.size(); i++)
 			{
 				this->blocks[i].start();
+>>>>>>> 759eee2fbe9b75f0baa16839a21aac21efd3912f
 			}
 
 

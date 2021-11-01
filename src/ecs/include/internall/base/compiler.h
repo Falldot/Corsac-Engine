@@ -47,4 +47,14 @@
     #error Unsupported compiler
 #endif
 
+// CORSAC_COMPILER_WINRTCX_ENABLED
+//
+// Определяется как 1, если в компиляторе включена доступная поддержка C ++ CX, в противном случае - не определено.
+// Это, в частности, означает, что соответствующая единица компиляции была создана с включенными компонентами среды выполнения Windows,
+// обычно с использованием флагов компилятора «-ZW». Этот параметр позволяет использовать объекты типа шляпы '^'
+// с подсчетом ссылок и другие ключевые слова C ++ CX, такие как «ref new».
+#if !defined(CORSAC_COMPILER_WINRTCX_ENABLED) && defined(__cplusplus_winrt)
+    #define CORSAC_COMPILER_WINRTCX_ENABLED 1
+#endif
+
 #endif //CORSAC_ENGINE_COMPILER_H

@@ -1,6 +1,9 @@
-// Copyright (c) 2021 Corsac Team
-// License: MIT License
-// MIT License web page: https://opensource.org/licenses/MIT
+//
+// internal/type_fundamental.h
+//
+// Created by Falldot on 01.11.2021.
+// Copyright (c) 2021 Corsac. All rights reserved.
+//
 #ifndef CORSAC_TYPE_FUNDAMENTAL_H
 #define CORSAC_TYPE_FUNDAMENTAL_H
 
@@ -57,7 +60,7 @@ namespace corsac
         template <typename T>
         struct is_null_pointer : public corsac::is_same<typename corsac::remove_cv<T>::type, decltype(nullptr)> {};
     #else
-    template <typename T>
+        template <typename T>
         struct is_null_pointer : public corsac::is_same<typename corsac::remove_cv<T>::type, std::nullptr_t> {};
     #endif
 
@@ -164,12 +167,15 @@ namespace corsac
     */
     template <typename T> struct is_hat_type_helper : public false_type {};
 
+    #if defined(CORSAC_COMPILER_WINRTCX_ENABLED)
+        template <typename T> struct is_hat_type_helper<T^> : public true_type{};
+    #endif
+
     template <typename T>
     struct is_hat_type : public corsac::is_hat_type_helper<T> {};
 
     template<typename T>
-    constexpr bool is_hat_type_v = is_hat_type<T>::value;
-
+        constexpr bool is_hat_type_v = is_hat_type<T>::value;
 }
 
 #endif //CORSAC_TYPE_FUNDAMENTAL_H
