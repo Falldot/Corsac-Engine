@@ -9,17 +9,19 @@
 
 bool types_compound_test(CorsacTest* assert)
 {
-    auto extent = assert->add_block("extent");
+    assert->add_block("extent", [](CorsacTest* assert)
     {
-        extent->equal("param is int[10]", corsac::extent<int[10]>::value, 10);
-        extent->equal("param is int[]", corsac::extent<int[]>::value, 0);
-    }
-    auto is_array = assert->add_block("is_array");
+        assert->equal("param is int[10]", corsac::extent<int[10]>::value, 10);
+        assert->equal("param is int[3][6]", corsac::extent<int[3][6], 1>::value, 6);
+        assert->equal("param is int[3][6]", corsac::extent<int[3][8][1], 2>::value, 1);
+        assert->equal("param is int[]", corsac::extent<int[]>::value, 0);
+    });
+    assert->add_block("is_array", [](CorsacTest* assert)
     {
-        is_array->is_true("param is int[10]", corsac::is_array<int[10]>::value);
-        is_array->is_true("param is int[]", corsac::is_array<int[]>::value);
-        is_array->is_false("param is int", corsac::is_array<int>::value);
-    }
+        assert->is_true("param is int[10]", corsac::is_array<int[10]>::value);
+        assert->is_true("param is int[]", corsac::is_array<int[]>::value);
+        assert->is_false("param is int", corsac::is_array<int>::value);
+    });
     return true;
 }
 
