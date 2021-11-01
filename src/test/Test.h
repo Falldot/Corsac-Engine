@@ -78,22 +78,43 @@ class CorsacTest
 			this->names.push_back(name);
 		}
 
+
 		void nt()
 		{
 			auto condition = this->tests[this->tests.size()-1];
 			this->tests[this->tests.size()-1] = [=]()mutable{ return !condition();};
 		}
 
+		template <typename T>
+		CorsacTest* is_false(std::name, T f)
+		{
+			this->add(name, [=]()mutable
+			{
+				return f == false;
+			});
+			return this;
+		}
+
+		template <typename T>
+		CorsacTest* is_true(std::name, T f)
+		{
+			this->add(name, [=]()mutable
+			{
+				return f == true;
+			});
+			return this;
+		}
+
 		template <typename T, typename C>
-		CorsacTest* is(std::string name, T f, C t){
-			this->tests.push_back([=]()mutable{
+		CorsacTest* is(std::string name, T f, C t)
+		{
+			this->add(name, [=]()mutable
+			{
 				if(typeid(f).name() == typeid(t).name())
 					return true;
 
 				return false;
 			});
-
-			this->names.push_back(name);
 			return this;
 		}
 
@@ -101,15 +122,16 @@ class CorsacTest
 		/**
 		*	Проверка на наличие элемента в массиве
 		*	 
-		*	@name 	- Имя теста
-		*	@start 	- Итератор начала массива
-		*	@end 	- Итератор конца массива
-		*	@search - Элемент который ищется в массиве  
+		*	@param name 	- Имя теста
+		*	@param @start 	- Итератор начала массива
+		*	@param @end 	- Итератор конца массива
+		*	@param @search - Элемент который ищется в массиве  
 		*/
 		template <typename iter, typename T>
 		CorsacTest* is_contein(std::string name, iter start, iter end, T search)
 		{
-			this->tests.push_back([=]()mutable{
+			this->add(name, [=]()mutable
+			{
 				bool find = false;
 
 				for(; start != end; ++start)
@@ -120,9 +142,7 @@ class CorsacTest
 					}
 				}
             	return find;
-			});
-
-			this->names.push_back(name);
+			});	
 			return this;
 		}
 
@@ -143,11 +163,11 @@ class CorsacTest
 
 				if(this->tests[i]()){
 					SetConsoleTextAttribute(hConsole, 10);
-					std::cout << "ok: ";
+					std::cout << "ok:		";
 				}
 				else{
 					SetConsoleTextAttribute(hConsole, 12);
-					std::cout << "er: ";
+					std::cout << "er:		";
 				}
 
 				std::cout << this->names[i] <<std::endl;
@@ -163,7 +183,7 @@ class CorsacTest
 			unsigned int search_time = end_time - start_time; 
 			SetConsoleTextAttribute(hConsole, 6);
 
-			
+
 			this->space_print(this->amount_space);
 			std::cout << "Test time: " << search_time/1000.0 << std::endl;
 		}
