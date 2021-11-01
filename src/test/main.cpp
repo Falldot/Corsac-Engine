@@ -7,12 +7,12 @@ int main()
 
 	t.equal("test0", 0, 1);
 
-	auto tt = t.add_block("test");
-	tt->equal("test1", 1, 1);
-
-	tt->equal("test2", 1, 1);
+	t.add_block("test1", [](CorsacTest* assert){
+		assert->equal("1 and 1", 1, 1);
+	});
 
 	t.start();
 
+	
 	return 0;
 }

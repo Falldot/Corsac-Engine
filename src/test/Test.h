@@ -31,43 +31,47 @@ class CorsacTest
 			}
 		}
 
+		CorsacTest* create_block(std::string name)
+		{
+
+			this->blocks.push_back(CorsacTest(name, this->amount_space+3));
+
+			return &this->blocks[this->blocks.size()-1];
+		}
+
 	public:
 		CorsacTest(std::string name, int amount_space = 0){
 			this->name_block = name;
 			this->amount_space = amount_space;
 		};
 
-		CorsacTest* add_block(std::string name)
+		CorsacTest* add_block(std::string name, std::function<void(CorsacTest*)> func_block)
 		{
-			this->blocks.push_back(CorsacTest(name, this->amount_space+3));
-
-			return &this->blocks[this->blocks.size()-1];
+			func_block(this->create_block(name));		
 		}
 
 		template <typename T, typename C>
 		CorsacTest* equal_ref(std::string name, T* f, C* t){
-			this->tests.push_back([=]()mutable{
+			this->add(name, [=]()mutable
+			{
 				if(f == t)
 					return true;
 
 				return false;
 			});
-
-			this->names.push_back(name);
 
 			return this;
 		}
 
 		template <typename T, typename C>
 		CorsacTest* equal(std::string name, T f, C t){
-			this->tests.push_back([=]()mutable{
-				if(f == t)
+			this->add(name, [=]()mutable
+			{
+				if(typeid(f).name() == typeid(t).name())
 					return true;
 
 				return false;
 			});
-
-			this->names.push_back(name);
 
 			return this;
 		}
@@ -115,6 +119,7 @@ class CorsacTest
 
 				return false;
 			});
+
 			return this;
 		}
 
@@ -163,11 +168,11 @@ class CorsacTest
 
 				if(this->tests[i]()){
 					SetConsoleTextAttribute(hConsole, 10);
-					std::cout << "ok:		";
+					std::cout << "ok:    ";
 				}
 				else{
 					SetConsoleTextAttribute(hConsole, 12);
-					std::cout << "er:		";
+					std::cout << "er:    ";
 				}
 
 				std::cout << this->names[i] <<std::endl;
