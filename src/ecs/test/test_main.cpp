@@ -8,7 +8,7 @@
 using namespace std;
 
 int main() {
-    auto assert = new CorsacTest();
+    auto assert = new CorsacTest("ecs");
     assert->equal("types_fundamental_test", types_fundamental_test(assert), true);
     assert->start();
 //    cout << "[TITLE] corsac::slice" << endl;
