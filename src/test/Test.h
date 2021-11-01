@@ -33,6 +33,7 @@ struct CorsacBlock
 	std::function<bool()> test;
 	std::string name;
 	std::string comment;
+	int comment_color;
 
 	CorsacBlock(std::string name, std::function<bool()> func)
 	{
@@ -48,6 +49,7 @@ class CorsacTest
 		std::vector<CorsacBlock> tests;
 		std::vector<CorsacTest> blocks;
 		int amount_space;
+		int comment_color;
 
 		void space_print(int amount){
 			for (int i = 0; i <= amount; i++)
@@ -103,7 +105,7 @@ class CorsacTest
 				if(cheked_test.comment.size() > 0){
 
 					this->space_print(this->amount_space+4);
-					this->set_color(STANDART);
+					this->set_color(cheked_test.comment_color);
 					std::cout << "> " << cheked_test.comment << std::endl;
 				}
 			}
@@ -142,9 +144,21 @@ class CorsacTest
 			return sum;
 		}
 
+		void set_comment_color(int color)
+		{
+			this->comment_color = color;
+		}
+
 		void add_block(std::string name, std::function<void(CorsacTest*)> func_block)
 		{
 			func_block(this->create_block(name));		
+		}
+
+		CorsacTest*  add(std::string name, std::function<bool()> test)
+		{
+			this->tests.push_back(CorsacBlock(name, test));
+		
+			return this;
 		}
 
 		template <typename T, typename C>
@@ -185,14 +199,6 @@ class CorsacTest
 
 			return this;
 		}
-
-		CorsacTest*  add(std::string name, std::function<bool()> test)
-		{
-			this->tests.push_back(CorsacBlock(name, test));
-		
-			return this;
-		}
-
 
 		CorsacTest*  nt()
 		{
@@ -267,6 +273,13 @@ class CorsacTest
 		void add_comment(std::string comment)
 		{
 			this->tests[this->tests.size()-1].comment = comment;
+			this->tests[this->tests.size()-1].comment_color = this->comment_color;
+		}
+
+		void add_comment(std::string comment, int color)
+		{
+			this->tests[this->tests.size()-1].comment = comment;
+			this->tests[this->tests.size()-1].comment_color = color;
 		}
 
 		void start()

@@ -6,6 +6,8 @@ int main()
 {
 	auto t = CorsacTest("Chek");
 
+	t.set_comment_color(RED);
+
 	t.equal("test0", 0, 1);
 	t.equal("test0", 0, 1);
 	t.equal("test0", 0, 1);
