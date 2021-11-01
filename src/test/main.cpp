@@ -10,8 +10,8 @@ int main()
 	t.equal("test0", 0, 1);
 	t.equal("test0", 0, 1);
 	t.equal("test0", 0, 1);
-	t.equal("test0", 0, 1);
-	t.equal("test0", 1, 1);
+	t.equal("test2", 0, 1)->nt();
+	t.equal("asdsad", 1, 1)->add_comment("Chek Comment");
 	t.equal("test0", 1, 1);
 	t.equal("test0", 1, 1);
 
