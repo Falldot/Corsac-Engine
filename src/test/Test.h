@@ -13,6 +13,11 @@
 #ifndef CORSAC_TEST
 #define CORSAC_TEST
 
+#define STANDART 6
+#define GREEN 10
+#define RED 12
+#define YELLOW 14
+
 #include <functional>
 #include <vector>
 #include <windows.h> 
@@ -45,13 +50,78 @@ class CorsacTest
 			return &this->blocks[this->blocks.size()-1];
 		}
 
+		void set_color(int color)
+		{
+
+			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+			SetConsoleTextAttribute(hConsole, color);
+		}
+
+		int start_test()
+		{
+			unsigned int start_time = clock();
+			this->set_color(STANDART);
+			this->space_print(this->amount_space);
+			std::cout << this->name_block  << ": "<< std::endl;
+
+			int error = 0;
+
+			for(auto i = 0; i < this->tests.size(); i++)
+			{
+				this->space_print(this->amount_space+3);
+
+
+				auto result = this->tests[i]();
+
+				if(result){
+					this->set_color(GREEN);
+					std::cout << "ok:    ";
+				}
+				else{
+					this->set_color(RED);
+					std::cout << "er:    ";
+					error++;
+				}
+
+				std::cout << this->names[i] <<std::endl;
+			}
+
+			for(auto i = 0; i < this->blocks.size(); i++)
+			{
+				error += this->blocks[i].start_test();
+			}
+
+
+			unsigned int end_time = clock(); 
+			unsigned int search_time = end_time - start_time; 
+			this->set_color(YELLOW);
+
+
+			this->space_print(this->amount_space);
+			std::cout << "Test time: " << search_time/1000.0 << std::endl;
+			this->set_color(STANDART);
+			return error;
+		}
+
+
 	public:
 		CorsacTest(std::string name, int amount_space = 0){
 			this->name_block = name;
 			this->amount_space = amount_space;
 		};
 
-		CorsacTest* add_block(std::string name, std::function<void(CorsacTest*)> func_block)
+		int amount_test(){
+			int sum = this->tests.size();
+			for (int i = 0; i < this->blocks.size(); ++i)
+			{
+				sum += this->blocks[i].amount_test(); 
+			}
+
+			return sum;
+		}
+
+		void add_block(std::string name, std::function<void(CorsacTest*)> func_block)
 		{
 			func_block(this->create_block(name));		
 		}
@@ -172,45 +242,16 @@ class CorsacTest
 
 		void start()
 		{
-			unsigned int start_time = clock();
-			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+			int error = this->start_test();
+			this->set_color(GREEN);
+			std::cout << " ok:    " << this->amount_test()-error << std::endl;
+			
+			this->set_color(RED);
+			std::cout << " er:    " << error << std::endl;
 
-
-			SetConsoleTextAttribute(hConsole, 6);
-			this->space_print(this->amount_space);
-			std::cout << this->name_block  << ": "<< std::endl;
-
-			for(auto i = 0; i < this->tests.size(); i++)
-			{
-				this->space_print(this->amount_space+3);
-
-
-				if(this->tests[i]()){
-					SetConsoleTextAttribute(hConsole, 10);
-					std::cout << "ok:    ";
-				}
-				else{
-					SetConsoleTextAttribute(hConsole, 12);
-					std::cout << "er:    ";
-				}
-
-				std::cout << this->names[i] <<std::endl;
-			}
-
-			for(auto i = 0; i < this->blocks.size(); i++)
-			{
-				this->blocks[i].start();
-			}
-
-
-			unsigned int end_time = clock(); 
-			unsigned int search_time = end_time - start_time; 
-			SetConsoleTextAttribute(hConsole, 6);
-
-
-			this->space_print(this->amount_space);
-			std::cout << "Test time: " << search_time/1000.0 << std::endl;
+			this->set_color(STANDART);
 		}
+		
 };
 
 #endif
