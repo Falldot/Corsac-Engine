@@ -25,13 +25,27 @@
 #include <iostream>
 #include <ctime>
 #include <typeinfo>
+#include <io.h>
+#include <fcntl.h>
+
+struct CorsacBlock
+{
+	std::function<bool()> test;
+	std::string name;
+	std::string comment;
+
+	CorsacBlock(std::string name, std::function<bool()> func)
+	{
+		this->test = func;
+		this->name = name;
+	}
+};
 
 class CorsacTest
 {
 	private:
 		std::string name_block;
-		std::vector<std::function<bool()>> tests;
-		std::vector<std::string> names;
+		std::vector<CorsacBlock> tests;
 		std::vector<CorsacTest> blocks;
 		int amount_space;
 
@@ -69,22 +83,29 @@ class CorsacTest
 
 			for(auto i = 0; i < this->tests.size(); i++)
 			{
+				auto cheked_test = this->tests[i];
+				auto result = cheked_test.test();
+
 				this->space_print(this->amount_space+3);
-
-
-				auto result = this->tests[i]();
 
 				if(result){
 					this->set_color(GREEN);
-					std::cout << "ok:    ";
+					std::cout << "\xfb:    ";
 				}
 				else{
 					this->set_color(RED);
-					std::cout << "er:    ";
+					std::cout << "X:    ";
 					error++;
 				}
 
-				std::cout << this->names[i] <<std::endl;
+				std::cout << cheked_test.name <<std::endl;
+
+				if(cheked_test.comment.size() > 0){
+
+					this->space_print(this->amount_space+4);
+					this->set_color(STANDART);
+					std::cout << "> " << cheked_test.comment << std::endl;
+				}
 			}
 
 			for(auto i = 0; i < this->blocks.size(); i++)
@@ -165,17 +186,20 @@ class CorsacTest
 			return this;
 		}
 
-		void add(std::string name, std::function<bool()> test)
+		CorsacTest*  add(std::string name, std::function<bool()> test)
 		{
-			this->tests.push_back(test);
-			this->names.push_back(name);
+			this->tests.push_back(CorsacBlock(name, test));
+		
+			return this;
 		}
 
 
-		void nt()
+		CorsacTest*  nt()
 		{
-			auto condition = this->tests[this->tests.size()-1];
-			this->tests[this->tests.size()-1] = [=]()mutable{ return !condition();};
+			auto condition = this->tests[this->tests.size()-1].test;
+			this->tests[this->tests.size()-1].test = [=]()mutable{ return !condition();};
+		
+			return this;
 		}
 
 		template <typename T>
@@ -216,10 +240,10 @@ class CorsacTest
 		/**
 		*	Проверка на наличие элемента в массиве
 		*	 
-		*	@param name	- Имя теста
-		*	@start 	- Итератор начала массива
-		*	@end 	- Итератор конца массива
-		*	@search - Элемент который ищется в массиве  
+		*	@param name		- Имя теста
+		*	@param start 	- Итератор начала массива
+		*	@param end 		- Итератор конца массива
+		*	@paramsearch 	- Элемент который ищется в массиве  
 		*/
 		template <typename iter, typename T>
 		CorsacTest* is_contein(std::string name, iter start, iter end, T search)
@@ -240,14 +264,19 @@ class CorsacTest
 			return this;
 		}
 
+		void add_comment(std::string comment)
+		{
+			this->tests[this->tests.size()-1].comment = comment;
+		}
+
 		void start()
 		{
 			int error = this->start_test();
 			this->set_color(GREEN);
-			std::cout << " ok:    " << this->amount_test()-error << std::endl;
+			std::cout << " \xfb:    " << this->amount_test()-error << std::endl;
 			
 			this->set_color(RED);
-			std::cout << " er:    " << error << std::endl;
+			std::cout << " X:    " << error << std::endl;
 
 			this->set_color(STANDART);
 		}
