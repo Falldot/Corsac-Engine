@@ -3,13 +3,25 @@
 
 #include <time.h>
 
+#define TEST_ENABLE
+#include "../../test/Test.h"
+
+#include "internall/type_traits.h"
+#include "internall/type_fundamental.h"
+#include "internall/type_transformation.h"
+#include "internall/type_compound.h"
+
 #include "types_fundamental_test.h"
+#include "types_compound_test.h"
 
 using namespace std;
 
 int main() {
     auto assert = new CorsacTest("ecs");
-    assert->equal("types_fundamental_test", types_fundamental_test(assert), true);
+    {
+        assert->is_true("types_fundamental_test", types_fundamental_test(assert));
+        assert->is_true("types_compound_test", types_compound_test(assert));
+    }
     assert->start();
 //    cout << "[TITLE] corsac::slice" << endl;
 //	{

@@ -86,7 +86,7 @@ class CorsacTest
 		}
 
 		template <typename T>
-		CorsacTest* is_false(std::name, T f)
+		CorsacTest* is_false(std::string name, T f)
 		{
 			this->add(name, [=]()mutable
 			{
@@ -96,7 +96,7 @@ class CorsacTest
 		}
 
 		template <typename T>
-		CorsacTest* is_true(std::name, T f)
+		CorsacTest* is_true(std::string name, T f)
 		{
 			this->add(name, [=]()mutable
 			{
@@ -122,17 +122,10 @@ class CorsacTest
 		/**
 		*	Проверка на наличие элемента в массиве
 		*	 
-<<<<<<< HEAD
 		*	@param name	- Имя теста
 		*	@start 	- Итератор начала массива
 		*	@end 	- Итератор конца массива
 		*	@search - Элемент который ищется в массиве  
-=======
-		*	@param name 	- Имя теста
-		*	@param @start 	- Итератор начала массива
-		*	@param @end 	- Итератор конца массива
-		*	@param @search - Элемент который ищется в массиве  
->>>>>>> a07bd78be65ea8c62b726460a9e7089db96d0819
 		*/
 		template <typename iter, typename T>
 		CorsacTest* is_contein(std::string name, iter start, iter end, T search)
