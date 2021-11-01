@@ -7,6 +7,21 @@
 #ifndef CORSAC_ENGINE_TYPES_COMPOUND_TEST_H
 #define CORSAC_ENGINE_TYPES_COMPOUND_TEST_H
 
+template <typename T, typename U>
+struct decay_equiv :
+        std::is_same<typename std::decay<T>::type, U>::type
+{};
+
+template <class T>
+struct Number { T n; };
+
+template <class T, class U>
+Number<typename std::common_type<T, U>::type> operator+(const Number<T>& lhs,
+                                                        const Number<U>& rhs)
+{
+    return {lhs.n + rhs.n};
+}
+
 bool types_compound_test(CorsacTest* assert)
 {
     assert->add_block("extent", [](CorsacTest* assert)
@@ -93,6 +108,76 @@ bool types_compound_test(CorsacTest* assert)
             assert->is_false("param is <C>", corsac::is_union<C>::value);
             assert->is_false("param is int", corsac::is_union<int>::value);
         #endif
+    });
+    assert->add_block("is_convertible", [](CorsacTest* assert)
+    {
+        struct A {};
+        class B {};
+        enum class C {};
+        assert->is_true("param is <A>", corsac::is_class<A>::value);
+        assert->is_true("param is <B>", corsac::is_class<B>::value);
+        assert->is_false("param is <C>", corsac::is_class<C>::value);
+        assert->is_false("param is int", corsac::is_class<int>::value);
+    });
+    assert->add_block("is_enum", [](CorsacTest* assert)
+    {
+        struct A { enum E { }; };
+        enum E {};
+        enum class Ec : int {};
+        assert->is_false("param is A", corsac::is_enum<A>::value);
+        assert->is_true("param is E", corsac::is_enum<E>::value);
+        assert->is_true("param is A::E", corsac::is_enum<A::E>::value);
+        assert->is_false("param is int", corsac::is_enum<int>::value);
+        assert->is_true("param is Ec", corsac::is_enum<Ec>::value);
+    });
+    assert->add_block("is_polymorphic", [](CorsacTest* assert)
+    {
+        struct A {int m;};
+        struct B {virtual void foo();};
+        struct C : B {};
+        struct D {virtual ~D() = default;};
+        assert->is_false("param is A", corsac::is_polymorphic<A>::value);
+        assert->is_true("param is B", corsac::is_polymorphic<B>::value);
+        assert->is_true("param is C", corsac::is_polymorphic<C>::value);
+        assert->is_true("param is D", corsac::is_polymorphic<D>::value);
+    });
+    assert->add_block("is_object", [](CorsacTest* assert)
+    {
+        class A {};
+        assert->is_true("param is int", corsac::is_object<int>::value);
+        assert->is_false("param is int&", corsac::is_object<int&>::value);
+        assert->is_true("param is A", corsac::is_object<A>::value);
+        assert->is_false("param is A&", corsac::is_object<A&>::value);
+    });
+    assert->add_block("is_scalar", [](CorsacTest* assert)
+    {
+        class A {};
+        assert->is_true("param is int", corsac::is_scalar<int>::value);
+        assert->is_false("param is A", corsac::is_scalar<A>::value);
+    });
+    assert->add_block("is_compound", [](CorsacTest* assert)
+    {
+        class A {};
+        assert->is_true("param is A", corsac::is_compound<A>::value);
+        assert->is_false("param is int", corsac::is_compound<int>::value);
+    });
+    assert->add_block("decay", [](CorsacTest* assert)
+    {
+        assert->is_true("param is int&&, int", decay_equiv<int&&, int>::value);
+        assert->is_true("param is int&, int", decay_equiv<int&, int>::value);
+        assert->is_true("param is int&&, int", decay_equiv<int&&, int>::value);
+        assert->is_true("param is const int&, int", decay_equiv<const int&, int>::value);
+        assert->is_true("param is int[2], int*", decay_equiv<int[2], int*>::value);
+        assert->is_true("param is int(int), int(*)(int)", decay_equiv<int(int), int(*)(int)>::value);
+    });
+    assert->add_block("decay", [](CorsacTest* assert)
+    {
+        Number<int> i1 = {1}, i2 = {2};
+        Number<double> d1 = {2.3}, d2 = {3.5};
+        assert->equal("param is Number<int>", (i1 + i2).n, 3);
+        assert->equal("param is Number<double>", (i1 + d2).n, 4.5);
+        assert->equal("param is Number<double>", (d1 + i2).n, 4.3);
+        assert->equal("param is Number<double>", (d1 + d2).n, 5.8);
     });
     return true;
 }
