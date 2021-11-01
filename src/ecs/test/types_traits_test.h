@@ -1,0 +1,8 @@
+//
+// Created by surve on 02.11.2021.
+//
+
+#ifndef CORSAC_ENGINE_TYPES_TRAITS_TEST_H
+#define CORSAC_ENGINE_TYPES_TRAITS_TEST_H
+
+#endif //CORSAC_ENGINE_TYPES_TRAITS_TEST_H
