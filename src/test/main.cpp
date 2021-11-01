@@ -9,7 +9,7 @@ int main()
 
 	t.equal("test0", 0, 1);
 
-	t.add_block("test1", Block{
+	t.add_block("test1", TestBlock{
 		assert->equal("1 and 1", 1, 1);
 	});
 

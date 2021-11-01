@@ -6,7 +6,7 @@
 
 #ifdef TEST_BLOCK
 
-#define Block [=](CorsacTest* assert)mutable
+#define TestBlock [=](CorsacTest* assert)mutable
 
 #endif
 
