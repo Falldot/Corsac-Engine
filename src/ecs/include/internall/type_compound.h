@@ -231,7 +231,7 @@ namespace corsac
     *    struct D : B, C {};
     *    is_convertible<D*, A*>::value; // Генерирует ошибку компилятора.
     */
-    #if defined(CORSAC_COMPILER_MSVC)
+    #if defined(CORSAC_COMPILER_MSVC) || defined(CORSAC_COMPILER_CLANG)
         template <typename From, typename To>
             struct is_convertible : public integral_constant<bool, __is_convertible_to(From, To)>{};
     #else
@@ -503,7 +503,7 @@ namespace corsac
     *     - нет virtual functions
     *     - нет инициализаторов по умолчанию
     */
-    #if defined(CORSAC_COMPILER_MSVC)
+    #if defined(CORSAC_COMPILER_MSVC) || defined(CORSAC_COMPILER_GCC)
         template <typename T>
         struct is_aggregate : public integral_constant<bool, __is_aggregate(T)> {};
     #else
