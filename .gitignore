@@ -13,3 +13,4 @@ build
 cmake-build-debug/
 cmake-build-debug_clang/
 cmake-build-debug_gcc/
+cmake-build-debug_vs/

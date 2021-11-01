@@ -125,6 +125,31 @@ namespace corsac
     struct type_or<false, false, false, false, false> { static const bool value = false; };
 
     /**
+    * type_and
+    *
+    * Это служебный класс для создания признаков составного типа.
+    */
+    template <bool b1, bool b2, bool b3 = true, bool b4 = true, bool b5 = true>
+    struct type_and;
+
+    template <bool b1, bool b2, bool b3, bool b4, bool b5>
+    struct type_and{ static const bool value = false; };
+
+    template <>
+    struct type_and<true, true, true, true, true>{ static const bool value = true; };
+
+    /**
+    * type_not
+    *
+    * Это служебный класс для создания признаков составного типа.
+    */
+    template <bool b>
+    struct type_not{ static const bool value = true; };
+
+    template <>
+    struct type_not<true>{ static const bool value = false; };
+
+    /**
     * is_reference
     *
     * is_reference<T>::value == true тогда и только тогда, когда T являеться ссылочным типом (Ссылка l-значения или ссылка r-значения).
@@ -225,6 +250,53 @@ namespace corsac
     */
     template <typename T>
     typename corsac::add_rvalue_reference<T>::type declval() noexcept;
+
+    /**
+    * remove_reference
+    *
+    * Удаляет обращение по ссылки из типа.
+    *
+    * remove_reference преобразователь типа, который удаляет верхний уровень
+    * обращения по ссылки (при наличии) из типа, к которому оно применимо.
+    * Для типа T, remove_reference<T&>::type эквивалентен.
+    */
+    template <typename T> struct remove_reference     { using type = T; };
+    template <typename T> struct remove_reference<T&> { using type = T; };
+    template <typename T> struct remove_reference<T&&>{ using type = T; };
+
+    template<typename T>
+        using remove_reference_t = typename remove_reference<T>::type;
+
+    /**
+    * remove_cvref
+    *
+    * Удаляет const и volatile из ссылочного типа.
+    *
+    * Признак преобразования remove_cvref удаляет квалификацию const и или volatile верхнего уровня
+    * (если есть) из ссылочного типа, к которому она применяется.
+    *  Для данного типа remove_cvref<T& const volatile>::type эквивалентен T.
+    *  Например, remove_cv<int& volatile>::type эквивалентен int.
+    */
+    template <typename T>
+    struct remove_cvref { using type = typename corsac::remove_volatile<typename corsac::remove_const<typename corsac::remove_reference<T>::type>::type>::type; };
+
+    template<typename T>
+        using remove_cvref_t = typename remove_cvref<T>::type;
+
+    /**
+    * conditional
+    *
+    * Предоставляет тип typedef члена, который определяется как T если B true
+    *  во время компиляции, или как F если B false.
+    */
+    template<bool B, typename T, typename F>
+    struct conditional { using type = T; };
+
+    template <typename T, typename F>
+    struct conditional<false, T, F> { using type = F; };
+
+    template <bool B, class T, class F>
+        using conditional_t = typename conditional<B, T, F>::type;
 }
 
 #endif //CORSAC_TYPE_FUNDAMENTAL_H

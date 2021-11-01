@@ -1,6 +1,9 @@
-// Copyright (c) 2021 Corsac Team
-// License: MIT License
-// MIT License web page: https://opensource.org/licenses/MIT
+//
+// internal/type_fundamental_test.h
+//
+// Created by Falldot on 01.11.2021.
+// Copyright (c) 2021 Corsac. All rights reserved.
+//
 #ifndef CORSAC_TYPES_H
 #define CORSAC_TYPES_H
 
@@ -13,10 +16,8 @@
 #include "internall/type_transformation.h"
 #include "internall/type_compound.h"
 
-void types()
+bool types_fundamental_test(CorsacTest* assert)
 {
-    auto assert = new CorsacTest();
-
     assert->equal("is_void", 1, 1);
     {
         assert->equal("\t param is void", corsac::is_void<void>::value, 1);
@@ -74,8 +75,7 @@ void types()
             assert->equal("\t param class", corsac::is_hat_type<T>::value, 0);
         #endif
     }
-
-    assert->start();
+    return true;
 }
 
 #endif // Header include guard

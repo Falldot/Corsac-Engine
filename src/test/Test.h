@@ -120,7 +120,7 @@ class CorsacTest
 					std::cout << "   er: ";
 				}
 
-				std::cout << this->names[i] <<std::endl<<std::endl ;
+				std::cout << this->names[i] <<std::endl;
 			}
 
 			unsigned int end_time = clock(); 
