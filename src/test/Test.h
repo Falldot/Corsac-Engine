@@ -4,6 +4,12 @@
 
 #endif
 
+#ifdef TEST_BLOCK
+
+#define Block [=](CorsacTest* assert)mutable
+
+#endif
+
 #ifndef CORSAC_TEST
 #define CORSAC_TEST
 
@@ -64,10 +70,23 @@ class CorsacTest
 		}
 
 		template <typename T, typename C>
-		CorsacTest* equal(std::string name, T f, C t){
+		CorsacTest* equal_type(std::string name, T f, C t){
 			this->add(name, [=]()mutable
 			{
 				if(typeid(f).name() == typeid(t).name())
+					return true;
+
+				return false;
+			});
+
+			return this;
+		}
+
+		template <typename T, typename C>
+		CorsacTest* equal(std::string name, T f, C t){
+			this->add(name, [=]()mutable
+			{
+				if(f == t)
 					return true;
 
 				return false;
