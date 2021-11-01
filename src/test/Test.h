@@ -146,10 +146,10 @@ class CorsacTest
 		/**
 		*	Проверка на наличие элемента в массиве
 		*	 
-		*	@param name 	- Имя теста
-		*	@param @start 	- Итератор начала массива
-		*	@param @end 	- Итератор конца массива
-		*	@param @search - Элемент который ищется в массиве  
+		*	@param name	- Имя теста
+		*	@start 	- Итератор начала массива
+		*	@end 	- Итератор конца массива
+		*	@search - Элемент который ищется в массиве  
 		*/
 		template <typename iter, typename T>
 		CorsacTest* is_contein(std::string name, iter start, iter end, T search)
