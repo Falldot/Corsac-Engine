@@ -18,12 +18,31 @@
 class CorsacTest
 {
 	private:
-
+		std::string name_block;
 		std::vector<std::function<bool()>> tests;
 		std::vector<std::string> names;
+		std::vector<CorsacTest> blocks;
+		int amount_space;
+
+		void space_print(int amount){
+			for (int i = 0; i <= amount; i++)
+			{
+				std::cout << " ";
+			}
+		}
 
 	public:
-		CorsacTest(){};
+		CorsacTest(std::string name, int amount_space = 0){
+			this->name_block = name;
+			this->amount_space = amount_space;
+		};
+
+		CorsacTest* add_block(std::string name)
+		{
+			this->blocks.push_back(CorsacTest(name, this->amount_space+3));
+
+			return &this->blocks[this->blocks.size()-1];
+		}
 
 		template <typename T, typename C>
 		CorsacTest* equal_ref(std::string name, T* f, C* t){
@@ -79,10 +98,13 @@ class CorsacTest
 		}
 
 
-		/*
-		*
-		*
-		*
+		/**
+		*	Проверка на наличие элемента в массиве
+		*	 
+		*	@name 	- Имя теста
+		*	@start 	- Итератор начала массива
+		*	@end 	- Итератор конца массива
+		*	@search - Элемент который ищется в массиве  
 		*/
 		template <typename iter, typename T>
 		CorsacTest* is_contein(std::string name, iter start, iter end, T search)
@@ -109,26 +131,45 @@ class CorsacTest
 			unsigned int start_time = clock();
 			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
+
+			SetConsoleTextAttribute(hConsole, 6);
+			this->space_print(this->amount_space);
+			std::cout << this->name_block  << ": "<< std::endl;
+
 			for(auto i = 0; i < this->tests.size(); i++)
 			{
+				this->space_print(this->amount_space+3);
+
+
 				if(this->tests[i]()){
 					SetConsoleTextAttribute(hConsole, 10);
-					std::cout << "   ok: ";
+					std::cout << "ok: ";
 				}
 				else{
 					SetConsoleTextAttribute(hConsole, 12);
-					std::cout << "   er: ";
+					std::cout << "er: ";
 				}
 
 				std::cout << this->names[i] <<std::endl;
+<<<<<<< HEAD
+=======
 			}
+
+			for(auto i = 0; i < this->blocks.size(); i++)
+			{
+				this->blocks[i].start();
+>>>>>>> 759eee2fbe9b75f0baa16839a21aac21efd3912f
+			}
+
 
 			unsigned int end_time = clock(); 
 			unsigned int search_time = end_time - start_time; 
 			SetConsoleTextAttribute(hConsole, 6);
+
+			
+			this->space_print(this->amount_space);
 			std::cout << "Test time: " << search_time/1000.0 << std::endl;
 		}
-
 };
 
 #endif
