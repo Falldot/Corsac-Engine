@@ -296,18 +296,21 @@ namespace corsac
     * Невозможно определить, является ли тип объединением, без помощи компилятора.
     * Пользователь может заставить что-то оцениваться как объединение через CORSAC_DECLARE_UNION.
     */
-    #if defined(CORSAC_COMPILER_MSVC)
-            template <typename T>
-            struct is_union : public integral_constant<bool, __is_union(T)>{};
+    #if defined(CORSAC_COMPILER_MSVC) || defined(CORSAC_COMPILER_GCC)
+        template <typename T>
+        struct is_union : public integral_constant<bool, __is_union(T)>{};
     #else
-        template <typename T> struct is_union : public false_type{};
+        template <class T> struct is_union : public integral_constant<bool, false> {};
     #endif
+
+    template <class T> struct is_union<T const> : public is_union<T>{};
+    template <class T> struct is_union<T volatile const> : public is_union<T>{};
+    template <class T> struct is_union<T volatile> : public is_union<T>{};
 
     #define CORSAC_DECLARE_UNION(T) namespace corsac{ template <> struct is_union<T> : public true_type{}; template <> struct is_union<const T> : public true_type{}; }
 
     template<typename T>
          constexpr bool is_union_v = is_union<T>::value;
-
 
     /**
     * is_class

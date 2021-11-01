@@ -22,6 +22,78 @@ bool types_compound_test(CorsacTest* assert)
         assert->is_true("param is int[]", corsac::is_array<int[]>::value);
         assert->is_false("param is int", corsac::is_array<int>::value);
     });
+    assert->add_block("is_array_of_known_bounds", [](CorsacTest* assert)
+    {
+        assert->is_true("param is int[10]", corsac::is_array_of_known_bounds<int[10]>::value);
+        assert->is_false("param is int[]", corsac::is_array_of_known_bounds<int[]>::value);
+        assert->is_false("param is int", corsac::is_array_of_known_bounds<int>::value);
+    });
+    assert->add_block("is_array_of_known_bounds", [](CorsacTest* assert)
+    {
+        assert->is_false("param is int[10]", corsac::is_array_of_unknown_bounds<int[10]>::value);
+        assert->is_true("param is int[]", corsac::is_array_of_unknown_bounds<int[]>::value);
+        assert->is_false("param is int", corsac::is_array_of_unknown_bounds<int>::value);
+    });
+    assert->add_block("is_member_function_pointer", [](CorsacTest* assert)
+    {
+        struct A {void member() {}};
+        assert->is_true("param is decltype(&class::member)", corsac::is_member_function_pointer<decltype(&A::member)>::value);
+        assert->is_false("param is void", corsac::is_member_function_pointer<void>::value);
+    });
+    assert->add_block("is_member_pointer", [](CorsacTest* assert)
+    {
+        class A {};
+        assert->is_true("param is int(class::*)", corsac::is_member_pointer<int(A::*)>::value);
+        assert->is_false("param is void", corsac::is_member_pointer<void>::value);
+    });
+    assert->add_block("is_member_object_pointer", [](CorsacTest* assert)
+    {
+        class A {};
+        assert->is_true("param is int(class::*)", corsac::is_member_object_pointer<int(A::*)>::value);
+        assert->is_false("param is int(class::*)()", corsac::is_member_object_pointer<int(A::*)()>::value);
+    });
+    assert->add_block("is_pointer", [](CorsacTest* assert)
+    {
+        class A {};
+        assert->is_false("param is class", corsac::is_pointer<A>::value);
+        assert->is_true("param is class*", corsac::is_pointer<A*>::value);
+        assert->is_false("param is class&", corsac::is_pointer<A&>::value);
+        assert->is_true("param is class**", corsac::is_pointer<A**>::value);
+        assert->is_false("param is decltype(nullptr)", corsac::is_pointer<decltype(nullptr)>::value);
+    });
+    assert->add_block("is_convertible", [](CorsacTest* assert)
+    {
+        class A {};
+        class B : public A {};
+        class C {};
+        class D { public: operator C() { return c; }  C c; };
+        assert->is_true("param is <B*, A*>", corsac::is_convertible<B*, A*>::value);
+        assert->is_false("param is <A*, B*>*", corsac::is_convertible<A*, B*>::value);
+        assert->is_true("param is <D, C>", corsac::is_convertible<D, C>::value);
+        assert->is_false("param is <B*, C*>", corsac::is_convertible<B*, C*>::value);
+    });
+    assert->add_block("is_union", [](CorsacTest* assert)
+    {
+        struct A {};
+        typedef union {
+            int a;
+            float b;
+        } B;
+        struct C {
+            B d;
+        };
+        #if defined(CORSAC_COMPILER_MSVC) || defined(CORSAC_COMPILER_GCC)
+            assert->is_false("param is <A>", corsac::is_union<A>::value);
+            assert->is_true("param is <B>", corsac::is_union<B>::value);
+            assert->is_false("param is <C>", corsac::is_union<C>::value);
+            assert->is_false("param is int", corsac::is_union<int>::value);
+        #else
+            assert->is_false("param is <A>", corsac::is_union<A>::value);
+            assert->is_true("param is <B>", corsac::is_union<B>::value);
+            assert->is_false("param is <C>", corsac::is_union<C>::value);
+            assert->is_false("param is int", corsac::is_union<int>::value);
+        #endif
+    });
     return true;
 }
 
