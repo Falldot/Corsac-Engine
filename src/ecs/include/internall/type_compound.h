@@ -296,18 +296,8 @@ namespace corsac
     * Невозможно определить, является ли тип объединением, без помощи компилятора.
     * Пользователь может заставить что-то оцениваться как объединение через CORSAC_DECLARE_UNION.
     */
-    #if defined(CORSAC_COMPILER_MSVC) || defined(CORSAC_COMPILER_GCC)
-        template <typename T>
-        struct is_union : public integral_constant<bool, __is_union(T)>{};
-    #else
-        template <class T> struct is_union : public integral_constant<bool, false> {};
-    #endif
-
-    template <class T> struct is_union<T const> : public is_union<T>{};
-    template <class T> struct is_union<T volatile const> : public is_union<T>{};
-    template <class T> struct is_union<T volatile> : public is_union<T>{};
-
-    #define CORSAC_DECLARE_UNION(T) namespace corsac{ template <> struct is_union<T> : public true_type{}; template <> struct is_union<const T> : public true_type{}; }
+    template <typename T>
+    struct is_union : public integral_constant<bool, __is_union(T)>{};
 
     template<typename T>
          constexpr bool is_union_v = is_union<T>::value;
@@ -316,23 +306,13 @@ namespace corsac
     * is_class
     *
     * is_class<T>::value == true тогда и только тогда, когда T класс или структура
-    * (а не тип union).
+    * (не тип union).
     *
     * Без специальной помощи компилятора невозможно различить объединения и классы.
     * В результате is_class ошибочно оценит значение true для типов объединения.
     */
-    #if defined(CORSAC_COMPILER_MSVC)
-		template <typename T>
-		struct is_class : public integral_constant<bool, __is_class(T)>{};
-    #else
-        template <typename U> static yes_type is_class_helper(void (U::*)());
-        template <typename U> static no_type  is_class_helper(...);
-
-        template <typename T>
-        struct is_class : public integral_constant<bool,
-                sizeof(is_class_helper<T>(0)) == sizeof(yes_type) && !is_union<T>::value
-        >{};
-    #endif
+    template <typename T>
+    struct is_class : public integral_constant<bool, __is_class(T)>{};
 
     template<typename T>
     constexpr bool is_class_v = is_class<T>::value;
@@ -343,40 +323,11 @@ namespace corsac
     * is_enum<T>::value == true тогда и только тогда, когда T преднадлежит перечисляемому типу.
     *
     */
-    #if defined(CORSAC_COMPILER_MSVC)
-        template <typename T>
-                    struct is_enum : public integral_constant<bool, __is_enum(T)>{};
-    #else
-        struct int_convertible{ int_convertible(int); };
-
-        template <bool is_arithmetic_or_reference>
-        struct is_enum_helper { template <typename T> struct nest : public is_convertible<T, int_convertible>{}; };
-
-        template <>
-        struct is_enum_helper<true> { template <typename T> struct nest : public false_type {}; };
-
-        template <typename T>
-        struct is_enum_helper2
-        {
-            using selector  = type_or<is_arithmetic<T>::value, is_reference<T>::value, is_class<T>::value>;
-            using helper_t  = is_enum_helper<selector::value>;
-            using ref_t     = typename add_reference<T>::type;
-            using result    = typename helper_t::template nest<ref_t>;
-        };
-
-        template <typename T>
-        struct is_enum : public integral_constant<bool, is_enum_helper2<T>::result::value>{};
-
-        template <> struct is_enum<void>                : public false_type {};
-        template <> struct is_enum<void const>          : public false_type {};
-        template <> struct is_enum<void volatile>       : public false_type {};
-        template <> struct is_enum<void const volatile> : public false_type {};
-    #endif
+    template <typename T>
+        struct is_enum : public integral_constant<bool, __is_enum(T)>{};
 
     template<typename T>
     constexpr bool is_enum_v = is_enum<T>::value;
-
-    #define CORSAC_DECLARE_ENUM(T) namespace corsac{ template <> struct is_enum<T> : public true_type{}; template <> struct is_enum<const T> : public true_type{}; }
 
     /**
     * is_polymorphic
@@ -385,52 +336,8 @@ namespace corsac
     * который объявляет или наследует виртуальную функцию.
     * is_polymorphic может применяться только к полным типам.
     */
-    #if defined(CORSAC_COMPILER_MSVC)
-        template <typename T>
-        struct is_polymorphic : public integral_constant<bool, __is_polymorphic(T)>{};
-    #else
-        template <typename T>
-        struct is_polymorphic_imp1
-        {
-            using t = typename remove_cv<T>::type;
-
-            struct helper_1 : public t
-            {
-                helper_1();
-                ~helper_1() throw();
-                char pad[64];
-            };
-
-            struct helper_2 : public t
-            {
-                helper_2();
-                virtual ~helper_2() throw();
-                char pad[64];
-            };
-
-            static const bool value = (sizeof(helper_1) == sizeof(helper_2));
-        };
-
-        template <typename T>
-        struct is_polymorphic_imp2{ static const bool value = false; };
-
-        template <bool is_class>
-        struct is_polymorphic_selector{ template <typename T> struct rebind{ using type = is_polymorphic_imp2<T>; }; };
-
-        template <>
-        struct is_polymorphic_selector<true>{ template <typename T> struct rebind{ using type = is_polymorphic_imp1<T>; }; };
-
-        template <typename T>
-        struct is_polymorphic_value{
-            using selector = is_polymorphic_selector<is_class<T>::value>;
-            using binder = typename selector::template rebind<T>;
-            using imp_type = typename binder::type;
-            static const bool value = imp_type::value;
-        };
-
-        template <typename T>
-        struct is_polymorphic : public integral_constant<bool, is_polymorphic_value<T>::value>{};
-    #endif
+    template <typename T>
+    struct is_polymorphic : public integral_constant<bool, __is_polymorphic(T)>{};
 
     template<typename T>
         constexpr bool is_polymorphic_v = is_polymorphic<T>::value;
