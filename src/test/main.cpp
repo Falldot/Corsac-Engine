@@ -1,11 +1,9 @@
 #define TEST_BLOCK
 #include "Test.h"
 
-using namespace Corsac;
-
 int main()
 {
-	auto assert = Block("Global Test Block");
+	auto assert = Corsac::Block("Global Test Block");
 
 	assert.set_comment_color(YELLOW);
 
@@ -18,10 +16,26 @@ int main()
 	assert.equal("test6", 1, 1)->add_comment("Chek Castom color", STANDART);
 	assert.equal("test7", 1, 1);
 
-	assert.add_block("Test Block 1", TestBlock{
+	assert.add_block("Test Block 1", TestingBlock{
 		assert->equal("test8", 1, 1);
 		assert->equal("test9", 1, 0);
 		assert->equal("test10", 1, 0);
+
+		assert->add_block_comment("32142142");
+	});
+
+	assert.add_block("Test Block 1", TestingBlock{
+		assert->equal("test8", 1, 1);
+		assert->equal("test9", 1, 0);
+		assert->equal("test10", 1, 0);
+		assert->equal("test8", 1, 1);
+		assert->equal("test9", 1, 0);
+		assert->equal("test10", 1, 0);
+		assert->equal("test8", 1, 1);
+		assert->equal("test9", 1, 0);
+		assert->equal("test10", 1, 0);
+
+		assert->add_block_comment("32142142");
 	});
 
 

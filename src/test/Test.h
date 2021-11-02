@@ -6,7 +6,7 @@
 
 #ifdef TEST_BLOCK
 
-#define TestBlock [=](Corsac::Block* assert)mutable
+#define TestingBlock [=](Corsac::Block* assert)mutable
 
 #endif
 
@@ -25,29 +25,25 @@
 #include <iostream>
 #include <ctime>
 #include <typeinfo>
-#include <io.h>
-#include <fcntl.h>
 
 
-/*
-	@desc - Структура теста.
 
-	@field test 			- Лямбда функция с тестом.
-	@field name 			- Имя теста.
-	@field comment 			- Комментарий к тесту.
-	@field comment_color 	- Цвет комментария.
-*/		
 namespace Corsac{
+	/*
+		@desc - Структура теста.
 
+		@field test 			- Лямбда функция с тестом.
+		@field name 			- Имя теста.
+		@field comment 			- Комментарий к тесту.
+		@field comment_color 	- Цвет комментария.
+	*/		
 	struct Test
 	{
 		std::function<bool()> test;
 		std::string name;
 		std::string comment;
 		
-
 		int comment_color;
-		int block_comment;
 
 		Test(std::string name, std::function<bool()> func)
 		{
@@ -60,13 +56,14 @@ namespace Corsac{
 	{
 		private:
 			std::string name_block;
-			
+			std::string block_comment;
+
 			std::vector<Test> tests;
 			std::vector<Block> blocks;
 
 
 			int amount_space;
-			int comment_color;
+			int comment_color = STANDART;
 
 
 			/*
@@ -81,7 +78,7 @@ namespace Corsac{
 				}
 			}
 
-			/*
+			/* 
 				@desc - Добавляет новый блок тестов.
 
 				@param name - Имя подблока.
@@ -107,43 +104,59 @@ namespace Corsac{
 			}
 
 
+			void print(std::string text, int color, bool new_line = false)
+			{
+				if(new_line){
+					this->set_color(color);
+					std::cout << text << std::endl;
+				} else {
+					this->set_color(color);
+					std::cout << text;
+				}
+			}
+
+			void print_block_name()
+			{
+				this->space_print(this->amount_space);
+				this->print(this->name_block + ": ", STANDART, true);
+				if(this->block_comment.size() > 0){
+					this->space_print(this->amount_space+1);
+					this->print("> "+this->block_comment, this->comment_color, true);
+				}
+			}			
+
+
 			/*
 				@desc - Запускает тесты и подтесты.
 			*/
 			int start_test()
 			{
 				unsigned int start_time = clock();
-
-				this->set_color(STANDART);
-				this->space_print(this->amount_space);
-				std::cout << this->name_block  << ": "<< std::endl;
-
 				int error = 0;
+
+				
+				this->print_block_name();
 
 				for(auto i = 0; i < this->tests.size(); i++)
 				{
-					auto cheked_test = this->tests[i];
-					auto result = cheked_test.test();
+					auto result = this->tests[i].test();
 
 					this->space_print(this->amount_space+3);
 
-					if(result){
-						this->set_color(GREEN);
-						std::cout << "\xfb:    ";
-					}
-					else{
-						this->set_color(RED);
-						std::cout << "X:    ";
+					if(result)
+						this->print("\xfb:    ", GREEN);
+					else
+					{
+						this->print("X:    ", RED);
 						error++;
 					}
 
-					std::cout << cheked_test.name <<std::endl;
+					std::cout << this->tests[i].name <<std::endl;
 
-					if(cheked_test.comment.size() > 0){
+					if(this->tests[i].comment.size() > 0){
 
 						this->space_print(this->amount_space+4);
-						this->set_color(cheked_test.comment_color);
-						std::cout << "> " << cheked_test.comment << std::endl;
+						this->print("> "+this->tests[i].comment, this->tests[i].comment_color, true);
 					}
 				}
 
@@ -153,13 +166,11 @@ namespace Corsac{
 				}
 
 
-				unsigned int end_time = clock(); 
-				unsigned int search_time = end_time - start_time; 
-				this->set_color(YELLOW);
-
+				double search_time = (clock() - start_time)/1000.0;
 
 				this->space_print(this->amount_space);
-				std::cout << "Test time: " << search_time/1000.0 << std::endl;
+				this->print("Test time: "+std::to_string(search_time), YELLOW, true);
+
 				this->set_color(STANDART);
 				return error;
 			}
@@ -374,11 +385,20 @@ namespace Corsac{
 				return this;
 			}
 
+			/*
+				@desc - Добавляет комментарий после блока.
+
+				@param comment - Текст комментария.  
+			*/
+			void add_block_comment(std::string comment)
+			{
+				this->block_comment = comment;
+			}
 
 			/*
 				@desc - Добавляет комментарий после теста.
 
-				@param comment - Имя теста.  
+				@param comment - Текст комментария.  
 			*/
 			void add_comment(std::string comment)
 			{
