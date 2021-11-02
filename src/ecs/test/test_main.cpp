@@ -13,6 +13,7 @@
 
 #include "types_fundamental_test.h"
 #include "types_compound_test.h"
+#include "types_traits_test.h"
 
 using namespace std;
 
@@ -21,6 +22,7 @@ int main() {
     {
         assert->is_true("types_fundamental_test", types_fundamental_test(assert));
         assert->is_true("types_compound_test", types_compound_test(assert));
+        assert->is_true("types_traits_test", types_traits_test(assert));
     }
     assert->start();
 //    cout << "[TITLE] corsac::slice" << endl;

@@ -9,14 +9,14 @@
 
 template <typename T, typename U>
 struct decay_equiv :
-        std::is_same<typename std::decay<T>::type, U>::type
+        corsac::is_same<typename std::decay<T>::type, U>::type
 {};
 
 template <class T>
 struct Number { T n; };
 
 template <class T, class U>
-Number<typename std::common_type<T, U>::type> operator+(const Number<T>& lhs,
+Number<typename corsac::common_type<T, U>::type> operator+(const Number<T>& lhs,
                                                         const Number<U>& rhs)
 {
     return {lhs.n + rhs.n};
@@ -85,7 +85,8 @@ bool types_compound_test(CorsacTest* assert)
         assert->is_true("param is <B*, A*>", corsac::is_convertible<B*, A*>::value);
         assert->is_false("param is <A*, B*>*", corsac::is_convertible<A*, B*>::value);
         assert->is_true("param is <D, C>", corsac::is_convertible<D, C>::value);
-        assert->is_false("param is <B*, C*>", corsac::is_convertible<B*, C*>::value);
+        assert->is_false("param is <B*, C*>", corsac::is_convertible<B*, C*>::value)
+                ->add_comment("compiler dependent");
     });
     assert->add_block("is_union", [](CorsacTest* assert)
     {
@@ -97,27 +98,11 @@ bool types_compound_test(CorsacTest* assert)
         struct C {
             B d;
         };
-        #if defined(CORSAC_COMPILER_MSVC) || defined(CORSAC_COMPILER_GCC)
-            assert->is_false("param is <A>", corsac::is_union<A>::value);
-            assert->is_true("param is <B>", corsac::is_union<B>::value);
-            assert->is_false("param is <C>", corsac::is_union<C>::value);
-            assert->is_false("param is int", corsac::is_union<int>::value);
-        #else
-            assert->is_false("param is <A>", corsac::is_union<A>::value);
-            assert->is_true("param is <B>", corsac::is_union<B>::value);
-            assert->is_false("param is <C>", corsac::is_union<C>::value);
-            assert->is_false("param is int", corsac::is_union<int>::value);
-        #endif
-    });
-    assert->add_block("is_convertible", [](CorsacTest* assert)
-    {
-        struct A {};
-        class B {};
-        enum class C {};
-        assert->is_true("param is <A>", corsac::is_class<A>::value);
-        assert->is_true("param is <B>", corsac::is_class<B>::value);
-        assert->is_false("param is <C>", corsac::is_class<C>::value);
-        assert->is_false("param is int", corsac::is_class<int>::value);
+        assert->is_false("param is <A>", corsac::is_union<A>::value);
+        assert->is_true("param is <B>", corsac::is_union<B>::value);
+        assert->is_false("param is <C>", corsac::is_union<C>::value);
+        assert->is_false("param is int", corsac::is_union<int>::value)
+                ->add_comment("compiler dependent");
     });
     assert->add_block("is_enum", [](CorsacTest* assert)
     {
@@ -128,7 +113,8 @@ bool types_compound_test(CorsacTest* assert)
         assert->is_true("param is E", corsac::is_enum<E>::value);
         assert->is_true("param is A::E", corsac::is_enum<A::E>::value);
         assert->is_false("param is int", corsac::is_enum<int>::value);
-        assert->is_true("param is Ec", corsac::is_enum<Ec>::value);
+        assert->is_true("param is Ec", corsac::is_enum<Ec>::value)
+                ->add_comment("compiler dependent");
     });
     assert->add_block("is_polymorphic", [](CorsacTest* assert)
     {
@@ -139,7 +125,8 @@ bool types_compound_test(CorsacTest* assert)
         assert->is_false("param is A", corsac::is_polymorphic<A>::value);
         assert->is_true("param is B", corsac::is_polymorphic<B>::value);
         assert->is_true("param is C", corsac::is_polymorphic<C>::value);
-        assert->is_true("param is D", corsac::is_polymorphic<D>::value);
+        assert->is_true("param is D", corsac::is_polymorphic<D>::value)
+            ->add_comment("compiler dependent");
     });
     assert->add_block("is_object", [](CorsacTest* assert)
     {
@@ -170,7 +157,7 @@ bool types_compound_test(CorsacTest* assert)
         assert->is_true("param is int[2], int*", decay_equiv<int[2], int*>::value);
         assert->is_true("param is int(int), int(*)(int)", decay_equiv<int(int), int(*)(int)>::value);
     });
-    assert->add_block("decay", [](CorsacTest* assert)
+    assert->add_block("common_type", [](CorsacTest* assert)
     {
         Number<int> i1 = {1}, i2 = {2};
         Number<double> d1 = {2.3}, d2 = {3.5};
@@ -178,6 +165,14 @@ bool types_compound_test(CorsacTest* assert)
         assert->equal("param is Number<double>", (i1 + d2).n, 4.5);
         assert->equal("param is Number<double>", (d1 + i2).n, 4.3);
         assert->equal("param is Number<double>", (d1 + d2).n, 5.8);
+    });
+    assert->add_block("is_aggregate", [](CorsacTest* assert)
+    {
+        struct A { int x, y; };
+        struct B { B (int, const char*) {} };
+        assert->is_true("param is A", corsac::is_aggregate<A>::value);
+        assert->is_false("param is B", corsac::is_aggregate<B>::value)
+                ->add_comment("compiler dependent, CLANG is not support!!!");
     });
     return true;
 }
