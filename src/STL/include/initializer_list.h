@@ -1,0 +1,8 @@
+//
+// Created by Falldot on 08.11.2021.
+//
+
+#ifndef CORSAC_INITIALIZER_LIST_H
+#define CORSAC_INITIALIZER_LIST_H
+
+#endif //CORSAC_INITIALIZER_LIST_H

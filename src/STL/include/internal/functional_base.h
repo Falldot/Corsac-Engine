@@ -1,0 +1,8 @@
+//
+// Created by Falldot on 09.11.2021.
+//
+
+#ifndef CORSAC_FUNCTIONAL_BASE_H
+#define CORSAC_FUNCTIONAL_BASE_H
+
+#endif //CORSAC_FUNCTIONAL_BASE_H

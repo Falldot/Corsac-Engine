@@ -1,0 +1,8 @@
+//
+// Created by Falldot on 09.11.2021.
+//
+
+#ifndef CORSAC_INTEGER_SEQUENCE_H
+#define CORSAC_INTEGER_SEQUENCE_H
+
+#endif //CORSAC_INTEGER_SEQUENCE_H
