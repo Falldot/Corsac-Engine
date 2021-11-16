@@ -65,9 +65,7 @@ func (a *TAbility) СalculateModifer(e *ecs.Entity) int {
 type TAI func(*ecs.Entity, *ecs.Entity)
 
 func (ai *TAI) Call(e1, e2 *ecs.Entity) {
-	*ai = func(e1, e2 *ecs.Entity) {
-
-	}
+	*ai = func(e1, e2 *ecs.Entity) {}
 }
 
 ///////////////////////////////////////////////////////////
@@ -133,9 +131,7 @@ func AIPattern(e1, e2 *ecs.Entity) {
 	var target TypeAbility
 	if 
 
-	for _, ability := range e1.Get(CAbility).(TAbilities) {
-
-	}
+	for _, ability := range e1.Get(CAbility).(TAbilities) {}
 
 	if e1.Get(CAbility).(TAbilities)[0].costMana > e1.Get(CMana) ||
 		e1.Get(CAbility).(TAbilities)[0].costEnergy > e1.Get(CEnergy) {

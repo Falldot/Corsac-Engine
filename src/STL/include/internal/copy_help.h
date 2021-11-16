@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "internall/config.h"
+#include "internal/config.h"
 
 #include "type_traits.h"
 #include "iterator.h"
@@ -130,7 +130,7 @@ namespace corsac
      *      OutputIterator move(InputIterator first, InputIterator last, OutputIterator result)
      *      {
      *          while(first != last)
-     *              *result++ = eastl::move(*first++);
+     *              *result++ = corsac::move(*first++);
      *          return result;
      *      }
      */

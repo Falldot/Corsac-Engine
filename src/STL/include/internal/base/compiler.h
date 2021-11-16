@@ -7,6 +7,15 @@
 #ifndef CORSAC_ENGINE_COMPILER_H
 #define CORSAC_ENGINE_COMPILER_H
 
+// CORSAC_COMPILER_HAS_FCORSACTURE
+#ifndef CORSAC_COMPILER_HAS_FCORSACTURE
+    #if defined(__clang__)
+        #define CORSAC_COMPILER_HAS_FCORSACTURE(x) __has_feature(x)
+    #else
+        #define CORSAC_COMPILER_HAS_FCORSACTURE(x) 0
+    #endif
+#endif
+
 #ifndef INTERNAL_STRINGIZE
     #define INTERNAL_STRINGIZE(x) INTERNAL_PRIMITIVE_STRINGIZE(x)
 #endif
@@ -49,10 +58,10 @@
 
 // CORSAC_COMPILER_WINRTCX_ENABLED
 //
-// Определяется как 1, если в компиляторе включена доступная поддержка C ++ CX, в противном случае - не определено.
+// Определяется как 1, если в компиляторе включена доступная поддержка C++ CX, в противном случае - не определено.
 // Это, в частности, означает, что соответствующая единица компиляции была создана с включенными компонентами среды выполнения Windows,
 // обычно с использованием флагов компилятора «-ZW». Этот параметр позволяет использовать объекты типа шляпы '^'
-// с подсчетом ссылок и другие ключевые слова C ++ CX, такие как «ref new».
+// с подсчетом ссылок и другие ключевые слова C++ CX, такие как «ref new».
 #if !defined(CORSAC_COMPILER_WINRTCX_ENABLED) && defined(__cplusplus_winrt)
     #define CORSAC_COMPILER_WINRTCX_ENABLED 1
 #endif
@@ -79,6 +88,26 @@
     #elif (defined(CORSAC_COMPILER_MSVC)) && !defined(_CPPUNWIND)
         #define CORSAC_COMPILER_NO_UNWIND 1
     #endif
+#endif
+
+/**
+* CORSAC_COMPILER_NO_RTTI
+*
+* Если CORSAC_COMPILER_NO_RTTI определен, то RTTI (информация о типе времени выполнения)
+* недоступен (возможно, из-за того, что он отключен пользователем).
+*/
+#if defined(__EDG_VERSION__) && !defined(__RTTI)
+    #define CORSAC_COMPILER_NO_RTTI 1
+#elif defined(__clang__) && !CORSAC_COMPILER_HAS_FCORSACTURE(cxx_rtti)
+    #define CORSAC_COMPILER_NO_RTTI 1
+#elif defined(__IBMCPP__) && !defined(__RTTI_ALL__)
+    #define CORSAC_COMPILER_NO_RTTI 1
+#elif defined(__GXX_ABI_VERSION) && !defined(__GXX_RTTI)
+    #define CORSAC_COMPILER_NO_RTTI 1
+#elif defined(_MSC_VER) && !defined(_CPPRTTI)
+    #define CORSAC_COMPILER_NO_RTTI 1
+#elif defined(__ARMCC_VERSION) && defined(__TARGET_CPU_MPCORE) && !defined(__RTTI)
+    #define CORSAC_COMPILER_NO_RTTI 1
 #endif
 
 #endif //CORSAC_ENGINE_COMPILER_H

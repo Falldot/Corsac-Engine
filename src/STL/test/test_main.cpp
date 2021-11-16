@@ -1,19 +1,22 @@
-#include <iostream>
 
 
-#include <time.h>
+#include "type_traits.h"
+
+#include "internal/type_fundamental.h"
+#include "internal/type_transformation.h"
+#include "internal/type_compound.h"
+#include "internal/type_pod.h"
+#include "internal/type_properties.h"
+
+
+#include "iterator.h"
+#include "memory.h"
+#include "algorithm.h"
+#include "functional.h"
+#include "random.h"
 
 #define TEST_ENABLE
 #include "../../test/Test.h"
-
-
-#include "internall/type_traits.h"
-#include "internall/type_fundamental.h"
-#include "internall/type_transformation.h"
-#include "internall/type_compound.h"
-#include "internall/type_pod.h"
-#include "internall/type_properties.h"
-
 
 #include "type_traits_test.h"
 #include "type_properties_test.h"
@@ -23,12 +26,15 @@
 #include "type_compound_test.h"
 
 
+
+
+
 using namespace std;
 
 int main() {
     auto assert = new Corsac::Block("STL");
 
-    assert->add_block("types", [](Corsac::Block *assert) {
+    assert->add_block("type", [](Corsac::Block *assert) {
         assert->add_block("type_fundamental_test", [](Corsac::Block *assert) {
             type_fundamental_test(assert);
         });
@@ -49,7 +55,7 @@ int main() {
         });
     });
     assert->start();
-//    cout << "[TITLE] corsac::slice" << endl;
+// cout << "[TITLE] corsac::slice" << endl;
 //	{
 //		cout << "[TEST] init when not set size" << endl;
 //		{
@@ -134,8 +140,8 @@ int main() {
 //        const Person* last = arr.back();
 //        arr.pop_back();
 //        cout << last->X << endl;
-
-//    {
+//
+//{
 //        clock_t start_time = clock();
 //        double elapsed_time = (double)(clock() - start_time);
 //        int play = 1;
@@ -159,9 +165,9 @@ int main() {
 //            }
 //        }
 //        printf("Vector Benchmark\t %d \t %f \n", count, elapsed_time);
-//    }
+//}
 //
-//    {
+//{
 //        clock_t start_time = clock();
 //        double elapsed_time = (double)(clock() - start_time);
 //        int play = 1;
@@ -184,7 +190,7 @@ int main() {
 //            }
 //        }
 //        printf("Slicee Benchmark\t %d \t %f \n", count, elapsed_time);
-//    }
+//}
 
 
     return 0;

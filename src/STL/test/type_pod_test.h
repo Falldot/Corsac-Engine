@@ -34,92 +34,6 @@ bool type_pod_test(Corsac::Block* assert)
         assert->is_false("param is B {int m1; private:int m2;}",  corsac::is_standard_layout<B>::value);
         assert->is_false("param is C {virtual void foo();}",  corsac::is_standard_layout<C>::value);
     });
-    assert->add_block("has_trivial_constructor", [](Corsac::Block* assert) {
-        struct A {int m;};
-        struct B {B(B const&) {}};
-        struct C {virtual void foo() {};};
-        struct D {int m;D(D const&) = default; D(int x): m(x+1) {} };
-        assert->is_true("param is A {int m;}",  corsac::has_trivial_constructor<A>::value);
-        assert->is_false("param is B {B(B const&) {}}",  corsac::has_trivial_constructor<B>::value);
-        assert->is_false("param is C {virtual void foo();}",  corsac::has_trivial_constructor<C>::value);
-        assert->is_false("param is D {int m;D(D const&) = default; D(int x): m(x+1) {} };",  corsac::has_trivial_constructor<D>::value);
-    });
-    assert->add_block("has_trivial_copyable", [](Corsac::Block* assert) {
-        struct A {int m;};
-        struct B {B(B const&) {}};
-        struct C {virtual void foo() {};};
-        struct D {int m;D(D const&) = default; D(int x): m(x+1) {} };
-        assert->is_true("param is A {int m;}",  corsac::has_trivial_copyable<A>::value);
-        assert->is_false("param is B {B(B const&) {}}",  corsac::has_trivial_copyable<B>::value);
-        assert->is_false("param is C {virtual void foo();}",  corsac::has_trivial_copyable<C>::value);
-        assert->is_true("param is D {int m;D(D const&) = default; D(int x): m(x+1) {} };",  corsac::has_trivial_copyable<D>::value);
-    });
-    assert->add_block("has_trivial_assign", [](Corsac::Block* assert) {
-        struct A {int m;};
-        struct B {B(B const&) {}};
-        struct C {virtual void foo() {};};
-        struct D {int m;D(D const&) = default; D(int x): m(x+1) {} };
-        assert->is_true("param is A {int m;}",  corsac::has_trivial_assign<A>::value);
-        assert->is_true("param is B {B(B const&) {}}",  corsac::has_trivial_assign<B>::value);
-        assert->is_false("param is C {virtual void foo();}",  corsac::has_trivial_assign<C>::value);
-        assert->is_true("param is D {int m;D(D const&) = default; D(int x): m(x+1) {} };",  corsac::has_trivial_assign<D>::value);
-    });
-    assert->add_block("has_trivial_destructor", [](Corsac::Block* assert) {
-        struct A {int m;};
-        struct B {~B() noexcept {};};
-        struct C {~C() = default;};
-        struct D {int m; ~D() = default;};
-        assert->is_true("param is A {int m;}",  corsac::has_trivial_destructor<A>::value);
-        assert->is_false("param is B {~B() noexcept {};}",  corsac::has_trivial_destructor<B>::value);
-        assert->is_true("param is C {~C() = default;}",  corsac::has_trivial_destructor<C>::value);
-        assert->is_true("param is D {int m; ~D() = default;}",  corsac::has_trivial_destructor<D>::value);
-    });
-    assert->add_block("has_nothrow_constructor", [](Corsac::Block* assert) {
-        struct A {int m;};
-        struct B {B(B const&) {}};
-        struct C {virtual void foo() {};};
-        struct D {int m;D(D const&) = default; D(int x): m(x+1) {} };
-        assert->is_true("param is A {int m;}",  corsac::has_nothrow_constructor<A>::value);
-        assert->is_false("param is B {B() noexcept {};}",  corsac::has_nothrow_constructor<B>::value);
-        assert->is_true("param is C {virtual void foo() {};}",  corsac::has_nothrow_constructor<C>::value);
-        assert->is_false("param is D {int m;D(D const&) = default; D(int x): m(x+1) {} }",  corsac::has_nothrow_constructor<D>::value);
-    });
-    assert->add_block("has_nothrow_copy", [](Corsac::Block* assert) {
-        struct A {int m;};
-        struct B {B(B const&) {}};
-        struct C {virtual void foo() {};};
-        struct D {int m;D(D const&) = default; D(int x): m(x+1) {} };
-        assert->is_true("param is A {int m;}",  corsac::has_nothrow_copy<A>::value);
-        assert->is_false("param is B {B() noexcept {};}",  corsac::has_nothrow_copy<B>::value);
-        assert->is_true("param is C C {virtual void foo() {};}",  corsac::has_nothrow_copy<C>::value);
-        assert->is_true("param isD {int m;D(D const&) = default; D(int x): m(x+1) {} }",  corsac::has_nothrow_copy<D>::value);
-    });
-    assert->add_block("has_nothrow_assign", [](Corsac::Block* assert) {
-        struct A {int m;};
-        struct B {B(B const&) {}};
-        struct C {virtual void foo() {};};
-        struct D {int m;D(D const&) = default; D(int x): m(x+1) {} };
-        assert->is_true("param is A {int m;}",  corsac::has_nothrow_assign<A>::value);
-        assert->is_true("param is B {B() noexcept {};}",  corsac::has_nothrow_assign<B>::value);
-        assert->is_true("param is C {virtual void foo() {};};",  corsac::has_nothrow_assign<C>::value);
-        assert->is_true("param is D {int m;D(D const&) = default; D(int x): m(x+1) {} }",  corsac::has_nothrow_assign<D>::value);
-    });
-    assert->add_block("has_virtual_destructor", [](Corsac::Block* assert) {
-        struct A {int m;};
-        struct B {~B() noexcept {};};
-        struct C {~C() = default;};
-        struct D {int m; virtual ~D() {};};
-        assert->is_false("param is A {int m;}",  corsac::has_virtual_destructor<A>::value);
-        assert->is_false("param is B {~B() noexcept {};}",  corsac::has_virtual_destructor<B>::value);
-        assert->is_false("param is C {~C() = default;}",  corsac::has_virtual_destructor<C>::value);
-        assert->is_true("param is D {int m; ~D() = default;}",  corsac::has_virtual_destructor<D>::value);
-    });
-    assert->add_block("is_literal_type", [](Corsac::Block* assert) {
-        struct A {int m;};
-        struct B {virtual ~B() {};};
-        assert->is_true("param is A {int m;}",  corsac::is_literal_type<A>::value);
-        assert->is_false("param is B B {virtual ~B() {};}",  corsac::is_literal_type<B>::value);
-    });
     assert->add_block("is_abstract", [](Corsac::Block* assert) {
         struct A {int m;};
         struct B {virtual void foo() {};};
@@ -152,13 +66,122 @@ bool type_pod_test(Corsac::Block* assert)
         assert->is_false("param is Foo",  corsac::is_trivially_constructible<Foo, int>::value);
         assert->is_false("param is Foo",  corsac::is_trivially_constructible<Foo, int, double>::value);
     });
-    assert->add_block("is_trivially_default_constructible", [](Corsac::Block* assert) {
+    assert->add_block("is_trivial", [](Corsac::Block* assert) {
+        struct A {int m;};
+        struct B {B() {}};
+        assert->is_true("param is A {int m;}",  corsac::is_trivial<A>::value);
+        assert->is_false("param is B {B() {}}",  corsac::is_trivial<B>::value);
+    });
+    assert->add_block("is_nothrow_constructible", [](Corsac::Block* assert) {
+        class Foo {int v1;double v2;public:Foo(int n) : v1(n), v2() {}Foo(int n, double f) noexcept : v1(n), v2(f) {}};
+        assert->is_false("param is Foo",  corsac::is_nothrow_constructible<Foo, int>::value);
+        assert->is_true("param is Foo",  corsac::is_nothrow_constructible<Foo, int, double>::value);
+    });
+    assert->add_block("is_default_constructible", [](Corsac::Block* assert) {
         struct A {std::string str;};
         struct B {int n;B() = default;};
-        assert->is_false("param is A {std::string str;}",  corsac::is_trivially_default_constructible<A>::value);
-        assert->is_true("param is B {int n;B() = default;}",  corsac::is_trivially_default_constructible<B>::value);
+        assert->is_true("param is {std::string str;}",  corsac::is_default_constructible<A>::value);
+        assert->is_true("param is {int n;B() = default;}",  corsac::is_default_constructible<B>::value);
     });
-
+    assert->add_block("is_nothrow_default_constructible", [](Corsac::Block* assert) {
+        struct A {std::string str;};
+        struct B {int n;B() = default;};
+        assert->is_true("param is {std::string str;}",  corsac::is_nothrow_default_constructible<A>::value);
+        assert->is_true("param is {int n;B() = default;}",  corsac::is_nothrow_default_constructible<B>::value);
+    });
+    assert->add_block("is_nothrow_default_constructible", [](Corsac::Block* assert) {
+        struct A {std::string str;};
+        struct B {int n;B() = default;};
+        assert->is_true("param is {std::string str;}",  corsac::is_nothrow_default_constructible<A>::value);
+        assert->is_true("param is {int n;B() = default;}",  corsac::is_nothrow_default_constructible<B>::value);
+    });
+    assert->add_block("is_constructible", [](Corsac::Block* assert) {
+        class Foo {int v1;double v2;public:Foo(int n) : v1(n), v2() {}Foo(int n, double f) noexcept : v1(n), v2(f) {}};
+        assert->is_true("param is Foo",  corsac::is_constructible<Foo, int>::value);
+    });
+    assert->add_block("is_trivially_copy_constructible", [](Corsac::Block* assert) {
+        struct A {std::string str;};
+        struct B {int n;B() = default;};
+        assert->is_false("param is {std::string str;}",  corsac::is_trivially_copy_constructible<A>::value);
+        assert->is_true("param is {int n;B() = default;}",  corsac::is_trivially_copy_constructible<B>::value);
+    });
+    assert->add_block("is_nothrow_copy_constructible", [](Corsac::Block* assert) {
+        struct A {std::string str;};
+        struct B {int n;B() = default;};
+        assert->is_false("param is {std::string str;}",  corsac::is_nothrow_copy_constructible<A>::value);
+        assert->is_true("param is {int n;B() = default;}",  corsac::is_nothrow_copy_constructible<B>::value);
+    });
+    assert->add_block("is_move_constructible", [](Corsac::Block* assert) {
+        struct NoMove {NoMove(const NoMove&) {}};
+        assert->is_true("param is {NoMove(const NoMove&) {}",  corsac::is_move_constructible<NoMove>::value);
+    });
+    assert->add_block("is_trivially_move_constructible", [](Corsac::Block* assert) {
+        struct A {std::string str;};
+        struct B {int n;B() = default;};
+        assert->is_false("param is {std::string str;}",  corsac::is_trivially_move_constructible<A>::value);
+        assert->is_true("param is {int n;B() = default;}",  corsac::is_trivially_move_constructible<B>::value);
+    });
+    assert->add_block("is_assignable", [](Corsac::Block* assert) {
+        assert->is_false("param is int, int",  corsac::is_assignable<int, int>::value);
+        assert->is_true("param is int&, int",  corsac::is_assignable<int&, int>::value);
+        assert->is_false("param is int, double",  corsac::is_assignable<int, double>::value);
+    });
+    assert->add_block("is_lvalue_assignable", [](Corsac::Block* assert) {
+        class A {};
+        assert->is_true("param is A",  corsac::is_copy_assignable<A>::value);
+        assert->is_true("param is A&",  corsac::is_copy_assignable<A&>::value);
+    });
+    assert->add_block("is_trivially_assignable", [](Corsac::Block* assert) {
+        struct A {int n;};
+        assert->is_true("param is A",  corsac::is_trivially_assignable<A&, const A&>::value);
+    });
+    assert->add_block("is_nothrow_assignable", [](Corsac::Block* assert) {
+        assert->is_true("param is int&, double",  corsac::is_nothrow_assignable<int&, double>::value);
+    });
+    assert->add_block("is_copy_assignable", [](Corsac::Block* assert) {
+        assert->is_false("param is int[2]",  corsac::is_copy_assignable<int[2]>::value);
+    });
+    assert->add_block("is_trivially_copy_assignable", [](Corsac::Block* assert) {
+        struct A {int n;};
+        assert->is_true("param is {int n;}",  corsac::is_trivially_copy_assignable<A>::value);
+    });
+    assert->add_block("is_nothrow_copy_assignable", [](Corsac::Block* assert) {
+        assert->is_true("param is int",  corsac::is_nothrow_copy_assignable<int>::value);
+    });
+    assert->add_block("is_nothrow_copy_assignable", [](Corsac::Block* assert) {
+        assert->is_true("param is int",  corsac::is_nothrow_copy_assignable<int>::value);
+    });
+    assert->add_block("is_move_assignable", [](Corsac::Block* assert) {
+        struct NoMove {NoMove& operator=(const NoMove&) { return *this; }};
+        assert->is_false("param is int[2]",  corsac::is_move_assignable<int[2]>::value);
+        assert->is_true("param is {NoMove(const NoMove&) {}",  corsac::is_move_assignable<NoMove>::value);
+    });
+    assert->add_block("is_trivially_move_assignable", [](Corsac::Block* assert) {
+        struct A { int n; };
+        assert->is_true("param is { int n; }",  corsac::is_trivially_move_assignable<A>::value);
+    });
+    assert->add_block("param is is_nothrow_move_assignable", [](Corsac::Block* assert) {
+        struct NoMove {NoMove& operator=(const NoMove&) { return *this; }};
+        assert->is_true("param is std::string",  corsac::is_nothrow_move_assignable<std::string>::value);
+        assert->is_false("param is {NoMove(const NoMove&) {}}",  corsac::is_nothrow_move_assignable<NoMove>::value);
+    });
+    assert->add_block("param is is_destructible", [](Corsac::Block* assert) {
+        assert->is_true("param is std::string",  corsac::is_destructible<std::string>::value);
+    });
+    assert->add_block("param is is_trivially_destructible", [](Corsac::Block* assert) {
+        struct A {std::string str; ~A() noexcept {};};
+        struct B {int n;~B() = default;};
+        assert->is_false("param is {std::string str;}",  corsac::is_trivially_destructible<A>::value);
+        assert->is_true("param is {int n;B() = default;}",  corsac::is_trivially_destructible<B>::value);
+    });
+    assert->add_block("is_nothrow_destructible", [](Corsac::Block* assert) {
+        struct A {std::string str; ~A() noexcept {};};
+        assert->is_true("param is {std::string str; ~A() noexcept {};}",  corsac::is_nothrow_destructible<A>::value);
+    });
+    assert->add_block("is_nothrow_move_constructible", [](Corsac::Block* assert) {
+        struct NoMove {NoMove(const NoMove&) {} };
+        assert->is_false("param is {int n;~B() = default;}",  corsac::is_nothrow_move_constructible<NoMove>::value);
+    });
     return true;
 }
 

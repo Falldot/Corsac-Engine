@@ -152,7 +152,6 @@ namespace Corsac{
 					error += this->blocks[i].start_test();
 				}
 
-
 				unsigned int end_time = clock(); 
 				unsigned int search_time = end_time - start_time; 
 				this->set_color(YELLOW);

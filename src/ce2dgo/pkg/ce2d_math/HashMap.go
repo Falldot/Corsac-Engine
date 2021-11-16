@@ -33,9 +33,7 @@ func createValue(hash, value interface{}) *mapValue {
 	}
 }
 
-func (h *hashMap) addValue(key uint64, value interface{}) {
-	
-}
+func (h *hashMap) addValue(key uint64, value interface{}) {}
 
 func (h *hashMap) addString(key string, value interface{}) {
 	var newKey uint64 = 0

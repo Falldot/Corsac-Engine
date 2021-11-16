@@ -1,21 +1,38 @@
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
-project(corsac_ecs VERSION 0.1.0 LANGUAGES CXX)
+project(STL VERSION 0.1.0 LANGUAGES CXX)
+set(NAME_SPACE "corsac")
 
-include_directories(
-    include
-        include/internal
+option(${PROJECT_NAME}_TESTING "Включить модульное тестирование" ON)
+
+if (MSVC)
+    add_compile_options(
+        -Wall
+    )
+else()
+    add_compile_options(
+        -Wall -Wextra -Wpedantic -Wcast-align -Wcast-qual
+        -Wconversion -Wctor-dtor-privacy -Wenum-compare -Wfloat-equal
+        -Wnon-virtual-dtor -Wold-style-cast -Woverloaded-virtual
+        -Wredundant-decls -Wsign-conversion -Wsign-promo
+    )
+endif()
+
+if(NOT CMAKE_CXX_EXTENSIONS)
+    set(CMAKE_CXX_EXTENSIONS OFF)
+endif()
+
+if(NOT ${PROJECT_NAME}_TESTING)
+    message(STATUS "Тестирование выключено!")
+else()
+    add_subdirectory(test)
+endif()
+
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(${PROJECT_NAME} INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
 )
-
-file(GLOB SOURCES "src/*.cpp" "src/**/*.cpp")
-
-add_subdirectory(test)
-
-add_library(${PROJECT_NAME} STATIC ${SOURCES})
-set_target_properties(
-        ${PROJECT_NAME} PROPERTIES
-    CXX_STANDARD 20
-    CXX_STANDARD_REQUIRED ON
-)
-add_library(corsac::corsac_ecs ALIAS ${PROJECT_NAME})
+target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
+add_library(${NAME_SPACE}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 

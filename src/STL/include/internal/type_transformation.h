@@ -129,8 +129,7 @@ namespace corsac
             };
 
             struct no_type_helper
-            {
-            };
+            {};
 
             typedef typename
             corsac::conditional<sizeof(T) <= sizeof(signed char), char_helper,
@@ -156,8 +155,7 @@ namespace corsac
         struct make_signed_helper_0<T, false>
         {
             struct no_type_helper
-            {
-            };
+            {};
             using type = no_type_helper;
         };
 
@@ -264,14 +262,13 @@ namespace corsac
 
             struct int128_helper
             {
-                #if CORSAC_INT128_SUPPORTED && (defined(CORSAC_COMPILER_GNUC) || defined(CORSAC_COMPILER_CLANG))
+                #if CORSAC_INT128_SUPPORTED && (defined(CORSAC_COMPILER_GCC) || defined(CORSAC_COMPILER_CLANG))
                      typedef __uint128_t type;
                 #endif
             };
 
             struct no_type_helper
-            {
-            };
+            {};
 
 
             typedef typename
@@ -280,7 +277,7 @@ namespace corsac
                     corsac::conditional_t<sizeof(T) <= sizeof(unsigned int), int_helper,
                     corsac::conditional_t<sizeof(T) <= sizeof(unsigned long), long_helper,
                     corsac::conditional_t<sizeof(T) <= sizeof(unsigned long long), longlong_helper,
-            #if CORSAC_INT128_SUPPORTED && (defined(CORSAC_COMPILER_GNUC) && defined(CORSAC_COMPILER_CLANG))
+            #if CORSAC_INT128_SUPPORTED && (defined(CORSAC_COMPILER_GCC) && defined(CORSAC_COMPILER_CLANG))
                                         corsac::conditional_t<sizeof(T) <= sizeof(__uint128_t), int128_helper,
                             no_type_helper
                         >
@@ -298,8 +295,7 @@ namespace corsac
         struct make_unsigned_helper_0<T, false>
         {
             struct no_type_helper
-            {
-            };
+            {};
 
             typedef no_type_helper type;
         };
@@ -335,7 +331,7 @@ namespace corsac
     template <> struct make_unsigned<unsigned long>          { using type = unsigned long;      };
     template <> struct make_unsigned<signed long long>       { using type = unsigned long long; };
     template <> struct make_unsigned<unsigned long long>     { using type = unsigned long long; };
-    #if CORSAC_INT128_SUPPORTED && (defined(CORSAC_COMPILER_GNUC) || defined(CORSAC_COMPILER_CLANG))
+    #if CORSAC_INT128_SUPPORTED && (defined(CORSAC_COMPILER_GCC) || defined(CORSAC_COMPILER_CLANG))
         template <> struct make_unsigned<__int128_t>         { using type = __uint128_t; };
         template <> struct make_unsigned<__uint128_t>        { using type = __uint128_t; };
     #endif
@@ -510,8 +506,8 @@ namespace corsac
     * Этот подход требуется для строго соответствующих компиляторов C++,
     * поскольку прямое использование преобразования C или C++ между несвязанными типами
     * чревато возможностью неопределенного поведения во время выполнения из-за псевдонима типов.
-    * Типы Source и Dest должны быть типами POD из-за использования объединения в версиях C ++ до C ++ 11.
-    * C ++ 11 ослабляет определение POD, так что он позволяет классам с тривиальными конструкторами по умолчанию,
+    * Типы Source и Dest должны быть типами POD из-за использования объединения в версиях C++ до C++ 11.
+    * C++ 11 ослабляет определение POD, так что он позволяет классам с тривиальными конструкторами по умолчанию,
     * тогда как в предыдущих версиях этого не было, поэтому будьте осторожны при написании переносимого кода.
     *
     * Пример использования:

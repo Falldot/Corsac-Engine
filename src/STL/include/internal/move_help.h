@@ -11,9 +11,9 @@
 
 #pragma once
 
-#include "internall/base/base.h"
+#include "internal/base/base.h"
 
-#include "internall/config.h"
+#include "internal/config.h"
 #include "type_traits.h"
 
 namespace corsac
@@ -69,9 +69,9 @@ namespace corsac
     * Цель этого состоит в том, чтобы использовать автоматическое использование конструкции копирования
     * вместо конструкции перемещения, когда перемещение может вызвать исключение.
     */
-    #if EASTL_EXCEPTIONS_ENABLED
+    #if CORSAC_EXCEPTIONS_ENABLED
         template <typename T>
-        constexpr typename corsac::conditional<!eastl::is_nothrow_move_constructible<T>::value &&
+        constexpr typename corsac::conditional<!corsac::is_nothrow_move_constructible<T>::value &&
                                                         corsac::is_copy_constructible<T>::value, const T&, T&&>::type
         move_if_noexcept(T& x) noexcept
         {

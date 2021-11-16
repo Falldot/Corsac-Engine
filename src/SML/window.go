@@ -9,22 +9,14 @@ func Init() error {
 	return nil
 }
 
-func DisplaySize(x int32, y int32) {
+func DisplaySize(x int32, y int32) {}
 
-}
-
-func WindowTitle(name string) {
-
-}
+func WindowTitle(name string) {}
 
 func WindowIcon(path string) error {
 	return nil
 }
 
-func Update() {
+func Update() {}
 
-}
-
-func Destroy() {
-
-}
+func Destroy() {}

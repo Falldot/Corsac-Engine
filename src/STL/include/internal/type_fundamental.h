@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "internall/base/base.h"
+#include "internal/base/base.h"
 
 namespace corsac
 {

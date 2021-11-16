@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
-project(STL VERSION 0.1.0 LANGUAGES CXX)
+project(ECS VERSION 0.1.0 LANGUAGES CXX)
 set(NAME_SPACE "corsac")
 
 option(${PROJECT_NAME}_TESTING "Включить модульное тестирование" ON)

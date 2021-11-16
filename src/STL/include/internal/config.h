@@ -26,7 +26,7 @@
     #define CORSAC_DEBUG 0
 #endif
 
-// Отладка разработчика. Помогает разработчикам EASTL утверждать, что EASTL написан правильно.
+// Отладка разработчика. Помогает разработчикам corsac утверждать, что corsac написан правильно.
 // Обычно отключен для пользователей, поскольку он проверяет внутренние вещи, а не пользовательские.
 #ifndef CORSAC_DEV_DEBUG
     #define CORSAC_DEV_DEBUG 0
@@ -40,7 +40,7 @@
 *
 * Пример использования CORSAC_NAME_ENABLED:
 *    // pName будет определено в сборке выпуска и, таким образом, предотвратит предупреждения компилятора.
-*    void allocator::set_name(const char* EASTL_NAME(pName))
+*    void allocator::set_name(const char* CORSAC_NAME(pName))
 *    {
 *        #if CORSAC_NAME_ENABLED
 *            mpName = pName;
@@ -94,12 +94,33 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-// EASTL_ASSERT
+// CORSAC_ASSERT_MSG
+//
+// Example usage:
+//    CORSAC_ASSERT_MSG(false, "detected error condition!");
+//
+///////////////////////////////////////////////////////////////////////////////
+#ifndef CORSAC_ASSERT_MSG
+    #if CORSAC_ASSERT_ENABLED
+        #define CORSAC_ASSERT_MSG(expression, message) \
+                CORSAC_DISABLE_VC_WARNING(4127) \
+                do { \
+                    CORSAC_ANALYSIS_ASSUME(expression); \
+                    (void)((expression) || (corsac::AssertionFailure(message), 0)); \
+                } while (0) \
+                CORSAC_RESTORE_VC_WARNING()
+    #else
+        #define CORSAC_ASSERT_MSG(expression, message)
+    #endif
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
+// CORSAC_ASSERT
 //
 // Assertion macro. Can be overridden by user with a different value.
 //
 // Example usage:
-//    EASTL_ASSERT(intVector.size() < 100);
+// CORSAC_ASSERT(intVector.size() < 100);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -145,6 +166,44 @@
     #define CORSACAllocatorType corsac::allocator
 #endif
 
+///////////////////////////////////////////////////////////////////////////////
+// CORSAC_RTTI_ENABLED
+//
+// Defined as 0 or 1. Default is 1 if RTTI is supported by the compiler.
+// This define exists so that we can use some dynamic_cast operations in the
+// code without warning. dynamic_cast is only used if the specifically refers
+// to it; CORSAC won't do dynamic_cast behind your back.
+//
+// Example usage:
+//     #if CORSAC_RTTI_ENABLED
+//         pChildClass = dynamic_cast<ChildClass*>(pParentClass);
+//     #endif
+//
+///////////////////////////////////////////////////////////////////////////////
+
+#ifndef CORSAC_RTTI_ENABLED
+    #if defined(CORSAC_COMPILER_NO_RTTI) || (defined(CORSAC_COMPILER_MSVC) && defined(CORSAC_LIBRARY_DINKUMWARE) && !(defined(_HAS_EXCEPTIONS) && _HAS_EXCEPTIONS))
+        #define CORSAC_RTTI_ENABLED 0
+    #else
+        #define CORSAC_RTTI_ENABLED 1
+    #endif
+#endif
+
+/**
+* CORSAC_MINMAX_ENABLED
+*
+* Defined as 0 or 1; default is 1.
+* Указывает, доступны ли алгоритмы минимума и максимума.
+* Может быть полезно отключить алгоритмы минимума и максимума, потому что иногда
+* существуют определения минимума и максимума, которые могут конфликтовать с
+* минимальным и максимальным CORSAC. Обратите внимание, что в CORSAC уже есть альтернативные версии
+* min и max с функциями min_alt и max_alt.  Вы можете использовать их, не сталкиваясь с макросами minmax,
+* которые могут существовать.
+*/
+#ifndef CORSAC_MINMAX_ENABLED
+    #define CORSAC_MINMAX_ENABLED 1
+#endif
+
 /**
 * CORSAC_ALLOCATOR_MIN_ALIGNMENT
 *
@@ -165,7 +224,6 @@
 #ifndef CORSAC_AllocAligned
     #define CORSAC_AllocAligned(allocator, n, alignment, offset) (allocator).allocate((n), (alignment), (offset))
 #endif
-
 
 
 #endif //CORSAC_ENGINE_CONFIG_H

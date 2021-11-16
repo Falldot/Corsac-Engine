@@ -1,7 +1,7 @@
 /**
  * corsac::STL
  *
- * internall/base/compiler_traits.h
+ * internal/base/compiler_traits.h
  *
  * Created by Falldot on 08.11.2021.
  * Copyright (c) 2021 Corsac. All rights reserved.
@@ -26,11 +26,11 @@
 * помочь компилятору с помощью директивы явной ясности.
 *
 * Пример использования:
-*    if(EA_LIKELY(a == 0)) // Сообщите компилятору, что a обычно равно 0.
+*    if(CORSAC_LIKELY(a == 0)) // Сообщите компилятору, что a обычно равно 0.
 *       { ... }
 *
 * Example usage:
-*    if(EA_UNLIKELY(a == 0)) // Сообщите компилятору, что a обычно не равно 0.
+*    if(CORSAC_UNLIKELY(a == 0)) // Сообщите компилятору, что a обычно не равно 0.
 *       { ... }
 */
 #ifndef CORSAC_LIKELY
@@ -125,4 +125,71 @@
     #define CORSAC_UNUSED(x) (void)x
 #endif
 
+/**
+* CORSAC_COMPILER_INTMAX_SIZE
+*
+* Это связано с концепцией intmax_t uintmax_t, но доступно в форме
+* препроцессора, а не во время компиляции. Во время компиляции вы можете
+* использовать intmax_t и uintmax_t для использования фактических типов.
+*/
+#if defined(CORSAC_COMPILER_GCC) && defined(__x86_64__)
+    #define CORSAC_COMPILER_INTMAX_SIZE 16  // intmax_t is __int128_t (GCC extension) and is 16 bytes.
+#else
+    #define CORSAC_COMPILER_INTMAX_SIZE 8   // intmax_t is int64_t and is 8 bytes.
+#endif
+
+/**
+* wchar_t
+* Здесь мы определяем::
+*    CORSAC_WCHAR_T_NON_NATIVE
+*    CORSAC_WCHAR_SIZE = <sizeof(wchar_t)>
+*/
+#ifndef CORSAC_WCHAR_T_NON_NATIVE
+    // Компиляторы, которые всегда реализуют wchar_t как собственный тип:
+    //     COMCORSACU, новый SN и другие компиляторы на основе EDG.
+    //     GCC
+    //     Borland
+    //     SunPro
+    //     IBM Visual Age
+    #if defined(CORSAC_COMPILER_MSVC) || (defined(CORSAC_COMPILER_CLANG) && defined(CORSAC_PLATFORM_WINDOWS))
+        #ifndef _NATIVE_WCHAR_T_DEFINED
+            #define CORSAC_WCHAR_T_NON_NATIVE 1
+        #endif
+    #endif
+
+    #ifndef CORSAC_WCHAR_SIZE
+        #if defined(__WCHAR_MAX__) // GCC определяет это для большинства платформ.
+            #if (__WCHAR_MAX__ == 2147483647) || (__WCHAR_MAX__ == 4294967295)
+                #define CORSAC_WCHAR_SIZE 4
+            #elif (__WCHAR_MAX__ == 32767) || (__WCHAR_MAX__ == 65535)
+                #define CORSAC_WCHAR_SIZE 2
+            #elif (__WCHAR_MAX__ == 127) || (__WCHAR_MAX__ == 255)
+                #define CORSAC_WCHAR_SIZE 1
+            #else
+                #define CORSAC_WCHAR_SIZE 4
+            #endif
+        #elif defined(CORSAC_PLATFORM_UNIX)
+            // Стандартно для Unix wchar_t имеет значение int32_t или uint32_t.
+            // Все версии GNUC по умолчанию используют 32-битный wchar_t, но CORSAC использовал
+            // параметр командной строки GCC -fshort-wchar, чтобы установить его 16-битный.
+            // Если вы знаете, что компилятор настроен на использование wchar_t, отличного
+            // от значения по умолчанию, вам необходимо вручную определить CORSAC_WCHAR_SIZE для сборки.
+            #define CORSAC_WCHAR_SIZE 4
+        #else
+            // В Windows стандартно,чтобы wchar_t был uint16_t.
+            // GCC по умолчанию определяет wchar_t как int. Electronic Arts
+            // стандартизировала wchar_t как 16-битное значение без знака на всех
+            // консольных платформах. Учитывая, что в настоящее время нет известного
+            // способа определить размер wchar_t во время препроцессора,
+            // мы объявляем его равным 2, так как это стандарт Electronic Arts.
+            // Если у вас есть CORSAC_WCHAR_SIZE! = Sizeof (wchar_t),
+            // то ваш код может не работать, но он также не будет работать с
+            // библиотеками wchar и данными из других частей CORSAC.
+            // В GCC вы можете принудительно установить wchar_t в два байта
+            // с помощью аргумента компилятора -fshort-wchar.
+            #define CORSAC_WCHAR_SIZE 2
+    #endif
+#endif
+
+#endif //CORSAC_COMPILER_TRAITS_H
 #endif //CORSAC_COMPILER_TRAITS_H
