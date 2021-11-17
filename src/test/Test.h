@@ -104,24 +104,19 @@ namespace Corsac{
 			}
 
 
-			void print(std::string text, int color, bool new_line = false)
+			void print(std::string text, int color)
 			{
-				if(new_line){
-					this->set_color(color);
-					std::cout << text << std::endl;
-				} else {
-					this->set_color(color);
-					std::cout << text;
-				}
+				this->set_color(color);
+				std::cout << text;
 			}
 
 			void print_block_name()
 			{
 				this->space_print(this->amount_space);
-				this->print(this->name_block + ": ", STANDART, true);
+				this->print(this->name_block + ": \n", STANDART);
 				if(this->block_comment.size() > 0){
 					this->space_print(this->amount_space+1);
-					this->print("> "+this->block_comment, this->comment_color, true);
+					this->print("> "+this->block_comment+"\n", this->comment_color);
 				}
 			}			
 
@@ -136,29 +131,44 @@ namespace Corsac{
 
 				
 				this->print_block_name();
+				#ifndef CORSAC_TEST_ONLY_RESULT 
 
-				for(auto i = 0; i < this->tests.size(); i++)
-				{
-					auto result = this->tests[i].test();
-
-					this->space_print(this->amount_space+3);
-
-					if(result)
-						this->print("\xfb:    ", GREEN);
-					else
+					for(auto i = 0; i < this->tests.size(); i++)
 					{
-						this->print("X:    ", RED);
-						error++;
+						auto result = this->tests[i].test();
+
+						this->space_print(this->amount_space+3);
+
+						
+							if(result)
+								this->print("\xfb:    ", GREEN);
+							else
+							{
+								this->print("X:    ", RED);
+								error++;
+							}
+						std::cout << this->tests[i].name <<std::endl;
+
+						if(this->tests[i].comment.size() > 0)
+						{
+
+							this->space_print(this->amount_space+4);
+							this->print("> "+this->tests[i].comment+"\n", this->tests[i].comment_color);
+						}
 					}
 
-					std::cout << this->tests[i].name <<std::endl;
+				#else
 
-					if(this->tests[i].comment.size() > 0){
-
-						this->space_print(this->amount_space+4);
-						this->print("> "+this->tests[i].comment, this->tests[i].comment_color, true);
+					for(auto i = 0; i < this->tests.size(); i++)
+					{
+						if(!this->tests[i].test())
+						{
+							this->space_print(this->amount_space+3);
+							this->print("X:    " + this->tests[i].name+"\n", RED);
+							error++;
+						}
 					}
-				}
+				#endif
 
 				for(auto i = 0; i < this->blocks.size(); i++)
 				{
@@ -169,7 +179,7 @@ namespace Corsac{
 				double search_time = (clock() - start_time)/1000.0;
 
 				this->space_print(this->amount_space);
-				this->print("Test time: "+std::to_string(search_time), YELLOW, true);
+				this->print("Test time: "+std::to_string(search_time)+"\n", YELLOW);
 
 				this->set_color(STANDART);
 				return error;

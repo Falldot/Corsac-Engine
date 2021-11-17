@@ -1,5 +1,8 @@
 #define TEST_BLOCK
+#define CORSAC_TEST_ONLY_RESULT
+
 #include "Test.h"
+
 
 int main()
 {
@@ -40,7 +43,6 @@ int main()
 
 
 	assert.start();
-
 
 	return 0;
 }
