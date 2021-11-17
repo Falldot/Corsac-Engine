@@ -58,7 +58,7 @@ namespace corsac
      *      corsac::is_null_pointer<void*>::value == false
      *      corsac::is_null_pointer<NULL>::value == [cannot compile]
      */
-    // TODO: Проверить утверждение от eastl: "VC++'s handling of decltype(nullptr) is broken."
+    // TODO: Проверить утверждение от corsac: "VC++'s handling of decltype(nullptr) is broken."
     template <typename T>
     struct is_null_pointer : public corsac::is_same<typename corsac::remove_cv<T>::type, decltype(nullptr)> {};
 

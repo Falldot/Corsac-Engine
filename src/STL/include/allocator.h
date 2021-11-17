@@ -13,11 +13,6 @@
 
 #include "internal/config.h"
 
-#include <new>
-
-void* operator new[](size_t size, const char* pName, int flags, unsigned debugFlags, const char* file, int line);
-void* operator new[](size_t size, size_t alignment, size_t alignmentOffset, const char* pName, int flags, unsigned debugFlags, const char* file, int line);
-
 namespace corsac {
     /**
     * alloc_flags
@@ -46,34 +41,210 @@ namespace corsac {
     */
     class allocator {
     public:
+        explicit allocator(const char *pName = CORSAC_NAME_VAL(CORSAC_ALLOCATOR_DEFAULT_NAME));
+
+        allocator(const allocator &x);
+
+        allocator(const allocator &x, const char *pName);
+
+        allocator &operator=(const allocator &x);
+
         void *allocate(size_t n, int flags = 0);
+
         void *allocate(size_t n, size_t alignment, size_t offset, int flags = 0);
+
         void deallocate(void *p, size_t n);
-    };
 
-    inline void* allocator::allocate(size_t n, int flags)
+        const char *get_name() const;
+
+        void set_name(const char *pName);
+
+        protected:
+        #if CORSAC_NAME_ENABLED
+                const char* mpName; // Имя отладки, используемое для отслеживания памяти.
+        #endif
+        };
+} // namespace corsac
+
+// Если пользователь не заявил, что он где-то определил другую реализацию распределителя ...
+#ifndef CORSAC_USER_DEFINED_ALLOCATOR
+
+    #include <new>
+    #if !CORSAC_DLL
+        // Если вы создаете обычную библиотеку, а не собираете CORSAC как DLL ...
+        // Ожидается, что приложение определит следующие
+        // версии оператора new для приложения. Либо это, либо
+        // пользователю необходимо переопределить реализацию класса распределителя.
+        void* operator new[](size_t size, const char* pName, int flags, unsigned debugFlags, const char* file, int line);
+        void* operator new[](size_t size, size_t alignment, size_t alignmentOffset, const char* pName, int flags, unsigned debugFlags, const char* file, int line);
+    #endif
+
+    namespace corsac
     {
-        return ::new(static_cast<char*>(0), flags, 0, static_cast<char*>(0), 0) char[n];
+        CORSAC_API allocator  gDefaultAllocator;
+        CORSAC_API allocator* gpDefaultAllocator = &gDefaultAllocator;
+
+        CORSAC_API allocator* GetDefaultAllocator()
+        {
+            return gpDefaultAllocator;
+        }
+
+        CORSAC_API allocator* SetDefaultAllocator(allocator* pAllocator)
+        {
+            allocator* const pPrevAllocator = gpDefaultAllocator;
+            gpDefaultAllocator = pAllocator;
+            return pPrevAllocator;
+        }
+
+        inline allocator::allocator(const char* CORSAC_NAME(pName))
+        {
+            #if CORSAC_NAME_ENABLED
+                mpName = pName ? pName : CORSAC_ALLOCATOR_DEFAULT_NAME;
+            #endif
+        }
+
+        inline allocator::allocator(const allocator& CORSAC_NAME(alloc))
+        {
+            #if CORSAC_NAME_ENABLED
+                    mpName = alloc.mpName;
+            #endif
+        }
+
+        inline allocator::allocator(const allocator&, const char* CORSAC_NAME(pName))
+        {
+            #if CORSAC_NAME_ENABLED
+                mpName = pName ? pName : CORSAC_ALLOCATOR_DEFAULT_NAME;
+            #endif
+        }
+
+        inline allocator& allocator::operator=(const allocator& CORSAC_NAME(alloc))
+        {
+            #if CORSAC_NAME_ENABLED
+                    mpName = alloc.mpName;
+            #endif
+            return *this;
+        }
+
+        inline const char* allocator::get_name() const
+        {
+            #if CORSAC_NAME_ENABLED
+                    return mpName;
+            #else
+                    return CORSAC_ALLOCATOR_DEFAULT_NAME;
+            #endif
+        }
+
+
+        inline void allocator::set_name(const char* CORSAC_NAME(pName))
+        {
+            #if CORSAC_NAME_ENABLED
+                mpName = pName;
+            #endif
+        }
+
+        inline void* allocator::allocate(size_t n, int flags)
+        {
+            #if CORSAC_NAME_ENABLED
+                #define pName mpName
+            #else
+                #define pName CORSAC_ALLOCATOR_DEFAULT_NAME
+            #endif
+
+            #if CORSAC_DLL
+                return allocate(n, CORSAC_SYSTEM_ALLOCATOR_MIN_ALIGNMENT, 0, flags);
+            #elif (CORSAC_DEBUGPARAMS_LEVEL <= 0)
+                return ::new(0, flags, 0, 0, 0) char[n];
+            #elif (CORSAC_DEBUGPARAMS_LEVEL == 1)
+                return ::new(pName, flags, 0, 0, 0) char[n];
+                    #else
+                return ::new(pName, flags, 0, __FILE__, __LINE__) char[n];
+            #endif
+        }
+
+
+        inline void* allocator::allocate(size_t n, size_t alignment, size_t offset, int flags)
+        {
+            #if CORSAC_DLL
+                // В настоящее время у нас нет поддержки для реализации флагов при использовании
+                // новой функции оператора библиотеки времени выполнения C. Пользователь может использовать
+                // SetDefaultAllocator для переопределения распределителя по умолчанию.
+                CORSAC_UNUSED(offset); CORSAC_UNUSED(flags);
+
+                size_t adjustedAlignment = (alignment > CORSAC_PLATFORM_PTR_SIZE) ? alignment : CORSAC_PLATFORM_PTR_SIZE;
+
+                void* p = new char[n + adjustedAlignment + CORSAC_PLATFORM_PTR_SIZE];
+                void* pPlusPointerSize = (void*)((uintptr_t)p + CORSAC_PLATFORM_PTR_SIZE);
+                void* pAligned = (void*)(((uintptr_t)pPlusPointerSize + adjustedAlignment - 1) & ~(adjustedAlignment - 1));
+
+                void** pStoredPtr = (void**)pAligned - 1;
+                CORSAC_ASSERT(pStoredPtr >= p);
+                *(pStoredPtr) = p;
+
+                CORSAC_ASSERT(((size_t)pAligned & ~(alignment - 1)) == (size_t)pAligned);
+
+                return pAligned;
+            #elif (CORSAC_DEBUGPARAMS_LEVEL <= 0)
+                return ::new(alignment, offset, 0, flags, 0, 0, 0) char[n];
+            #elif (CORSAC_DEBUGPARAMS_LEVEL == 1)
+                return ::new(alignment, offset, pName, flags, 0, 0, 0) char[n];
+            #else
+                return ::new(alignment, offset, pName, flags, 0, __FILE__, __LINE__) char[n];
+            #endif
+
+            #undef pName
+        }
+
+        inline void allocator::deallocate(void* p, size_t)
+        {
+            #if CORSAC_DLL
+                if (p != nullptr)
+                {
+                    void* pOriginalAllocation = *((void**)p - 1);
+                    delete[]static_cast<char*>(pOriginalAllocation);
+                }
+            #else
+                delete[]static_cast<char*>(p);
+            #endif
+        }
+
+        inline bool operator==(const allocator&, const allocator&)
+        {
+            return true;
+        }
+
+        inline bool operator!=(const allocator&, const allocator&)
+        {
+            return false;
+        }
+    } // namespace corsac
+
+#endif // CORSAC_USER_DEFINED_ALLOCATOR
+
+namespace corsac
+{
+    template <typename Allocator>
+    inline Allocator* get_default_allocator(const Allocator*)
+    {
+        return NULL; // По умолчанию мы возвращаем NULL; пользователь должен сделать специализацию этой функции, чтобы обеспечить собственную реализацию.
     }
 
-    inline void* allocator::allocate(size_t n, size_t alignment, size_t offset, int flags)
+    inline CORSAC_AllocatorType* get_default_allocator(const CORSAC_AllocatorType*)
     {
-        return ::new(alignment, offset, static_cast<char*>(0), flags, 0, static_cast<char*>(0), 0) char[n];
+        // Для встроенного распределителя CORSAC_AllocatorType у нас уже есть функция для возврата экземпляра распределителя по умолчанию, поэтому мы предоставляем ее.
+        return CORSAC_AllocatorDefault();
     }
 
-    inline void allocator::deallocate(void* p, size_t)
+    inline void* default_allocfreemethod(size_t n, void* pBuffer, void* /*pContext*/)
     {
-        delete[] static_cast<char*>(p);
-    }
+        CORSAC_AllocatorType* const pAllocator = CORSAC_AllocatorDefault();
 
-    inline bool operator==(const allocator&, const allocator&)
-    {
-        return true;
-    }
-
-    inline bool operator!=(const allocator&, const allocator&)
-    {
-        return false;
+        if(pBuffer) // Если освободить ...
+        {
+            CORSAC_Free(*pAllocator, pBuffer, n);
+            return NULL;  // Возвращаемое значение бессмысленно.
+        }
+        else // распределение
+            return CORSAC_Alloc(*pAllocator, n);
     }
 
     /**

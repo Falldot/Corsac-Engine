@@ -994,27 +994,28 @@ inline constexpr long double min_alt(long double a, long double  b) { return b <
     }
 
 
-    /// move_backward
-    ///
-    /// The elements are moved in reverse order (the last element is moved first), but their relative order is preserved.
-    /// After this operation the elements in the moved-from range will still contain valid values of the
-    /// appropriate type, but not necessarily the same values as before the move.
-    /// Returns the beginning of the result range.
-    /// Note: When moving between containers, the dest range must be valid; this function doesn't resize containers.
-    /// Note: If result is within [first, last), move must be used instead of move_backward.
-    ///
-    /// Example usage:
-    ///     corsac::move_backward(myArray.begin(), myArray.end(), myDestArray.end());
-    ///
-    /// Reference implementation:
-    ///     template <typename BidirectionalIterator1, typename BidirectionalIterator2>
-    ///     BidirectionalIterator2 move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last, BidirectionalIterator2 resultEnd)
-    ///     {
-    ///         while(last != first)
-    ///             *--resultEnd = corsac::move(*--last);
-    ///         return resultEnd;
-    ///     }
-    ///
+    /**
+    * move_backward
+    *
+    * Элементы перемещаются в обратном порядке (последний элемент перемещается первым), но их
+    * относительный порядок сохраняется. После этой операции элементы в перемещаемом диапазоне
+    * по-прежнему будут содержать допустимые значения соответствующего типа, но не обязательно те
+    * же значения, что и до перемещения. Возвращает начало диапазона результатов.
+    * Примечание. При перемещении между контейнерами диапазон dest должен быть допустимым; эта функция не изменяет размер контейнеров.
+    * Примечание. Если результат находится в пределах [first, last), необходимо использовать move вместо move_backward.
+    *
+    * Пример использования:
+    *     corsac::move_backward(myArray.begin(), myArray.end(), myDestArray.end());
+    *
+    * Эталонная реализация:
+    *     template <typename BidirectionalIterator1, typename BidirectionalIterator2>
+    *     BidirectionalIterator2 move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last, BidirectionalIterator2 resultEnd)
+    *     {
+    *         while(last != first)
+    *             *--resultEnd = corsac::move(*--last);
+    *         return resultEnd;
+    *     }
+    */
     template <typename BidirectionalIterator1, typename BidirectionalIterator2>
     inline BidirectionalIterator2 move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last, BidirectionalIterator2 resultEnd)
     {
