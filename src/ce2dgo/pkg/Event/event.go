@@ -15,9 +15,7 @@ var (
 	keyUp    [512]bool
 )
 
-func Init() {
-
-}
+func Init() {}
 
 func Update() bool {
 

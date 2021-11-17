@@ -175,8 +175,10 @@ namespace Corsac{
 					error += this->blocks[i].start_test();
 				}
 
+				unsigned int end_time = clock(); 
+				unsigned int search_time = end_time - start_time; 
+				this->set_color(YELLOW);
 
-				double search_time = (clock() - start_time)/1000.0;
 
 				this->space_print(this->amount_space);
 				this->print("Test time: "+std::to_string(search_time)+"\n", YELLOW);

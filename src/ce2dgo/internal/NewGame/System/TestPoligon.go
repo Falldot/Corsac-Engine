@@ -40,9 +40,7 @@ var InitorCreaterUnits ECS.Initer = func() {
 		Add(Comp.PLAYER, Comp.CreatePlayer()).
 		Add(Comp.COLLIDER, Comp.CreateColider(100, 100, 64, 64, func(self, other *Comp.Colider) bool {
 			return true
-		}, func(self, other *Comp.Colider) {
-
-		}))
+		}, func(self, other *Comp.Colider) {}))
 
 	ECS.CreateEntity().
 		Add(Comp.TRANSFORM, Comp.CreateTransform(300, 300, 300)).
@@ -57,9 +55,7 @@ var InitorCreaterUnits ECS.Initer = func() {
 		})).
 		Add(Comp.COLLIDER, Comp.CreateColider(300, 300, 64, 64, func(self, other *Comp.Colider) bool {
 			return true
-		}, func(self, other *Comp.Colider) {
-
-		}))
+		}, func(self, other *Comp.Colider) {}))
 }
 
 // @Exiter -> GameController

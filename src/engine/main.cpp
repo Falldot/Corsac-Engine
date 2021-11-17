@@ -2,17 +2,18 @@
 
 #include "window.h"
 
-#include "Token.h"
-#include <vector>
 
 int main()
 {
-    auto c = new TokenType("c", R"(s)");
+    corsac::Window window;
 
-    auto arr = std::vector<int>();
+    window.SetTitle("My Game");
+    window.Resize(1200, 800);
+    window.Show();
 
+    SDL_Delay(3000);
 
-    std::cout << "hi" << std::endl;
+    std::cout << window.x() << std::endl;
 
     return 0;
 }
