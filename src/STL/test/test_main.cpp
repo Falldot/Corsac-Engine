@@ -17,6 +17,8 @@
 #include "vector.h"
 #include "sparse_set.h"
 
+#define CORSAC_TEST_ONLY_RESULT
+
 #define TEST_ENABLE
 #include "../../test/Test.h"
 

@@ -9,16 +9,6 @@
 
 #include "vector.h"
 
-Most classes should not directly handle resources, but instead, use members that perform resource handling for them:
-For memory, it can be std::unique_ptr, std::shared_ptr, std::vector…​
-For files, it can be std::ofstream, std::ifstream…​
-…​
-Classes that avoid directly handling resources don’t need to define any of the special member functions required to properly handle resources: destructor, copy constructor, move constructor, copy-assignment operator, move-assignment operator. That’s because the versions of those functions provided by the compiler do the right thing automatically, which is especially useful because writing these functions correctly is typically tricky and error-prone.
-Omitting all of these functions from a class is known as the Rule of Zero because no special function should be defined.
-In some cases, this rule takes a slightly different shape, while respecting the fact that no definition of those functions will be provided:
-For the base class of a polymorphic hierarchy, the destructor should be declared as public and virtual, and defaulted (=default). The copy-constructor and copy-assignment operator should be deleted. (If you want to copy classes in a polymorphic hierarchy, use the clone idiom.) The move operation will be automatically deleted by the compiler.
-For other kinds of base classes, the destructor should be protected and non-virtual, and defaulted (=default).
-
 namespace corsac
 {
     template <typename T, typename Allocator = CORSAC_AllocatorType>
