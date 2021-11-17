@@ -179,10 +179,11 @@ namespace Corsac{
 				unsigned int search_time = end_time - start_time; 
 				this->set_color(YELLOW);
 
-
-				this->space_print(this->amount_space);
-				this->print("Test time: "+std::to_string(search_time)+"\n", YELLOW);
-
+				#ifndef CORSAC_TEST_TIME_OFF
+					this->space_print(this->amount_space);
+					this->print("Test time: "+std::to_string(search_time)+"\n", YELLOW);
+				#endif
+					
 				this->set_color(STANDART);
 				return error;
 			}

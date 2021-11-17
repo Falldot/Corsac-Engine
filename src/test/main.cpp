@@ -1,5 +1,6 @@
 #define TEST_BLOCK
 #define CORSAC_TEST_ONLY_RESULT
+#define CORSAC_TEST_TIME_OFF
 
 #include "Test.h"
 
@@ -40,6 +41,28 @@ int main()
 
 		assert->add_block_comment("32142142");
 	});
+	assert.add_block("Test Block 1", TestingBlock{
+
+		assert->add_block_comment("32142142");
+	});
+
+assert.add_block("Test Block 1", TestingBlock{
+	});
+
+assert.add_block("Test Block 1", TestingBlock{
+		assert->equal("test8", 1, 1);
+		assert->equal("test9", 1, 0);
+		assert->equal("test10", 1, 0);
+		assert->equal("test8", 1, 1);
+		assert->equal("test9", 1, 0);
+		assert->equal("test10", 1, 0);
+		assert->equal("test8", 1, 1);
+		assert->equal("test9", 1, 0);
+		assert->equal("test10", 1, 0);
+
+		assert->add_block_comment("32142142");
+	});
+
 
 
 	assert.start();
