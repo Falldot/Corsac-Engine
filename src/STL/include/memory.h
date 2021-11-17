@@ -6,21 +6,10 @@
 
 #pragma once
 
-#include "internal/config.h"
-#include "internal/memory_base.h"
-#include "internal/generic_iterator.h"
-#include "internal/functional_base.h"
-#include "algorithm.h"
-#include "type_traits.h"
-#include "allocator.h"
-#include "iterator.h"
-#include "utility.h"
-#include "numeric_limits.h"
-
 /**
  * Описание (Falldot 07.11.2021)
  *
- * Этот файл реализует следующие функции стандарта C ++,
+ * Этот файл реализует следующие функции стандарта C++,
  * которые находятся в модуле <memory>:
  *
  * Компиляторы:
@@ -73,9 +62,20 @@
  * === Указатели:
  *    pointer_traits
  *
- * === Взаимствование с eastl:
+ * === Взаимствование с corsac:
  *    late_constructed<T>                       Умный указатель для глобальных переменных с отложенной инициализации.
  */
+
+#include "internal/config.h"
+#include "internal/memory_base.h"
+#include "internal/generic_iterator.h"
+#include "internal/functional_base.h"
+#include "algorithm.h"
+#include "type_traits.h"
+#include "allocator.h"
+#include "iterator.h"
+#include "utility.h"
+#include "numeric_limits.h"
 
 namespace corsac
 {
@@ -593,16 +593,17 @@ namespace corsac
 
 
 
-    /// uninitialized_copy_ptr
-    ///
-    /// This is a specialization of uninitialized_copy for iterators that are pointers. We use it because
-    /// internally it uses generic_iterator to make pointers act like regular corsac::iterator.
-    ///
+    /**
+    * uninitialized_copy_ptr
+    *
+    * Это специализация uninitialized_copy для итераторов, которые являются указателями.
+    * Мы используем его, потому что внутри он использует generic_iterator, чтобы указатели действовали как обычный corsac::iterator.
+    */
     template <typename First, typename Last, typename Result>
     inline Result uninitialized_copy_ptr(First first, Last last, Result result)
     {
         typedef typename corsac::iterator_traits<generic_iterator<Result, void> >::value_type value_type;
-        const generic_iterator<Result, void> i(internal::uninitialized_copy_impl(corsac::generic_iterator<First, void>(first), // generic_iterator makes a pointer act like an iterator.
+        const generic_iterator<Result, void> i(internal::uninitialized_copy_impl(corsac::generic_iterator<First, void>(first), // generic_iterator заставляет указатель действовать как итератор.
                                                                                  corsac::generic_iterator<Last, void>(last),
                                                                                  corsac::generic_iterator<Result, void>(result),
                                                                                  corsac::is_trivially_copy_assignable<value_type>()));
@@ -707,8 +708,7 @@ namespace corsac
     }
 
 
-    /// uninitialized_move_ptr_if_noexcept
-    ///
+    // uninitialized_move_ptr_if_noexcept
     template <typename First, typename Last, typename Result>
     inline Result uninitialized_move_ptr_if_noexcept(First first, Last last, Result dest)
     {
@@ -787,27 +787,27 @@ namespace corsac
             typedef typename corsac::iterator_traits<ForwardIterator>::value_type value_type;
             ForwardIterator currentDest(first);
 
-    #if CORSAC_EXCEPTIONS_ENABLED
-            try
-                {
-    #endif
-            for (; n > 0; --n, ++currentDest)
-                ::new (corsac::addressof(*currentDest)) value_type();
-    #if CORSAC_EXCEPTIONS_ENABLED
-            }
-                catch (...)
-                {
-                    for (; first < currentDest; ++first)
-                        (*first).~value_type();
-                    throw;
+        #if CORSAC_EXCEPTIONS_ENABLED
+                try
+                    {
+        #endif
+                for (; n > 0; --n, ++currentDest)
+                    ::new (corsac::addressof(*currentDest)) value_type();
+        #if CORSAC_EXCEPTIONS_ENABLED
                 }
-    #endif
+                    catch (...)
+                    {
+                        for (; first < currentDest; ++first)
+                            (*first).~value_type();
+                        throw;
+                    }
+        #endif
         }
 
         template <typename ForwardIterator, typename Count>
         inline void uninitialized_default_fill_n_impl(ForwardIterator first, Count n, true_type)
         {
-            typedef typename corsac::iterator_traits<ForwardIterator>::value_type value_type;
+            using value_type = typename corsac::iterator_traits<ForwardIterator>::value_type;
             memset(first, 0, sizeof(value_type) * n);
         }
     }
@@ -815,7 +815,7 @@ namespace corsac
     template <typename ForwardIterator, typename Count>
     inline void uninitialized_default_fill_n(ForwardIterator first, Count n)
     {
-        typedef typename corsac::iterator_traits<ForwardIterator>::value_type value_type;
+        using value_type = typename corsac::iterator_traits<ForwardIterator>::value_type;
         internal::uninitialized_default_fill_n_impl(first, n, is_scalar<value_type>());
     }
 
@@ -1056,27 +1056,23 @@ namespace corsac
     template <typename ForwardIterator, typename Count, typename T>
     inline void uninitialized_fill_n(ForwardIterator first, Count n, const T& value)
     {
-        typedef typename corsac::iterator_traits<ForwardIterator>::value_type value_type;
+        using value_type = typename corsac::iterator_traits<ForwardIterator>::value_type;
         internal::uninitialized_fill_n_impl(first, n, value, corsac::is_trivially_copy_assignable<value_type>());
     }
 
-
-
-    /// uninitialized_fill_n_ptr
-    ///
-    /// This is a specialization of uninitialized_fill_n for iterators that are pointers.
-    /// It exists so that we can declare a value_type for the iterator, which you
-    /// can't do with a pointer by itself.
-    ///
+    /**
+    * uninitialized_fill_n_ptr
+    *
+    * Это специализация uninitialized_fill_n для итераторов, которые являются указателями.
+    * Он существует для того, чтобы мы могли объявить value_type для итератора,
+    * чего нельзя сделать с помощью самого указателя.
+    */
     template <typename T, typename Count>
     inline void uninitialized_fill_n_ptr(T* first, Count n, const T& value)
     {
-        typedef typename corsac::iterator_traits<generic_iterator<T*, void> >::value_type value_type;
+        using value_type = typename corsac::iterator_traits<generic_iterator<T*, void> >::value_type;
         internal::uninitialized_fill_n_impl(corsac::generic_iterator<T*, void>(first), n, value, corsac::is_trivially_copy_assignable<value_type>());
     }
-
-
-
 
     /// uninitialized_copy_fill
     ///
@@ -1262,13 +1258,13 @@ namespace corsac
             (*first).~value_type();
     }
 
-    /// destruct
-    ///
-    /// Calls the destructor on a range of objects.
-    ///
-    /// We have a specialization for objects with trivial destructors, such as
-    /// PODs. In this specialization the destruction of the range is a no-op.
-    ///
+    /**
+    * destruct
+    *
+    * Вызывает деструктор для ряда объектов.
+    * У нас есть специализация для объектов с тривиальными деструкторами, такими как PODs.
+    * В этой специализации уничтожение диапазона не выполняется.
+    */
     template <typename ForwardIterator>
     inline void destruct(ForwardIterator first, ForwardIterator last)
     {

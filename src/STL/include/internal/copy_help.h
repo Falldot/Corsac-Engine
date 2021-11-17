@@ -179,7 +179,7 @@ namespace corsac
             if (CORSAC_UNLIKELY(first == last))
                 return result;
             // Мы могли бы использовать memcpy здесь, если нет перекрытия диапазонов, но memcpy редко бывает намного быстрее, чем memmove.
-            return static_cast<T*>(memmove(result, first, (static_cast<uintptr_t>(last) - static_cast<uintptr_t>(first))) + (last - first));
+            return (T*)memmove(result, first, (size_t)((uintptr_t)last - (uintptr_t)first)) + (last - first);
         }
     };
 

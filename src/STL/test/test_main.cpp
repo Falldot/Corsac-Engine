@@ -14,6 +14,8 @@
 #include "algorithm.h"
 #include "functional.h"
 #include "random.h"
+#include "vector.h"
+#include "sparse_set.h"
 
 #define TEST_ENABLE
 #include "../../test/Test.h"
@@ -24,12 +26,7 @@
 #include "type_transformation_test.h"
 #include "type_pod_test.h"
 #include "type_compound_test.h"
-
-
-
-
-
-using namespace std;
+#include "vector_test.h"
 
 int main() {
     auto assert = new Corsac::Block("STL");
@@ -52,6 +49,9 @@ int main() {
         });
         assert->add_block("type_properties_test", [](Corsac::Block *assert) {
             type_pod_test(assert);
+        });
+        assert->add_block("vector_test", [](Corsac::Block *assert) {
+            vector_test(assert);
         });
     });
     assert->start();
@@ -107,22 +107,6 @@ int main() {
 //            }
 //		}
 //	}
-
-	    class Person
-        {
-        public:
-            int X, Y;
-
-	        Person(int x, int y) : X(x), Y(y)
-            {}
-            ~Person()
-            {
-                cout << "hi" << endl;
-                X = 0;
-                Y = 0;
-            }
-
-        };
 
 //        auto obj1 = new Person(10, 30);
 //        auto arr1 = corsac::slice<Person*>();

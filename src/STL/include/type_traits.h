@@ -766,4 +766,10 @@ namespace corsac
 
 }
 
+#include <internal/type_fundamental.h>
+#include <internal/type_transformation.h>
+#include <internal/type_properties.h>
+#include <internal/type_compound.h>
+#include <internal/type_pod.h>
+
 #endif //CORSAC_TYPE_FUNDAMENTAL_H
