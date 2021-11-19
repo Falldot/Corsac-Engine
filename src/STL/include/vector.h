@@ -1,10 +1,25 @@
-// Copyright (c) 2021 Corsac Team
-// License: MIT License
-// MIT License web page: https://opensource.org/licenses/MIT
+/**
+ * corsac::STL
+ *
+ * vector.h
+ *
+ * Created by Falldot on 20.11.2021.
+ * Copyright (c) 2021 Corsac. All rights reserved.
+ */
 #ifndef CORSAC_VECTOR_H
 #define CORSAC_VECTOR_H
 
 #pragma once
+/**
+ * Описание (Falldot 20.11.2021)
+ *
+ * Реализация классического С++ динамического массива.
+ *
+ * Компиляторы:
+ *      - g++       v10.3.0
+ *      - clang++   v12.0.1
+ *      - MSVC      v16.11.5
+ */
 
 #include "internal/config.h"
 #include "allocator.h"
@@ -991,7 +1006,7 @@ namespace corsac
     inline typename vector<T, Allocator>::iterator
     vector<T, Allocator>::insert(const_iterator position, size_type n, const value_type& value)
     {
-        const ptrdiff_t p = position - mpBegin; // Сохраните это, потому что мы можем перераспределить.
+        const ptrdiff_t p = position - mpBegin;
         DoInsertValues(position, n, value);
         return mpBegin + p;
     }
@@ -1001,7 +1016,7 @@ namespace corsac
     inline typename vector<T, Allocator>::iterator
     vector<T, Allocator>::insert(const_iterator position, InputIterator first, InputIterator last)
     {
-        const ptrdiff_t n = position - mpBegin; // Сохраните это, потому что мы можем перераспределить.
+        const ptrdiff_t n = position - mpBegin;
         DoInsert(position, first, last, is_integral<InputIterator>());
         return mpBegin + n;
     }
@@ -1011,7 +1026,7 @@ namespace corsac
     inline typename vector<T, Allocator>::iterator
     vector<T, Allocator>::insert(const_iterator position, std::initializer_list<value_type> ilist)
     {
-        const ptrdiff_t n = position - mpBegin; // Сохраните это, потому что мы можем перераспределить.
+        const ptrdiff_t n = position - mpBegin;
         DoInsert(position, ilist.begin(), ilist.end(), false_type());
         return mpBegin + n;
     }
@@ -1060,7 +1075,6 @@ namespace corsac
             if(CORSAC_UNLIKELY((position < mpBegin) || (position >= mpEnd)))
                         CORSAC_FAIL_MSG("vector::erase -- invalid position");
         #endif
-        // C++11 оговаривает, что позиция - это const_iterator, но возвращаемое значение - итератор.
         iterator destPosition = const_cast<value_type*>(position);
         *destPosition = corsac::move(*(mpEnd - 1));
 
@@ -1661,7 +1675,7 @@ namespace corsac
                 {   // To do: ниже мы не обрабатываем исключения должным образом. В частности, мы не хотим
                     // вызовать corsac::destruct для всего диапазона, если была построена только первая часть диапазона.
                     // Поскольку старые данные потенциально перемещаются, а не копируются, нам нужно переместить.
-                    ::new((void*)(pNewData + nPosSize)) value_type(corsac::forward<Args>(args)...);
+                    ::new(static_cast<void*>(pNewData + nPosSize)) value_type(corsac::forward<Args>(args)...);
                     // Установите значение NULL, чтобы в catch мы могли сказать, что исключение произошло во время следующего вызова.
                     pNewEnd = NULL;
                     // значение сначала, потому что это может быть ссылка на старые перемещаемые данные.
@@ -1679,7 +1693,7 @@ namespace corsac
                 }
             #else
                 // Поскольку старые данные потенциально перемещаются, а не копируются, нам нужно переместить
-                ::new((void*)(pNewData + nPosSize)) value_type(corsac::forward<Args>(args)...);
+                ::new(static_cast<void*>(pNewData + nPosSize)) value_type(corsac::forward<Args>(args)...);
                 // значение сначала, потому что это может быть ссылка на старые перемещаемые данные.
                 pointer pNewEnd = corsac::uninitialized_move_ptr_if_noexcept(mpBegin, destPosition, pNewData);
                 // Вопрос: с отключенными исключениями, предполагаем ли мы, что все операции не являются исключениями,
@@ -1709,7 +1723,7 @@ namespace corsac
             try
             {
                 pNewEnd = corsac::uninitialized_move_ptr_if_noexcept(mpBegin, mpEnd, pNewData);
-                ::new((void*)pNewEnd) value_type(corsac::forward<Args>(args)...);
+                ::new(static_cast<void*>(pNewEnd)) value_type(corsac::forward<Args>(args)...);
                 pNewEnd++;
             }
             catch(...)
@@ -1720,7 +1734,7 @@ namespace corsac
             }
         #else
         pointer pNewEnd = corsac::uninitialized_move_ptr_if_noexcept(mpBegin, mpEnd, pNewData);
-        ::new((void*)pNewEnd) value_type(corsac::forward<Args>(args)...);
+        ::new(static_cast<void*>(pNewEnd)) value_type(corsac::forward<Args>(args)...);
         pNewEnd++;
         #endif
 
@@ -1808,14 +1822,14 @@ namespace corsac
     template <class T, class Allocator, class U>
     void erase(vector<T, Allocator>& c, const U& value)
     {
-        // Erases all elements that compare equal to value from the container.
+        // Удаляет из контейнера все элементы, которые сравниваются со значением, равным значению.
         c.erase(corsac::remove(c.begin(), c.end(), value), c.end());
     }
 
     template <class T, class Allocator, class Predicate>
     void erase_if(vector<T, Allocator>& c, Predicate predicate)
     {
-        // Erases all elements that satisfy the predicate pred from the container.
+        // Удаляет из контейнера все элементы, удовлетворяющие предикату pred.
         c.erase(corsac::remove_if(c.begin(), c.end(), predicate), c.end());
     }
 }

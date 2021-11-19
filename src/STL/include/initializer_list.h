@@ -10,6 +10,16 @@
 #define CORSAC_INITIALIZER_LIST_H
 
 #pragma once
+/**
+ * Описание (Falldot 20.11.2021)
+ *
+ * Реализация статического массива элементов, в котором каждый элемент имеет указанный тип.
+ *
+ * Компиляторы:
+ *      - g++       v10.3.0
+ *      - clang++   v12.0.1
+ *      - MSVC      v16.11.5
+ */
 
 #include "internal/config.h"
 #include "internal/base/have.h"
@@ -47,7 +57,7 @@
                     : mpArray(NULL), mArraySize(0) { }
 
             size_type      size()  const noexcept { return mArraySize; }
-            const_iterator begin() const noexcept { return mpArray; }            // Must be const_iterator, as initializer_list (and its mpArray) is an immutable temp object.
+            const_iterator begin() const noexcept { return mpArray; }            // Должен быть const_iterator, поскольку initializer_list (и его mpArray) является неизменяемым временным объектом.
             const_iterator end()   const noexcept { return mpArray + mArraySize; }
         };
 

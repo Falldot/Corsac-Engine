@@ -1527,11 +1527,11 @@ namespace corsac
 
         template <typename Pointer, bool = has_difference_type<Pointer>::value>
         struct pointer_difference_type
-        { typedef typename Pointer::difference_type type; };
+        { using type = typename Pointer::difference_type; };
 
         template <typename Pointer>
         struct pointer_difference_type<Pointer, false>
-        { typedef ptrdiff_t type; };
+        { using type = ptrdiff_t; };
 
 
         // pointer_rebind

@@ -1,7 +1,7 @@
 /**
  * corsac::STL
  *
- * internal/numeric_limits.h
+ * numeric_limits.h
  *
  * Created by Falldot on 09.11.2021.
  * Copyright (c) 2021 Corsac. All rights reserved.
@@ -10,6 +10,62 @@
 #define CORSAC_NUMERIC_LIMITS_H
 
 #pragma once
+
+/**
+ * Описание (Falldot 20.11.2021)
+ *
+ * Здесь реализованн шаблон описания арифметических свойств
+ * встроенных числовых типов.
+ *
+ * Компиляторы:
+ *      - g++       v10.3.0
+ *      - clang++   v12.0.1
+ *      - MSVC      v16.11.5
+ *
+ * Для типов:
+ * ---------------------------------------------------------------------------------------------
+ *      bool, char, signed char, unsigned char,
+ *      short, unsigned short, signed short,
+ *      int, unsigned int, signed int,
+ *      long, unsigned long, signed long,
+ *      long long, unsigned long long, signed long long,
+ *      float, double, long double, char16_t, char32_t, wchar_t
+ *
+ * Статические функции и константы:
+ * ---------------------------------------------------------------------------------------------
+ *      denorm_min	            Возвращает наименьшее ненулевое денормализованное значение.
+ *      digits	                Возвращает количество цифр основания системы счисления, которое тип может представлять без потери точности.
+ *      digits10	            Возвращает количество дробных десятичных цифр, которых тип может представлять без потери точности.
+ *      epsilon	                Возвращает разницу между 1 и наименьшим значением больше 1, которое этот тип данных может представлять.
+ *      has_denorm	            Проверяет, допускает ли тип денормализованные значения.
+ *      has_denorm_loss	        Проверяет, обнаружена ли потеря точности как потеря денормализации, а не неточный результат.
+ *      has_infinity	        Проверяет, может ли тип представлять положительную бесконечность.
+ *      has_quiet_NaN	        Проверяет, имеет ли тип представление для скрытого, не являющегося числом (NAN), которое не сообщается.
+ *      has_signaling_NaN	    Проверяет, может ли тип представлять сообщения об обнаружении нечисла (NAN).
+ *      infinity	            Представление положительной бесконечности для типа, если доступно.
+ *      is_bounded	            Проверяет, конечен ли набор значений, представляемый типом.
+ *      is_exact	            Проверяет, не содержат ли вычисления с типом ошибок округления.
+ *      is_iec559	            Проверяет, соответствует ли тип стандартам IEC 559.
+ *      is_integer	            Проверяет, может ли тип представлять целые числа.
+ *      is_modulo	            Проверяет, может ли тип представлять модуль.
+ *      is_signed	            Проверяет, может ли тип представлять числа со знаком.
+ *      is_specialized	        Проверяет, имеет ли тип явную специализацию, определенную в шаблоне класса numeric_limits.
+ *      lowest	                Возвращает наибольшее отрицательное конечное значение.
+ *      max	                    Возвращает максимальное конечное значение типа.
+ *      max_digits10	        Возвращает количество цифр дробной части, необходимых, чтобы у двух различных значений типа были уникальные десятичные представления.
+ *      max_exponent	        Возвращает максимальную положительную целую степень, которую тип с плавающей запятой может представить как конечное значение при возведении основания системы счисления в эту степень.
+ *      max_exponent10	        Возвращает максимальную положительную целую степень, которую тип с плавающей запятой может представить как конечное значение при возведении десяти в эту степень.
+ *      min	                    Возвращает минимальное нормализованное значение для типа.
+ *      min_exponent	        Возвращает максимальную отрицательную целую степень, которую тип с плавающей запятой может представить как конечное значение при возведении основания системы счисления в эту степень.
+ *      min_exponent10	        Возвращает максимальную отрицательную целую степень, которую тип с плавающей запятой может представить как конечное значение при возведении десяти в эту степень.
+ *      quiet_NaN	            Возвращает представление "тихого" нечисла (NaN) для типа.
+ *      radix                   Возвращает целочисленное основание системы счисления, используемое для представления типа.
+ *      round_error	            Возвращает максимальную ошибку округления для типа.
+ *      round_style	            Возвращает значение, описывающее различные методы, которые могут быть выбраны реализацией для округления значения с плавающей запятой до целочисленного.
+ *      signaling_NaN	        Возвращает представление обозначения нечисла (NaN) для типа.
+ *      tinyness_before	        Проверяет, может ли тип определить, что значение слишком мало для представления в качестве нормализованного значения, до его округления.
+ *      traps	                Проверяет, реализованы ли для типа исключения при выполнении арифметических операций.
+ */
 
 #include "internal/config.h"
 #include "type_traits.h"
@@ -65,7 +121,6 @@
 
 namespace corsac
 {
-    // See C++11 18.3.2.5
     enum float_round_style
     {
         round_indeterminate       = -1,    /// Intermediate.
@@ -75,7 +130,6 @@ namespace corsac
         round_toward_neg_infinity =  3     /// To negative infinity.
     };
 
-    // See C++11 18.3.2.6
     enum float_denorm_style
     {
         denorm_indeterminate = -1,          /// Нельзя определить, допускает ли тип денормализованные значения.
@@ -87,7 +141,6 @@ namespace corsac
     namespace internal
     {
         // Определяет значения по умолчанию для numeric_limits, которые могут быть переопределены специализациями класса.
-        // See C++11 18.3.2.3
         struct numeric_limits_base
         {
             // Значение true, если тип имеет явную специализацию, определенную в классе шаблона; ложь, если нет.
@@ -174,9 +227,6 @@ namespace corsac
 
     } // namespace internal
 
-
-    // Default numeric_limits.
-    // See C++11 18.3.2.3
     template<typename T>
     class numeric_limits : public internal::numeric_limits_base
     {
@@ -339,7 +389,7 @@ namespace corsac
         { return value_type(); }
 
         static constexpr value_type denorm_min()
-        { return (value_type)0; }
+        { return static_cast<value_type>(0); }
     };
 
 
@@ -398,7 +448,7 @@ namespace corsac
         { return value_type(); }
 
         static constexpr value_type denorm_min()
-        { return (value_type)0; }
+        { return static_cast<value_type>(0); }
     };
 
 
@@ -457,14 +507,14 @@ namespace corsac
         { return value_type(); }
 
         static constexpr value_type denorm_min()
-        { return (value_type)0; }
+        { return static_cast<value_type>(0); }
     };
 
     // numeric_limits<wchar_t>
-    // VC++ имеет возможность сделать wchar_t просто беззнаковым коротким.  Если это включено,
+    // VC++ имеет возможность сделать wchar_t просто беззнаковым коротким. Если это включено,
     // приведенный ниже код может вызвать сбои компиляции из-за избыточности.  Лучшим решением может
     // быть использование __wchar_t здесь для VC ++ вместо wchar_t, поскольку __wchar_t всегда является
-    // истинно уникальным типом в VC++. http://social.msdn.microsoft.com/Forums/en-US/vclanguage/thread/9059330a-7cce-4d0d-a8e0-e1dcb63322bd/
+    // истинно уникальным типом в VC++.
     template<>
     struct numeric_limits<wchar_t>
     {
@@ -519,7 +569,7 @@ namespace corsac
         { return value_type(); }
 
         static constexpr value_type denorm_min()
-        { return (value_type)0; }
+        { return static_cast<value_type>(0); }
     };
 
 
@@ -580,7 +630,7 @@ namespace corsac
 				{ return value_type(); }
 
 			static constexpr value_type denorm_min()
-				{ return (value_type)0; }
+				{ return static_cast<value_type>(0); }
 		};
 
 #endif
@@ -643,7 +693,7 @@ namespace corsac
 				{ return value_type(); }
 
 			static constexpr value_type denorm_min()
-				{ return (value_type)0; }
+				{ return static_cast<value_type>(0); }
 		};
 
 #endif
@@ -1552,7 +1602,7 @@ namespace corsac
 			static constexpr value_type denorm_min()
 				{ return __LDBL_DENORM_MIN__; }
 
-#elif defined(CORSAC_LIBRARY_DINKUMWARE) // При использовании стандартной библиотеки Dinkumware ...
+    #elif defined(CORSAC_LIBRARY_DINKUMWARE) // При использовании стандартной библиотеки Dinkumware ...
         static value_type min()
 				{ return LDBL_MIN; }
 
@@ -1580,7 +1630,7 @@ namespace corsac
 			static value_type denorm_min()
 				{ return _CSTD _LDenorm._Long_double; }
 
-#endif
+    #endif
     };
 }
 

@@ -30,26 +30,26 @@ int main()
 
     auto set = corsac::sparse_set<uint32_t>();
 
-    set.Add(3);
-    set.Add(66);
-    set.Add(134);
-    set.Add(423);
-    set.Add(987);
+    set.insert(3);
+    set.insert(66);
+    set.insert(134);
+    set.insert(423);
+    set.insert(987);
 
-    std::cout << set.Has(3) << std::endl;
-    std::cout << set.Has(66) << std::endl;
-    std::cout << set.Has(134) << std::endl;
-    std::cout << set.Has(423) << std::endl;
-    std::cout << set.Has(987) << std::endl;
+    std::cout << set.has(3);
+    std::cout << set.has(66);
+    std::cout << set.has(134);
+    std::cout << set.has(423);
+    std::cout << set.has(987) << std::endl;
 
-    set.Remove(66);
-    set.Remove(423);
+    set.erase(66);
+    set.erase(423);
 
-    std::cout << set.Has(3) << std::endl;
-    std::cout << set.Has(66) << std::endl;
-    std::cout << set.Has(134) << std::endl;
-    std::cout << set.Has(423) << std::endl;
-    std::cout << set.Has(987) << std::endl;
+    std::cout << set.has(3);
+    std::cout << set.has(66);
+    std::cout << set.has(134);
+    std::cout << set.has(423);
+    std::cout << set.has(987) << std::endl;
 
 
     return 0;
