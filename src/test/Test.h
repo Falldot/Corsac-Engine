@@ -42,6 +42,7 @@ namespace Corsac{
 		std::function<bool()> test;
 		std::string name;
 		std::string comment;
+		bool result = true;
 		
 		int comment_color;
 
@@ -71,7 +72,8 @@ namespace Corsac{
 
 				@param amount - Кол-во пробелов.
 			*/		
-			void space_print(int amount){
+			void space_print(int amount)
+			{
 				for (int i = 0; i <= amount; i++)
 				{
 					std::cout << " ";
@@ -120,7 +122,6 @@ namespace Corsac{
 				}
 			}			
 
-
 			/*
 				@desc - Запускает тесты и подтесты.
 			*/
@@ -129,63 +130,76 @@ namespace Corsac{
 				unsigned int start_time = clock();
 				int error = 0;
 
-				
-				this->print_block_name();
-				#ifndef CORSAC_TEST_ONLY_RESULT 
-
-					for(auto i = 0; i < this->tests.size(); i++)
+				for(int i = 0; i < this->tests.size(); i++)
+				{
+					bool result = this->tests[i].test(); 
+			
+					if(!result)
 					{
-						auto result = this->tests[i].test();
-
-						this->space_print(this->amount_space+3);
-
-						
-							if(result)
-								this->print("\xfb:    ", GREEN);
-							else
-							{
-								this->print("X:    ", RED);
-								error++;
-							}
-						std::cout << this->tests[i].name <<std::endl;
-
-						if(this->tests[i].comment.size() > 0)
-						{
-
-							this->space_print(this->amount_space+4);
-							this->print("> "+this->tests[i].comment+"\n", this->tests[i].comment_color);
-						}
+						error++;
+						this->tests[i].result = false;
 					}
+				}
 
-				#else
-
-					for(auto i = 0; i < this->tests.size(); i++)
-					{
-						if(!this->tests[i].test())
-						{
-							this->space_print(this->amount_space+3);
-							this->print("X:    " + this->tests[i].name+"\n", RED);
-							error++;
-						}
-					}
-				#endif
+				this->print_result(start_time, error);
 
 				for(auto i = 0; i < this->blocks.size(); i++)
 				{
 					error += this->blocks[i].start_test();
 				}
 
-				unsigned int end_time = clock(); 
-				unsigned int search_time = end_time - start_time; 
-				this->set_color(YELLOW);
+				return error;
+			}
+
+			void print_result(unsigned int time, int error)
+			{
+				#ifndef CORSAC_TEST_RESULT_OFF
+				
+				#ifdef CORSAC_TEST_WITHOUT_OK
+				if(error>0)
+				{
+				#endif
+				#ifdef CORSAC_TEST_WITHOUT_ERROR
+				if(error!=this->tests.size())
+				{
+				#endif
+				this->print_block_name();
+				for(int i = 0; i < this->tests.size(); i++)
+				{
+					if(!this->tests[i].result)
+					{
+						#ifndef CORSAC_TEST_WITHOUT_OK
+
+						this->space_print(this->amount_space+3);
+						this->print("\xfb:    " + this->tests[i].name + "\n", GREEN);
+						#endif
+					}
+					#ifndef CORSAC_TEST_WITHOUT_ERROR
+					else
+					{
+						this->space_print(this->amount_space+3);
+						this->print("X:    " + this->tests[i].name + "\n", RED);
+					}		
+					#endif	
+				}
 
 				#ifndef CORSAC_TEST_TIME_OFF
+					unsigned int end_time = clock(); 
+					unsigned int search_time = end_time - time; 
+					this->set_color(YELLOW);
+
 					this->space_print(this->amount_space);
 					this->print("Test time: "+std::to_string(search_time)+"\n", YELLOW);
 				#endif
-					
-				this->set_color(STANDART);
-				return error;
+
+				#ifdef CORSAC_TEST_WITHOUT_ERROR
+				}
+				#endif
+				#ifdef CORSAC_TEST_WITHOUT_OK
+				}
+				#endif
+
+				#endif
 			}
 
 
@@ -194,7 +208,8 @@ namespace Corsac{
 				@param name 	- Имя блока теста.
 				@amount_space 	- Задает кол-во отступов.
 			*/
-			Block(std::string name, int amount_space = 0){
+			Block(std::string name, int amount_space = 0)
+			{
 				this->name_block = name;
 				this->amount_space = amount_space;
 			};
