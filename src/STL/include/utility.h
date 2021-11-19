@@ -296,14 +296,14 @@ namespace corsac
     /**
     * pair
     *
-    * Реализует простую пару, как C++ STD :: Pair.
+    * Реализует простую пару, как C++ std::Pair.
     */
     template <typename T1, typename T2>
     struct pair
     {
-        typedef T1           first_type;
-        typedef T2           second_type;
-        typedef pair<T1, T2> this_type;
+        using first_type = T1;
+        using second_type = T2;
+        using this_type = pair<T1, T2>;
 
         T1 first;
         T2 second;

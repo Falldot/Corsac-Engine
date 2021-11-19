@@ -23,7 +23,7 @@ namespace corsac
         static_assert(corsac::is_integral<IntType>::value, "uniform_int_distribution: IntType must be integral.");
 
     public:
-        typedef IntType result_type;
+        using result_type = IntType;
 
         // Для uniform_int_distribution param_type просто определяет минимальное и максимальное значения диапазона,
         // возвращаемого operator (). Это может означать что-то еще для других типов дистрибутивов.
