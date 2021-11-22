@@ -15,7 +15,6 @@ void* __cdecl operator new[](size_t size, size_t alignment, size_t alignmentOffs
 #include "sparse_set.h"
 
 
-
 int main()
 {
 //    corsac::Window window;
@@ -30,6 +29,7 @@ int main()
 
     auto set = corsac::sparse_set<uint32_t>();
 
+
     set.insert(3);
     set.insert(66);
     set.insert(134);
@@ -42,15 +42,14 @@ int main()
     std::cout << set.has(423);
     std::cout << set.has(987) << std::endl;
 
-    set.erase(66);
-    set.erase(423);
+    set.erase(3);
+    set.erase(987);
 
     std::cout << set.has(3);
     std::cout << set.has(66);
     std::cout << set.has(134);
     std::cout << set.has(423);
     std::cout << set.has(987) << std::endl;
-
 
     return 0;
 }

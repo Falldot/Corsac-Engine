@@ -424,5 +424,10 @@
     #define CORSAC_AllocatorDefault corsac::GetDefaultAllocator
 #endif
 
+/// CORSAC_USER_LITERALS_ENABLED
+#ifndef CORSAC_USER_LITERALS_ENABLED
+    #define CORSAC_USER_LITERALS_ENABLED 1
+#endif
+
 
 #endif //CORSAC_ENGINE_CONFIG_H

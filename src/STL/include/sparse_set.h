@@ -192,11 +192,8 @@ namespace corsac
     inline typename sparse_set<T, Allocator, true>::this_type&
     sparse_set<T, Allocator, true>::operator=(const this_type& x) noexcept
     {
-        if(this != &x)
-        {
-            packed = x.packed;
-            sparse = x.sparse;
-        }
+        packed.swap(x.packed);
+        sparse.swap(x.sparse);
         return *this;
     }
 
@@ -204,11 +201,8 @@ namespace corsac
     inline typename sparse_set<T, Allocator, true>::this_type&
     sparse_set<T, Allocator, true>::operator=(this_type&& x) noexcept
     {
-        if(this != &x)
-        {
-            packed = corsac::move(x.packed);
-            sparse = corsac::move(x.sparse);
-        }
+        packed.swap(x.packed);
+        sparse.swap(x.sparse);
         return *this;
     }
 
@@ -276,7 +270,7 @@ namespace corsac
     template<typename T, typename Allocator>
     inline bool sparse_set<T, Allocator, true>::has(value_type &&value)
     {
-        return sparse[corsac::move(value)] < packed.size() && packed[sparse[corsac::move(value)]] == corsac::move(value);
+        return sparse[value] < packed.size() && packed[sparse[value]] == value;
     }
 
     template<typename T, typename Allocator>
@@ -293,10 +287,10 @@ namespace corsac
     template<typename T, typename Allocator>
     inline void sparse_set<T, Allocator, true>::insert(value_type &&value)
     {
-        if (corsac::move(value) >= sparse.size()) sparse.resize(corsac::move(value) * 2);
-        if (!has(corsac::move(value)))
+        if (value >= sparse.size()) sparse.resize(value * 2);
+        if (!has(value))
         {
-            sparse[corsac::move(value)] = static_cast<value_type>(packed.size());
+            sparse[value] = static_cast<value_type>(packed.size());
             packed.push_back(value);
         }
     }
@@ -306,32 +300,21 @@ namespace corsac
     {
         if (has(value))
         {
-            value_type index = sparse[value];
-            value_type swap = packed.back();
+            packed[sparse[value]] = packed[packed.size() - 1];
+            sparse[packed[packed.size() - 1]] = sparse[value];
             packed.pop_back();
-
-            if (swap != value)
-            {
-                packed[index] = swap;
-                sparse[swap] = index;
-            }
         }
     }
 
     template<typename T, typename Allocator>
     inline void sparse_set<T, Allocator, true>::erase(value_type &&value)
     {
-        if (has(corsac::move(value)))
+        // TODO: Тут необходима оптимизация
+        if (has(value))
         {
-            value_type index = sparse[corsac::move(value)];
-            value_type swap = packed.back();
+            packed[sparse[value]] = packed[packed.size() - 1];
+            sparse[packed[packed.size() - 1]] = sparse[value];
             packed.pop_back();
-
-            if (swap != corsac::move(value))
-            {
-                packed[index] = swap;
-                sparse[swap] = index;
-            }
         }
     }
 

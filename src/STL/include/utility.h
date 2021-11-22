@@ -469,7 +469,7 @@ namespace corsac
     * Общее программирование.
     */
     template <typename T>
-    struct use_self             //: private unary_function <t, t> // Возможно, мы хотим сделать его подклассом unary_function.
+    struct use_self
     {
         using result_type = T;
 
@@ -498,7 +498,7 @@ namespace corsac
     * Оператор () (x) просто возвращает x.second.
     */
     template <typename Pair>
-    struct use_second           // : public unary_function<Pair, typename Pair::second_type> // Возможно, мы хотим сделать его подклассом unary_function.
+    struct use_second
     {
         using argument_type = Pair;
         using result_type   = typename Pair::second_type;

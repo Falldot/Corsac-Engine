@@ -16,6 +16,8 @@
 #include "random.h"
 #include "vector.h"
 #include "sparse_set.h"
+#include "ratio.h"
+#include "chrono.h"
 
 #define CORSAC_TEST_TIME_OFF
 #define CORSAC_TEST_ONLY_RESULT

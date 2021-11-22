@@ -771,11 +771,6 @@ inline constexpr long double min_alt(long double a, long double  b) { return b <
     /// Complexity: Exactly '(last - first) - 1' swaps.
     ///
     /// Example usage:
-    ///     size_t Rand(size_t n) { return (size_t)(rand() % n); } // Note: The C rand function is poor and slow.
-    ///     pointer_to_unary_function<size_t, size_t> randInstance(Rand);
-    ///     random_shuffle(pArrayBegin, pArrayEnd, randInstance);
-    ///
-    /// Example usage:
     ///     struct Rand{ size_t operator()(size_t n) { return (size_t)(rand() % n); } }; // Note: The C rand function is poor and slow.
     ///     Rand randInstance;
     ///     random_shuffle(pArrayBegin, pArrayEnd, randInstance);

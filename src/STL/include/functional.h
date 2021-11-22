@@ -1,11 +1,74 @@
-//
-// Created by Falldot on 16.11.2021.
-//
-
+/**
+ * corsac::STL
+ *
+ * ratio.h
+ *
+ * Created by Falldot on 16.11.2021.
+ * Copyright (c) 2021 Corsac. All rights reserved.
+ */
 #ifndef CORSAC_FUNCTIONAL_H
 #define CORSAC_FUNCTIONAL_H
 
 #pragma once
+/**
+ * Описание (Falldot 22.11.2021)
+ *
+ * Реализует функции стандартной библиотеки C++, которые помогают конструировать объекты функций,
+ * также известные как операторов, и их связыватели. Объект-функция — это объект типа,
+ * который определяет operator(). Объект-функция может быть указателем на функцию, но,
+ * как правило, он используется для хранения дополнительных сведений, которые могут потребоваться
+ * при вызове функции.
+ *
+ * ---------------------------------------------------------------------------------------------------
+ * === Классы:
+ *
+ *      bad_function_call           Класс, который описывает исключение, указывающий, что вызов operator() в объекте-function завершился ошибкой, так как объект был пуст.
+ *      function                    Класс, создающий оболочку для вызываемого объекта.
+ *      hash                        Класс, который вычисляет хэш-код для значения.
+ *      reference_wrapper           Класс, который создает оболочку для ссылки.
+ *
+ * === Функции:
+ *
+ *      cref                        Создает конструкцию reference_wrapper из аргумента.
+ *      invoke                      Создает обобщенный оператор вызова функции, который работает с указателями функций, указателями функций-членов, вызываемыми объектами и указателями на элементы.
+ *      mem_fn                      Создает простую оболочку вызова.
+ *      not_fn                      Возвращает дополнение результата объекта функции.
+ *      ref                         Создает reference_wrapper из аргумента.
+ *      swap                        Меняет местами два объекта function.
+ *
+ * === Шаблоны:
+ *
+ *      divides                     Бинарный предикат, который выполняет арифметическую операцию деления элементов заданного типа значения.
+ *      equal_to                    Бинарный предикат, который проверяет, равно ли значение заданного типа другому значению этого типа.
+ *      greater                     Бинарный предикат, который проверяет, больше ли значение заданного типа другого значения этого типа.
+ *      greater_equal               Бинарный предикат, который проверяет, больше или равно ли значение заданного типа другого значения этого типа.
+ *      less                        Бинарный предикат, который проверяет, меньше ли значение заданного типа другого значения этого типа.
+ *      less_equal                  Бинарный предикат, который проверяет, меньше или равно ли значение заданного типа другого значения этого типа.
+ *      logical_and                 Бинарный предикат, который применяет логическую операцию конъюнкции к элементам заданного типа значения и проверяет истинность или ложность результата.
+ *      logical_not                 Бинарный предикат, который применяет логическую операцию отрицания к элементам заданного типа значения и проверяет истинность или ложность результата.
+ *      logical_or                  Бинарный предикат, который применяет логическую операцию логического сложения к элементам заданного типа значения и проверяет истинность или ложность результата.
+ *      minus                       Бинарный предикат, который выполняет арифметическую операцию вычитания для элементов заданного типа значения.
+ *      module                      Бинарный предикат, который выполняет арифметическую операцию модуля для элементов заданного типа значения.
+ *      multiplies                  Бинарный предикат, который выполняет арифметическую операцию умножения для элементов заданного типа значения.
+ *      negate                      Бинарный предикат, который возвращает отрицательное значение элемента.
+ *      not_equal_to                Бинарный предикат, который проверяет, не равно ли значение заданного типа другому значению этого типа.
+ *      plus                        Бинарный предикат, который выполняет арифметическую операцию сложения для элементов заданного типа значения.
+ *
+ * === Взаимствование с eastl:
+ *
+ *      is_reference_wrapper<T>     Т являеться оболочкой для ссылки.
+ *      remove_reference_wrapper    Добавляет ссылку на тип при задании reference_wrapper этого типа.
+ */
+/**
+ * === TODO: (С++ 17)
+ *      is_bind_expression          Класс, который проверяет, можно ли создать определенный тип, вызывая bind.
+ *      is_placeholder              Класс, который проверяет, является ли определенный тип заполнителем.
+ *      bind                        Привязывает аргументы к вызываемому объекту.
+ *      bit_and                     Возвращает результат применения побитовой логической операции И (бинарный оператор &) между двумя параметрами.
+ *      bit_not                     Возвращает результат применения логического дополнения (оператор ~) к параметру.
+ *      bit_or                      Возвращает результат применения логической операции ИЛИ (оператор |) между двумя параметрами.
+ *      bit_xor                     Возвращает результат применения логической операции ИСКЛЮЧАЮЩЕЕ ИЛИ (оператор ^) между двумя параметрами.
+ */
 
 #include "internal/config.h"
 #include "internal/move_help.h"
@@ -17,7 +80,7 @@ namespace corsac
 {
     // Primary C++ functions
     template <typename T = void>
-    struct plus : public binary_function<T, T, T>
+    struct plus
     {
         constexpr T operator()(const T& a, const T& b) const
         { return a + b; }
@@ -26,7 +89,7 @@ namespace corsac
     template <>
     struct plus<void>
     {
-        typedef int is_transparent;
+        using is_transparent = int;
         template<typename A, typename B>
         constexpr auto operator()(A&& a, B&& b) const
         -> decltype(corsac::forward<A>(a) + corsac::forward<B>(b))
@@ -34,7 +97,7 @@ namespace corsac
     };
 
     template <typename T = void>
-    struct minus : public binary_function<T, T, T>
+    struct minus
     {
         constexpr T operator()(const T& a, const T& b) const
         { return a - b; }
@@ -43,7 +106,7 @@ namespace corsac
     template <>
     struct minus<void>
     {
-        typedef int is_transparent;
+        using is_transparent = int;
         template<typename A, typename B>
         constexpr auto operator()(A&& a, B&& b) const
         -> decltype(corsac::forward<A>(a) - corsac::forward<B>(b))
@@ -51,7 +114,7 @@ namespace corsac
     };
 
     template <typename T = void>
-    struct multiplies : public binary_function<T, T, T>
+    struct multiplies
     {
         constexpr T operator()(const T& a, const T& b) const
         { return a * b; }
@@ -60,7 +123,7 @@ namespace corsac
     template <>
     struct multiplies<void>
     {
-        typedef int is_transparent;
+        using is_transparent = int;
         template<typename A, typename B>
         constexpr auto operator()(A&& a, B&& b) const
         -> decltype(corsac::forward<A>(a) * corsac::forward<B>(b))
@@ -68,7 +131,7 @@ namespace corsac
     };
 
     template <typename T = void>
-    struct divides : public binary_function<T, T, T>
+    struct divides
     {
         constexpr T operator()(const T& a, const T& b) const
         { return a / b; }
@@ -77,7 +140,7 @@ namespace corsac
     template <>
     struct divides<void>
     {
-        typedef int is_transparent;
+        using is_transparent = int;
         template<typename A, typename B>
         constexpr auto operator()(A&& a, B&& b) const
         -> decltype(corsac::forward<A>(a) / corsac::forward<B>(b))
@@ -85,7 +148,7 @@ namespace corsac
     };
 
     template <typename T = void>
-    struct modulus : public binary_function<T, T, T>
+    struct modulus
     {
         constexpr T operator()(const T& a, const T& b) const
         { return a % b; }
@@ -94,7 +157,7 @@ namespace corsac
     template <>
     struct modulus<void>
     {
-        typedef int is_transparent;
+        using is_transparent = int;
         template<typename A, typename B>
         constexpr auto operator()(A&& a, B&& b) const
         -> decltype(corsac::forward<A>(a) % corsac::forward<B>(b))
@@ -102,7 +165,7 @@ namespace corsac
     };
 
     template <typename T = void>
-    struct negate : public unary_function<T, T>
+    struct negate
     {
         constexpr T operator()(const T& a) const
         { return -a; }
@@ -111,7 +174,7 @@ namespace corsac
     template <>
     struct negate<void>
     {
-        typedef int is_transparent;
+        using is_transparent = int;
         template<typename T>
         constexpr auto operator()(T&& t) const
         -> decltype(-corsac::forward<T>(t))
@@ -119,7 +182,7 @@ namespace corsac
     };
 
     template <typename T = void>
-    struct equal_to : public binary_function<T, T, bool>
+    struct equal_to
     {
         constexpr bool operator()(const T& a, const T& b) const
         { return a == b; }
@@ -128,7 +191,7 @@ namespace corsac
     template <>
     struct equal_to<void>
     {
-        typedef int is_transparent;
+        using is_transparent = int;
         template<typename A, typename B>
         constexpr auto operator()(A&& a, B&& b) const
         -> decltype(corsac::forward<A>(a) == corsac::forward<B>(b))
@@ -142,7 +205,7 @@ namespace corsac
     }
 
     template <typename T = void>
-    struct not_equal_to : public binary_function<T, T, bool>
+    struct not_equal_to
     {
         constexpr bool operator()(const T& a, const T& b) const
         { return a != b; }
@@ -151,7 +214,7 @@ namespace corsac
     template <>
     struct not_equal_to<void>
     {
-        typedef int is_transparent;
+        using is_transparent = int;
         template<typename A, typename B>
         constexpr auto operator()(A&& a, B&& b) const
         -> decltype(corsac::forward<A>(a) != corsac::forward<B>(b))
@@ -184,7 +247,7 @@ namespace corsac
     * основе слов, такие как та, которая используется в функции CorsacStdC Strcmp.
     */
     template <typename T>
-    struct str_equal_to : public binary_function<T, T, bool>
+    struct str_equal_to
     {
         constexpr bool operator()(T a, T b) const
         {
@@ -198,7 +261,7 @@ namespace corsac
     };
 
     template <typename T = void>
-    struct greater : public binary_function<T, T, bool>
+    struct greater
     {
         constexpr bool operator()(const T& a, const T& b) const
         { return a > b; }
@@ -243,7 +306,7 @@ namespace corsac
     * сравнения на основе слов, такие как та, которая используется в функции CorsacStdC Strcmp.
     */
     template <typename T>
-    struct str_less : public binary_function<T, T, bool>
+    struct str_less
     {
         bool operator()(T a, T b) const
         {
@@ -270,7 +333,7 @@ namespace corsac
     };
 
     template <typename T = void>
-    struct greater_equal : public binary_function<T, T, bool>
+    struct greater_equal
     {
         constexpr bool operator()(const T& a, const T& b) const
         { return a >= b; }
@@ -292,7 +355,7 @@ namespace corsac
     }
 
     template <typename T = void>
-    struct less_equal : public binary_function<T, T, bool>
+    struct less_equal
     {
         constexpr bool operator()(const T& a, const T& b) const
         { return a <= b; }
@@ -314,7 +377,7 @@ namespace corsac
     }
 
     template <typename T = void>
-    struct logical_and : public binary_function<T, T, bool>
+    struct logical_and
     {
         constexpr bool operator()(const T& a, const T& b) const
         { return a && b; }
@@ -330,7 +393,7 @@ namespace corsac
     };
 
     template <typename T = void>
-    struct logical_or : public binary_function<T, T, bool>
+    struct logical_or
     {
         constexpr bool operator()(const T& a, const T& b) const
         { return a || b; }
@@ -346,7 +409,7 @@ namespace corsac
     };
 
     template <typename T = void>
-    struct logical_not : public unary_function<T, bool>
+    struct logical_not
     {
         constexpr bool operator()(const T& a) const
         { return !a; }
@@ -360,224 +423,6 @@ namespace corsac
         -> decltype(!corsac::forward<T>(t))
         { return !corsac::forward<T>(t); }
     };
-
-    // Dual type functions
-    template <typename T, typename U>
-    struct equal_to_2 : public binary_function<T, U, bool>
-    {
-        constexpr bool operator()(const T& a, const U& b) const
-        { return a == b; }
-
-        template <typename T_ = T, typename U_ = U, typename = corsac::enable_if_t<!corsac::is_same_v<corsac::remove_const_t<T_>, corsac::remove_const_t<U_>>>>
-        constexpr bool operator()(const U& b, const T& a) const
-        { return b == a; }
-    };
-
-    template <typename T, typename U>
-    struct not_equal_to_2 : public binary_function<T, U, bool>
-    {
-        constexpr bool operator()(const T& a, const U& b) const
-        { return a != b; }
-
-        template <typename T_ = T, typename U_ = U, typename = corsac::enable_if_t<!corsac::is_same_v<corsac::remove_const_t<T_>, corsac::remove_const_t<U_>>>>
-        constexpr bool operator()(const U& b, const T& a) const
-        { return b != a; }
-    };
-
-
-    template <typename T, typename U>
-    struct less_2 : public binary_function<T, U, bool>
-    {
-        constexpr bool operator()(const T& a, const U& b) const
-        { return a < b; }
-
-        template <typename T_ = T, typename U_ = U, typename = corsac::enable_if_t<!corsac::is_same_v<corsac::remove_const_t<T_>, corsac::remove_const_t<U_>>>>
-        constexpr bool operator()(const U& b, const T& a) const
-        { return b < a; }
-    };
-
-
-    /// unary_negate
-    template <typename Predicate>
-    class unary_negate : public unary_function<typename Predicate::argument_type, bool>
-    {
-    protected:
-        Predicate mPredicate;
-    public:
-        explicit unary_negate(const Predicate& a)
-                : mPredicate(a) {}
-        constexpr bool operator()(const typename Predicate::argument_type& a) const
-        { return !mPredicate(a); }
-    };
-
-    template <typename Predicate>
-    inline constexpr unary_negate<Predicate> not1(const Predicate& predicate)
-    { return unary_negate<Predicate>(predicate); }
-
-
-
-    /// binary_negate
-    template <typename Predicate>
-    class binary_negate : public binary_function<typename Predicate::first_argument_type, typename Predicate::second_argument_type, bool>
-    {
-    protected:
-        Predicate mPredicate;
-    public:
-        explicit binary_negate(const Predicate& a)
-                : mPredicate(a) { }
-        constexpr bool operator()(const typename Predicate::first_argument_type& a, const typename Predicate::second_argument_type& b) const
-        { return !mPredicate(a, b); }
-    };
-
-    template <typename Predicate>
-    inline constexpr binary_negate<Predicate> not2(const Predicate& predicate)
-    { return binary_negate<Predicate>(predicate); }
-
-
-
-    /// unary_compose
-    template<typename Operation1, typename Operation2>
-    struct unary_compose : public unary_function<typename Operation2::argument_type, typename Operation1::result_type>
-    {
-    protected:
-        Operation1 op1;
-        Operation2 op2;
-
-    public:
-        unary_compose(const Operation1& x, const Operation2& y)
-                : op1(x), op2(y) {}
-
-        typename Operation1::result_type operator()(const typename Operation2::argument_type& x) const
-        { return op1(op2(x)); }
-
-        typename Operation1::result_type operator()(typename Operation2::argument_type& x) const
-        { return op1(op2(x)); }
-    };
-
-    template<typename Operation1,typename Operation2>
-    inline unary_compose<Operation1,Operation2>
-    compose1(const Operation1& op1, const Operation2& op2)
-    {
-        return unary_compose<Operation1, Operation2>(op1,op2);
-    }
-
-
-    /// binary_compose
-    template <class Operation1, class Operation2, class Operation3>
-    class binary_compose : public unary_function<typename Operation2::argument_type, typename Operation1::result_type>
-    {
-    protected:
-        Operation1 op1;
-        Operation2 op2;
-        Operation3 op3;
-
-    public:
-        // Support binary functors too.
-        typedef typename Operation2::argument_type first_argument_type;
-        typedef typename Operation3::argument_type second_argument_type;
-
-        binary_compose(const Operation1& x, const Operation2& y, const Operation3& z)
-                : op1(x), op2(y), op3(z) { }
-
-        typename Operation1::result_type operator()(const typename Operation2::argument_type& x) const
-        { return op1(op2(x),op3(x)); }
-
-        typename Operation1::result_type operator()(typename Operation2::argument_type& x) const
-        { return op1(op2(x),op3(x)); }
-
-        typename Operation1::result_type operator()(const typename Operation2::argument_type& x,const typename Operation3::argument_type& y) const
-        { return op1(op2(x),op3(y)); }
-
-        typename Operation1::result_type operator()(typename Operation2::argument_type& x, typename Operation3::argument_type& y) const
-        { return op1(op2(x),op3(y)); }
-    };
-
-
-    template <class Operation1, class Operation2, class Operation3>
-    inline binary_compose<Operation1, Operation2, Operation3>
-    compose2(const Operation1& op1, const Operation2& op2, const Operation3& op3)
-    {
-        return binary_compose<Operation1, Operation2, Operation3>(op1, op2, op3);
-    }
-
-    /**
-    * pointer_to_unary_function
-    *
-    * Это шаблон адаптера, который преобразует указатель на автономную функцию в объект функции.
-    * Это позволяет автономным функциям работать во многих случаях,
-    * когда системе требуется объект функции.
-    *
-    * Пример использования:
-    *     ptrdiff_t Rand(ptrdiff_t n) { return rand() % n; } // Note: The C rand function is poor and slow.
-    *     pointer_to_unary_function<ptrdiff_t, ptrdiff_t> randInstance(Rand);
-    *     random_shuffle(pArrayBegin, pArrayEnd, randInstance);
-    */
-    template <typename Arg, typename Result>
-    class pointer_to_unary_function : public unary_function<Arg, Result>
-    {
-    protected:
-        Result (*mpFunction)(Arg);
-
-    public:
-        pointer_to_unary_function()
-        { }
-
-        explicit pointer_to_unary_function(Result (*pFunction)(Arg))
-                : mpFunction(pFunction) { }
-
-        Result operator()(Arg x) const
-        { return mpFunction(x); }
-    };
-
-    /**
-    * ptr_fun
-    *
-    * Этот ptr_fun - это просто сокращение для использования pointer_to_unary_function.
-    *
-    * Пример использования (на самом деле вам не нужно здесь использовать ptr_fun, но он все равно работает):
-    *    int factorial(int x) { return (x > 1) ? (x * factorial(x - 1)) : x; }
-    *    transform(pIntArrayBegin, pIntArrayEnd, pIntArrayBegin, ptr_fun(factorial));
-    */
-    template <typename Arg, typename Result>
-    inline pointer_to_unary_function<Arg, Result>
-    ptr_fun(Result (*pFunction)(Arg))
-    { return pointer_to_unary_function<Arg, Result>(pFunction); }
-
-    /**
-    * pointer_to_binary_function
-    *
-    * Это шаблон адаптера, который преобразует указатель на автономную функцию в объект функции.
-    * Это позволяет автономным функциям работать во многих случаях,
-    * когда системе требуется объект функции.
-    */
-    template <typename Arg1, typename Arg2, typename Result>
-    class pointer_to_binary_function : public binary_function<Arg1, Arg2, Result>
-    {
-    protected:
-        Result (*mpFunction)(Arg1, Arg2);
-
-    public:
-        pointer_to_binary_function()
-        {}
-
-        explicit pointer_to_binary_function(Result (*pFunction)(Arg1, Arg2))
-                : mpFunction(pFunction) {}
-
-        Result operator()(Arg1 x, Arg2 y) const
-        { return mpFunction(x, y); }
-    };
-
-    /**
-    * Этот ptr_fun - это просто сокращение для использования pointer_to_binary_function.
-    *
-    * Пример использования (на самом деле, вам не нужно использовать ptr_fun здесь, но он все равно работает):
-    *    int multiply(int x, int y) { return x * y; }
-    *    transform(pIntArray1Begin, pIntArray1End, pIntArray2Begin, pIntArray1Begin, ptr_fun(multiply));
-    */
-    template <typename Arg1, typename Arg2, typename Result>
-    inline pointer_to_binary_function<Arg1, Arg2, Result>
-    ptr_fun(Result (*pFunction)(Arg1, Arg2))
-    { return pointer_to_binary_function<Arg1, Arg2, Result>(pFunction); }
 
     /**
     * not_fn_ret
@@ -745,9 +590,9 @@ namespace corsac
         size_t operator()(const char* p) const
         {
             uint32_t c, result = 2166136261U;   // Хеш FNV1. Пожалуй, лучший строковый хеш. Намеренно uint32_t вместо size_t, поэтому поведение одинаково независимо от размера.
-            while((c = (uint8_t)*p++) != 0)     // Использование '!=' Отключает предупреждения компилятора.
+            while((c = static_cast<uint8_t>(*p++)) != 0)     // Использование '!=' Отключает предупреждения компилятора.
                 result = (result * 16777619) ^ c;
-            return (size_t)result;
+            return static_cast<size_t>(result);
         }
     };
 
@@ -756,9 +601,9 @@ namespace corsac
         size_t operator()(const char* p) const
         {
             uint32_t c, result = 2166136261U;   // Намеренно uint32_t вместо size_t, поэтому поведение одинаково независимо от размера.
-            while((c = (uint8_t)*p++) != 0)     // приведен к беззнаковому 8 бит.
+            while((c = static_cast<uint8_t>(*p++)) != 0)     // приведен к беззнаковому 8 бит.
                 result = (result * 16777619) ^ c;
-            return (size_t)result;
+            return static_cast<size_t>(result);
         }
     };
 
@@ -768,9 +613,9 @@ namespace corsac
 		size_t operator()(const char8_t* p) const
 		{
 			uint32_t c, result = 2166136261U;   // Хеш FNV1. Пожалуй, лучший строковый хеш. Намеренно uint32_t вместо size_t, поэтому поведение одинаково независимо от размера.
-			while((c = (uint8_t)*p++) != 0)     // Использование '!=' Отключает предупреждения компилятора.
+			while((c = static_cast<uint8_t>(*p++)) != 0)     // Использование '!=' Отключает предупреждения компилятора.
 				result = (result * 16777619) ^ c;
-			return (size_t)result;
+			return static_cast<size_t>(result);
 		}
 	};
 
@@ -779,9 +624,9 @@ namespace corsac
 		size_t operator()(const char8_t* p) const
 		{
 			uint32_t c, result = 2166136261U;   // Намеренно uint32_t вместо size_t, поэтому поведение одинаково независимо от размера.
-			while((c = (uint8_t)*p++) != 0)     // приведен к беззнаковому 8 бит.
+			while((c = static_cast<uint8_t>(*p++)) != 0)     // приведен к беззнаковому 8 бит.
 				result = (result * 16777619) ^ c;
-			return (size_t)result;
+			return static_cast<size_t>(result);
 		}
 	};
 #endif
@@ -790,10 +635,10 @@ namespace corsac
     {
         size_t operator()(const char16_t* p) const
         {
-            uint32_t c, result = 2166136261U;   // Intentionally uint32_t instead of size_t, so the behavior is the same regardless of size.
-            while((c = (uint16_t)*p++) != 0)    // cast to unsigned 16 bit.
+            uint32_t c, result = 2166136261U;               // Намеренно uint32_t вместо size_t, поэтому поведение одинаково независимо от размера.
+            while((c = static_cast<uint16_t>(*p++)) != 0)   // приведен к беззнаковому 16 бит.
                 result = (result * 16777619) ^ c;
-            return (size_t)result;
+            return static_cast<size_t>(result);
         }
     };
 
@@ -801,10 +646,10 @@ namespace corsac
     {
         size_t operator()(const char16_t* p) const
         {
-            uint32_t c, result = 2166136261U;   // Intentionally uint32_t instead of size_t, so the behavior is the same regardless of size.
-            while((c = (uint16_t)*p++) != 0)    // cast to unsigned 16 bit.
+            uint32_t c, result = 2166136261U;               // Намеренно uint32_t вместо size_t, поэтому поведение одинаково независимо от размера.
+            while((c = static_cast<uint16_t>(*p++)) != 0)   // приведен к беззнаковому 16 бит.
                 result = (result * 16777619) ^ c;
-            return (size_t)result;
+            return static_cast<size_t>(result);
         }
     };
 
@@ -812,10 +657,10 @@ namespace corsac
     {
         size_t operator()(const char32_t* p) const
         {
-            uint32_t c, result = 2166136261U;   // Intentionally uint32_t instead of size_t, so the behavior is the same regardless of size.
-            while((c = (uint32_t)*p++) != 0)    // cast to unsigned 32 bit.
+            uint32_t c, result = 2166136261U;                   // Намеренно uint32_t вместо size_t, поэтому поведение одинаково независимо от размера.
+            while((c = static_cast<uint32_t>(*p++)) != 0)       // приведен к беззнаковому 32 бит.
                 result = (result * 16777619) ^ c;
-            return (size_t)result;
+            return static_cast<size_t>(result);
         }
     };
 
@@ -823,10 +668,10 @@ namespace corsac
     {
         size_t operator()(const char32_t* p) const
         {
-            uint32_t c, result = 2166136261U;   // Intentionally uint32_t instead of size_t, so the behavior is the same regardless of size.
-            while((c = (uint32_t)*p++) != 0)    // cast to unsigned 32 bit.
+            uint32_t c, result = 2166136261U;                   // Намеренно uint32_t вместо size_t, поэтому поведение одинаково независимо от размера.
+            while((c = static_cast<uint32_t>(*p++)) != 0)       // приведен к беззнаковому 32 бит.
                 result = (result * 16777619) ^ c;
-            return (size_t)result;
+            return static_cast<size_t>(result);
         }
     };
 
@@ -835,10 +680,10 @@ namespace corsac
 	{
 		size_t operator()(const wchar_t* p) const
 		{
-			uint32_t c, result = 2166136261U;    // Intentionally uint32_t instead of size_t, so the behavior is the same regardless of size.
-			while ((c = (uint32_t)*p++) != 0)    // cast to unsigned 32 bit.
+			uint32_t c, result = 2166136261U;                   // Намеренно uint32_t вместо size_t, поэтому поведение одинаково независимо от размера.
+			while ((c = static_cast<uint32_t>(*p++)) != 0)      // приведен к беззнаковому 32 бит.
 				result = (result * 16777619) ^ c;
-			return (size_t)result;
+			return static_cast<size_t>(result);
 		}
 	};
 
@@ -846,10 +691,10 @@ namespace corsac
 	{
 		size_t operator()(const wchar_t* p) const
 		{
-			uint32_t c, result = 2166136261U;    // Intentionally uint32_t instead of size_t, so the behavior is the same regardless of size.
-			while ((c = (uint32_t)*p++) != 0)    // cast to unsigned 32 bit.
+			uint32_t c, result = 2166136261U;                   // Намеренно uint32_t вместо size_t, поэтому поведение одинаково независимо от размера.
+			while ((c = static_cast<uint32_t>(*p++)) != 0)      // приведен к беззнаковому 32 бит.
 				result = (result * 16777619) ^ c;
-			return (size_t)result;
+			return static_cast<size_t>(result);
 		}
 	};
 #endif
@@ -865,17 +710,17 @@ namespace corsac
     template <typename String>
     struct string_hash
     {
-        typedef String                                              string_type;
-        typedef typename String::value_type                         value_type;
-        typedef typename corsac::make_unsigned<value_type>::type    unsigned_value_type;
+        using string_type           = String;
+        using value_type            = typename String::value_type;
+        using unsigned_value_type   = typename corsac::make_unsigned<value_type>::type;
 
         size_t operator()(const string_type& s) const
         {
-            const unsigned_value_type* p = (const unsigned_value_type*)s.c_str();
+            const auto* p = static_cast<const unsigned_value_type*>(s.c_str());
             uint32_t c, result = 2166136261U;
             while((c = *p++) != 0)
                 result = (result * 16777619) ^ c;
-            return (size_t)result;
+            return static_cast<size_t>(result);
         }
     };
 }

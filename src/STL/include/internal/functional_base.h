@@ -164,24 +164,9 @@ namespace corsac
     */
     inline constexpr allocator_arg_t allocator_arg = allocator_arg_t();
 
-    template <typename Argument, typename Result>
-    struct unary_function
-    {
-        using argument_type = Argument;
-        using result_type   = Result;
-    };
-
-    template <typename Argument1, typename Argument2, typename Result>
-    struct binary_function
-    {
-        using first_argument_type = Argument1;
-        using second_argument_type = Argument2;
-        using result_type = Result;
-    };
-
     /// less<T>
     template <typename T = void>
-    struct less : public binary_function<T, T, bool>
+    struct less
     {
         constexpr bool operator()(const T& a, const T& b) const
         { return a < b; }
@@ -333,9 +318,11 @@ namespace corsac
         return obj.get().*member;
     }
 
-    // bind1st
+    // bind
+
+    /// bind1st
     template <typename Operation>
-    class binder1st : public unary_function<typename Operation::second_argument_type, typename Operation::result_type>
+    class binder1st //: public unary_function<typename Operation::second_argument_type, typename Operation::result_type>
     {
     protected:
         typename Operation::first_argument_type value;
@@ -343,7 +330,7 @@ namespace corsac
 
     public:
         binder1st(const Operation& x, const typename Operation::first_argument_type& y)
-                : value(y), op(x) { }
+                : value(y), op(x) {}
 
         typename Operation::result_type operator()(const typename Operation::second_argument_type& x) const
         { return op(value, x); }
@@ -359,9 +346,9 @@ namespace corsac
         return binder1st<Operation>(op, value(x));
     }
 
-    // bind2nd
+    /// bind2nd
     template <typename Operation>
-    class binder2nd : public unary_function<typename Operation::first_argument_type, typename Operation::result_type>
+    class binder2nd //: public unary_function<typename Operation::first_argument_type, typename Operation::result_type>
     {
     protected:
         Operation op;
@@ -377,6 +364,7 @@ namespace corsac
         typename Operation::result_type operator()(typename Operation::first_argument_type& x) const
         { return op(x, value); }
     };
+
 
     template <typename Operation, typename T>
     inline binder2nd<Operation> bind2nd(const Operation& op, const T& x)

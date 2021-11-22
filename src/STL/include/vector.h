@@ -383,7 +383,7 @@ namespace corsac
     {
         #if CORSAC_ASSERT_ENABLED
             if(CORSAC_UNLIKELY(n >= 0x80000000))
-                        CORSAC_FAIL_MSG("vector::DoAllocate -- improbably large request.");
+                CORSAC_FAIL_MSG("vector::DoAllocate -- improbably large request.");
         #endif
         // Если n равно нулю, мы не выделяем память и просто возвращаем nullptr.
         // Это нормально, поскольку наш ctor по умолчанию инициализируется указателями NULL.

@@ -25,18 +25,16 @@
 
 namespace corsac
 {
-    #if constexpr
-        class bad_function_call : public std::exception
-            {
-            public:
-                bad_function_call() noexcept = default;
+    class bad_function_call : public std::exception
+    {
+    public:
+        bad_function_call() noexcept = default;
 
-                const char* what() const noexcept CORSAC_OVERRIDE
-                {
-                    return "bad function_detail call";
-                }
-            };
-    #endif
+        const char* what() const noexcept override
+        {
+            return "bad function_detail call";
+        }
+    };
 
     namespace internal
     {
