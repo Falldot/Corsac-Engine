@@ -408,14 +408,14 @@ namespace corsac
 			template <typename Size, typename Value>
 			inline uint64_t* fill_n(uint64_t* first, Size n, Value c)
 			{
-				__stosq(first, (uint64_t)c, (size_t)n);
+				__stosq(first, (uint64_t)c, static_cast<size_t>(n));
 				return first + n;
 			}
 
 			template <typename Size, typename Value>
 			inline int64_t* fill_n(int64_t* first, Size n, Value c)
 			{
-				__stosq((uint64_t*)first, (uint64_t)c, (size_t)n);
+				__stosq((uint64_t*)first, (uint64_t)c, static_cast<size_t>(n));
 				return first + n;
 			}
 		#endif

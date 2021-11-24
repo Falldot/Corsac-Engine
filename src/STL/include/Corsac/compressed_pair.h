@@ -1,0 +1,8 @@
+//
+// Created by Falldot on 25.11.2021.
+//
+
+#ifndef CORSAC_COMPRESSED_PAIR_H
+#define CORSAC_COMPRESSED_PAIR_H
+
+#endif //CORSAC_COMPRESSED_PAIR_H
