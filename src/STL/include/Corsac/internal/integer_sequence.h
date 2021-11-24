@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "type_traits.h"
+#include "Corsac/type_traits.h"
 
 namespace corsac
 {

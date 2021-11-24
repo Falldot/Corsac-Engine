@@ -155,7 +155,7 @@
  *    true_type
  *    false_type
  *
- * === Взаимствование с eastl:
+ * === Взаимствование с corsac:
  *
  *    is_aligned<T>                             Определяется как истина, если у типа требования к выравниванию выше, чем выравнивание по умолчанию, которое принимается равным 8.
  *    union_cast<sT, dT>(dV)                    Обеспечивает удобное для чтения приведение между типами, которые не связаны между собой, но имеют двоичную эквивалентность. Классический вариант использования - преобразование между представлениями битов float и int32_t.
@@ -175,7 +175,7 @@
 
 #pragma once
 
-#include "internal/config.h"
+#include "Corsac/internal/config.h"
 #include <stddef.h> // Требуется для использования size_t
 
 namespace corsac
@@ -764,10 +764,10 @@ namespace corsac
 
 }
 
-#include <internal/type_fundamental.h>
-#include <internal/type_transformation.h>
-#include <internal/type_properties.h>
-#include <internal/type_compound.h>
-#include <internal/type_pod.h>
+#include <Corsac/internal/type_fundamental.h>
+#include <Corsac/internal/type_transformation.h>
+#include <Corsac/internal/type_properties.h>
+#include <Corsac/internal/type_compound.h>
+#include <Corsac/internal/type_pod.h>
 
 #endif //CORSAC_TYPE_FUNDAMENTAL_H

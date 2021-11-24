@@ -54,7 +54,7 @@
  *      not_equal_to                Бинарный предикат, который проверяет, не равно ли значение заданного типа другому значению этого типа.
  *      plus                        Бинарный предикат, который выполняет арифметическую операцию сложения для элементов заданного типа значения.
  *
- * === Взаимствование с eastl:
+ * === Взаимствование с corsac:
  *
  *      is_reference_wrapper<T>     Т являеться оболочкой для ссылки.
  *      remove_reference_wrapper    Добавляет ссылку на тип при задании reference_wrapper этого типа.
@@ -70,11 +70,11 @@
  *      bit_xor                     Возвращает результат применения логической операции ИСКЛЮЧАЮЩЕЕ ИЛИ (оператор ^) между двумя параметрами.
  */
 
-#include "internal/config.h"
-#include "internal/move_help.h"
-#include "type_traits.h"
-#include "internal/functional_base.h"
-#include "internal/mem_fn.h"
+#include "Corsac/internal/config.h""
+#include "Corsac/internal/move_help.h"
+#include "Corsac/type_traits.h"
+#include "Corsac/internal/functional_base.h"
+#include "Corsac/internal/mem_fn.h"
 
 namespace corsac
 {
@@ -725,6 +725,6 @@ namespace corsac
     };
 }
 
-#include "internal/function.h"
+#include "Corsac/internal/function.h"
 
 #endif //CORSAC_FUNCTIONAL_H

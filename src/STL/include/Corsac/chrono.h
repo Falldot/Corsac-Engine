@@ -28,7 +28,7 @@
  *      duration_values                 Предоставляет конкретные значения для параметра Rep шаблона duration.
  *      high_resolution_clock           Часы с тактовым периодом в наносекунд.
  *      steady_clock                    Часы. Предпочтительный для измерения временных интервалов.
- *      system_clock                    Объект clock type , основанный на часах системы в реальном времени.
+ *      system_clock                    Объект clock type, основанный на часах системы в реальном времени.
  *
  * === Функции:
  *
@@ -109,21 +109,21 @@
  *      sys_time                        Число дней, представленное объектом, time_point связанным с system_clock , который имеет эпоху 1/1/1970.
 */
 
-#include "internal/config.h"
-#include "type_traits.h"
-#include "numeric_limits.h"
-#include "ratio.h"
+#include "Corsac/internal/config.h"
+#include "Corsac/type_traits.h"
+#include "Corsac/numeric_limits.h"
+#include "Corsac/ratio.h"
 
 // TODO:  move to platform specific cpp or header file
 #if defined(CORSAC_PLATFORM_MICROSOFT)
-	#ifndef WIN32_LEAN_AND_MEAN
-		#define WIN32_LEAN_AND_MEAN
+	#ifndef WIN32_LCORSACN_AND_MCORSACN
+		#define WIN32_LCORSACN_AND_MCORSACN
 	#endif
 
 	#undef NOMINMAX
 	#define NOMINMAX
 
-	#include <Windows.h>
+	#include <windows.h>
 
 	#ifdef min
 		#undef min
@@ -146,7 +146,7 @@
 		#include <pthread_time.h>
 	#endif
 	#include <time.h>
-	#if (defined(CLOCK_REALTIME) || defined(CLOCK_MONOTONIC))
+	#if (defined(CLOCK_RCORSACLTIME) || defined(CLOCK_MONOTONIC))
 		#include <errno.h>
 	#else
 		#include <sys/time.h>
@@ -601,12 +601,12 @@ namespace corsac
                 #elif defined(CORSAC_PLATFORM_APPLE)
                     return mach_absolute_time();
                 #elif defined(CORSAC_PLATFORM_POSIX) // Posix means Linux, Unix, and Macintosh OSX, among others (including Linux-based mobile platforms).
-                    #if (defined(CLOCK_REALTIME) || defined(CLOCK_MONOTONIC))
+                    #if (defined(CLOCK_RCORSACLTIME) || defined(CLOCK_MONOTONIC))
                             timespec ts;
                             int result = clock_gettime(CLOCK_MONOTONIC, &ts);
 
                             if (result == -1 && errno == EINVAL)
-                                result = clock_gettime(CLOCK_REALTIME, &ts);
+                                result = clock_gettime(CLOCK_RCORSACLTIME, &ts);
 
                             const uint64_t nNanoseconds = (uint64_t)ts.tv_nsec + ((uint64_t)ts.tv_sec * UINT64_C(1000000000));
                             return nNanoseconds;

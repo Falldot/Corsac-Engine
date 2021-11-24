@@ -66,16 +66,16 @@
  *    late_constructed<T>                       Умный указатель для глобальных переменных с отложенной инициализации.
  */
 
-#include "internal/config.h"
-#include "internal/memory_base.h"
-#include "internal/generic_iterator.h"
-#include "internal/functional_base.h"
-#include "algorithm.h"
-#include "type_traits.h"
-#include "allocator.h"
-#include "iterator.h"
-#include "utility.h"
-#include "numeric_limits.h"
+#include "Corsac/internal/config.h""
+#include "Corsac/internal/memory_base.h"
+#include "Corsac/internal/generic_iterator.h"
+#include "Corsac/internal/functional_base.h"
+#include "Corsac/algorithm.h"
+#include "Corsac/type_traits.h"
+#include "Corsac/allocator.h"
+#include "Corsac/iterator.h"
+#include "Corsac/utility.h"
+#include "Corsac/numeric_limits.h"
 
 namespace corsac
 {

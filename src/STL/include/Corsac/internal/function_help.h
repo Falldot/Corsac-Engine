@@ -5,8 +5,8 @@
 #ifndef CORSAC_FUNCTION_HELP_H
 #define CORSAC_FUNCTION_HELP_H
 
-#include "internal/config.h"
-#include "type_traits.h"
+#include "Corsac/internal/config.h"
+#include "Corsac/type_traits.h"
 
 namespace corsac
 {

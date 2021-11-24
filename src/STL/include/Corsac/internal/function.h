@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "internal/config.h"
-#include "internal/function_detail.h"
+#include "Corsac/internal/config.h"
+#include "Corsac/internal/function_detail.h"
 
 namespace corsac
 {

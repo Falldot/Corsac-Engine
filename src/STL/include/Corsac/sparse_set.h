@@ -22,11 +22,11 @@
  */
 #pragma once
 
-#include "vector.h"
+#include "Corsac/vector.h"
 
 namespace corsac
 {
-    template <typename T, typename Allocator = CORSAC_AllocatorType, bool is_unsigned = corsac::is_unsigned_v<T>>
+    template <typename T, typename Allocator = CORSAC_ALLOCATOR_TYPE, bool is_unsigned = corsac::is_unsigned_v<T>>
     class sparse_set {};
 
     template <typename T, typename Allocator>

@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include "internal/config.h"
+#include "Corsac/internal/config.h"
 
-#include "internal/memory_base.h"
-#include "internal/move_help.h"
-#include "type_traits.h"
+#include "Corsac/internal/memory_base.h"
+#include "Corsac/internal/move_help.h"
+#include "Corsac/type_traits.h"
 
 namespace corsac
 {

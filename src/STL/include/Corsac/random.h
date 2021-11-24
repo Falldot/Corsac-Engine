@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "internal/config.h"
-#include "numeric_limits.h"
+#include "Corsac/internal/config.h""
+#include "Corsac/numeric_limits.h"
 
 namespace corsac
 {

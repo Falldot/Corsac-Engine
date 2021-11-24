@@ -11,12 +11,12 @@
 
 #pragma once
 
-#include "internal/config.h"
+#include "Corsac/internal/config.h"
 
-#include "type_traits.h"
-#include "iterator.h"
+#include "Corsac/type_traits.h"
+#include "Corsac/iterator.h"
 
-#include "string.h" // memcpy, memcmp, memmove
+#include <string.h> // memcpy, memcmp, memmove
 
 namespace corsac
 {

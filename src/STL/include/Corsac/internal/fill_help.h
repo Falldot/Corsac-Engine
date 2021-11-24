@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "internal/config.h"
+#include "Corsac/internal/config.h""
 
 #if defined(CORSAC_COMPILER_MICROSOFT) && (defined(CORSAC_PROCESSOR_X86) || defined(CORSAC_PROCESSOR_X86_64))
     #include <intrin.h>

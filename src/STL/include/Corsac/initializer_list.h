@@ -21,8 +21,8 @@
  *      - MSVC      v16.11.5
  */
 
-#include "internal/config.h"
-#include "internal/base/have.h"
+#include "Corsac/internal/config.h""
+#include "Corsac/internal/base/have.h"
 
 #if defined(CORSAC_HAVE_INITIALIZER_LIST) // Если компилятор может генерировать вызовы std::initializer_list...
 

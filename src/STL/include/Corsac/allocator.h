@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "internal/config.h"
+#include "Corsac/internal/config.h""
 
 namespace corsac {
     /**
@@ -228,15 +228,15 @@ namespace corsac
         return NULL; // По умолчанию мы возвращаем NULL; пользователь должен сделать специализацию этой функции, чтобы обеспечить собственную реализацию.
     }
 
-    inline CORSAC_AllocatorType* get_default_allocator(const CORSAC_AllocatorType*)
+    inline CORSAC_ALLOCATOR_TYPE* get_default_allocator(const CORSAC_ALLOCATOR_TYPE*)
     {
-        // Для встроенного распределителя CORSAC_AllocatorType у нас уже есть функция для возврата экземпляра распределителя по умолчанию, поэтому мы предоставляем ее.
+        // Для встроенного распределителя CORSAC_ALLOCATOR_TYPE у нас уже есть функция для возврата экземпляра распределителя по умолчанию, поэтому мы предоставляем ее.
         return CORSAC_AllocatorDefault();
     }
 
     inline void* default_allocfreemethod(size_t n, void* pBuffer, void* /*pContext*/)
     {
-        CORSAC_AllocatorType* const pAllocator = CORSAC_AllocatorDefault();
+        CORSAC_ALLOCATOR_TYPE* const pAllocator = CORSAC_AllocatorDefault();
 
         if(pBuffer) // Если освободить ...
         {

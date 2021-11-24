@@ -67,8 +67,8 @@
  *      traps	                Проверяет, реализованы ли для типа исключения при выполнении арифметических операций.
  */
 
-#include "internal/config.h"
-#include "type_traits.h"
+#include "Corsac/internal/config.h""
+#include "Corsac/type_traits.h"
 
 #include "limits.h"
 #include "float.h"

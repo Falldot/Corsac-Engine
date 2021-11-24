@@ -11,9 +11,9 @@
 
 #pragma once
 
-#include "internal/config.h"
-#include "internal/move_help.h"
-#include "initializer_list.h"
+#include "Corsac/internal/config.h""
+#include "Corsac/internal/move_help.h"
+#include "Corsac/initializer_list.h"
 
 namespace corsac
 {

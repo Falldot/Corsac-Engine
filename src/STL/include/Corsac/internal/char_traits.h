@@ -19,8 +19,8 @@
  * corsac::string_view types.
  */
 
-#include "internal/config.h"
-#include "type_traits.h"
+#include "Corsac/internal/config.h""
+#include "Corsac/type_traits.h"
 
 #include <ctype.h>              // toupper, etc.
 #include <string.h>             // memset, etc.

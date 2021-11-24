@@ -6,11 +6,11 @@
 
 #pragma once
 
-#include "base/base.h"
+#include "Corsac/internal/base/base.h"
 
-#include "config.h"
-#include "iterator.h"
-#include "type_traits.h"
+#include "Corsac/internal/config.h"
+#include "Corsac/iterator.h"
+#include "Corsac/type_traits.h"
 
 // Реализует универсальный итератор из заданного итеративного типа, например указателя
 // Мы не можем поместить этот файл в наш собственный файл iterator.h, потому что

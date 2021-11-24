@@ -21,13 +21,13 @@
  *      - MSVC      v16.11.5
  */
 
-#include "internal/config.h"
-#include "allocator.h"
-#include "type_traits.h"
-#include "iterator.h"
-#include "algorithm.h"
-#include "initializer_list.h"
-#include "memory.h"
+#include "Corsac/internal/config.h""
+#include "Corsac/allocator.h"
+#include "Corsac/type_traits.h"
+#include "Corsac/iterator.h"
+#include "Corsac/algorithm.h"
+#include "Corsac/initializer_list.h"
+#include "Corsac/memory.h"
 
 #include <new>
 #include <stddef.h>
@@ -110,7 +110,7 @@ namespace corsac
     *
     * Динамический массив.
     */
-    template <typename T, typename Allocator = CORSAC_AllocatorType>
+    template <typename T, typename Allocator = CORSAC_ALLOCATOR_TYPE>
     class vector : public VectorBase<T, Allocator>
     {
         using base_type = VectorBase<T, Allocator>;
@@ -778,11 +778,10 @@ namespace corsac
     {
         #if CORSAC_ASSERT_ENABLED && CORSAC_EMPTY_REFERENCE_ASSERT_ENABLED
             if (CORSAC_UNLIKELY(n >= (static_cast<size_type>(mpEnd - mpBegin))))
-                        CORSAC_FAIL_MSG("vector::operator[] -- out of range");
+                CORSAC_FAIL_MSG("vector::operator[] -- out of range");
         #elif CORSAC_ASSERT_ENABLED
-            // Мы разрешаем пользователю использовать ссылку на v[0] пустого контейнера. Но это было просто дедушкой, и в идеале мы не должны разрешать такой доступ к [0].
-                    if (CORSAC_UNLIKELY((n != 0) && (n >= (static_cast<size_type>(mpEnd - mpBegin)))))
-                        CORSAC_FAIL_MSG("vector::operator[] -- out of range");
+            if (CORSAC_UNLIKELY((n != 0) && (n >= (static_cast<size_type>(mpEnd - mpBegin)))))
+                CORSAC_FAIL_MSG("vector::operator[] -- out of range");
         #endif
         return *(mpBegin + n);
     }
@@ -793,11 +792,10 @@ namespace corsac
     {
         #if CORSAC_ASSERT_ENABLED && CORSAC_EMPTY_REFERENCE_ASSERT_ENABLED
             if (CORSAC_UNLIKELY(n >= (static_cast<size_type>(mpEnd - mpBegin))))
-                        CORSAC_FAIL_MSG("vector::operator[] -- out of range");
+                CORSAC_FAIL_MSG("vector::operator[] -- out of range");
         #elif CORSAC_ASSERT_ENABLED
-            // We allow the user to use a reference to v[0] of an empty container. But this was merely grandfathered in and ideally we shouldn't allow such access to [0].
-                    if (CORSAC_UNLIKELY((n != 0) && (n >= (static_cast<size_type>(mpEnd - mpBegin)))))
-                        CORSAC_FAIL_MSG("vector::operator[] -- out of range");
+            if (CORSAC_UNLIKELY((n != 0) && (n >= (static_cast<size_type>(mpEnd - mpBegin)))))
+                CORSAC_FAIL_MSG("vector::operator[] -- out of range");
         #endif
         return *(mpBegin + n);
     }
@@ -811,10 +809,10 @@ namespace corsac
         // пределы допустимого диапазона, вызывая исключение out_of_range.
         #if CORSAC_EXCEPTIONS_ENABLED
             if(CORSAC_UNLIKELY(n >= (static_cast<size_type>(mpEnd - mpBegin))))
-                        throw std::out_of_range("vector::at -- out of range");
+                throw std::out_of_range("vector::at -- out of range");
         #elif CORSAC_ASSERT_ENABLED
             if(CORSAC_UNLIKELY(n >= (static_cast<size_type>(mpEnd - mpBegin))))
-                        CORSAC_FAIL_MSG("vector::at -- out of range");
+                CORSAC_FAIL_MSG("vector::at -- out of range");
         #endif
         return *(mpBegin + n);
     }
@@ -825,10 +823,10 @@ namespace corsac
     {
         #if CORSAC_EXCEPTIONS_ENABLED
             if(CORSAC_UNLIKELY(n >= (static_cast<size_type>(mpEnd - mpBegin))))
-                        throw std::out_of_range("vector::at -- out of range");
+                throw std::out_of_range("vector::at -- out of range");
         #elif CORSAC_ASSERT_ENABLED
             if(CORSAC_UNLIKELY(n >= (static_cast<size_type>(mpEnd - mpBegin))))
-                        CORSAC_FAIL_MSG("vector::at -- out of range");
+                CORSAC_FAIL_MSG("vector::at -- out of range");
         #endif
         return *(mpBegin + n);
     }
@@ -838,8 +836,9 @@ namespace corsac
     vector<T, Allocator>::front()
     {
         #if CORSAC_ASSERT_ENABLED && CORSAC_EMPTY_REFERENCE_ASSERT_ENABLED
-            if (CORSAC_UNLIKELY((mpBegin == nullptr) || (mpEnd <= mpBegin))) // We don't allow the user to reference an empty container.
-                        CORSAC_FAIL_MSG("vector::front -- empty vector");
+            // Мы не разрешаем пользователю ссылаться на пустой контейнер.
+            if (CORSAC_UNLIKELY((mpBegin == nullptr) || (mpEnd <= mpBegin)))
+                CORSAC_FAIL_MSG("vector::front -- empty vector");
         #else
             // Мы позволяем пользователю ссылаться на пустой контейнер.
         #endif
@@ -852,7 +851,7 @@ namespace corsac
     {
         #if CORSAC_ASSERT_ENABLED && CORSAC_EMPTY_REFERENCE_ASSERT_ENABLED
             if (CORSAC_UNLIKELY((mpBegin == nullptr) || (mpEnd <= mpBegin))) // We don't allow the user to reference an empty container.
-                        CORSAC_FAIL_MSG("vector::front -- empty vector");
+                CORSAC_FAIL_MSG("vector::front -- empty vector");
         #else
             // Мы позволяем пользователю ссылаться на пустой контейнер.
         #endif
@@ -865,8 +864,9 @@ namespace corsac
     vector<T, Allocator>::back()
     {
     #if CORSAC_ASSERT_ENABLED && CORSAC_EMPTY_REFERENCE_ASSERT_ENABLED
-        if (CORSAC_UNLIKELY((mpBegin == nullptr) || (mpEnd <= mpBegin))) // We don't allow the user to reference an empty container.
-                    CORSAC_FAIL_MSG("vector::back -- empty vector");
+        // Мы не разрешаем пользователю ссылаться на пустой контейнер.
+        if (CORSAC_UNLIKELY((mpBegin == nullptr) || (mpEnd <= mpBegin)))
+            CORSAC_FAIL_MSG("vector::back -- empty vector");
     #else
         // Мы позволяем пользователю ссылаться на пустой контейнер.
     #endif
@@ -879,8 +879,9 @@ namespace corsac
     vector<T, Allocator>::back() const
     {
         #if CORSAC_ASSERT_ENABLED && CORSAC_EMPTY_REFERENCE_ASSERT_ENABLED
-            if (CORSAC_UNLIKELY((mpBegin == nullptr) || (mpEnd <= mpBegin))) // We don't allow the user to reference an empty container.
-                        CORSAC_FAIL_MSG("vector::back -- empty vector");
+            // Мы не разрешаем пользователю ссылаться на пустой контейнер.
+            if (CORSAC_UNLIKELY((mpBegin == nullptr) || (mpEnd <= mpBegin)))
+                CORSAC_FAIL_MSG("vector::back -- empty vector");
         #else
             // Мы позволяем пользователю ссылаться на пустой контейнер.
         #endif
@@ -934,7 +935,7 @@ namespace corsac
     {
     #if CORSAC_ASSERT_ENABLED
         if(CORSAC_UNLIKELY(mpEnd <= mpBegin))
-                    CORSAC_FAIL_MSG("vector::pop_back -- empty vector");
+            CORSAC_FAIL_MSG("vector::pop_back -- empty vector");
     #endif
         --mpEnd;
         mpEnd->~value_type();
@@ -978,10 +979,10 @@ namespace corsac
     inline typename vector<T, Allocator>::iterator
     vector<T, Allocator>::insert(const_iterator position, const value_type& value)
     {
-    #if CORSAC_ASSERT_ENABLED
-        if(CORSAC_UNLIKELY((position < mpBegin) || (position > mpEnd)))
-                    CORSAC_FAIL_MSG("vector::insert -- invalid position");
-    #endif
+        #if CORSAC_ASSERT_ENABLED
+            if(CORSAC_UNLIKELY((position < mpBegin) || (position > mpEnd)))
+                CORSAC_FAIL_MSG("vector::insert -- invalid position");
+        #endif
         // Мы реализуем быстрый путь для случая, когда позиция вставки находится в конце, и у нас есть свободная емкость для нее.
         const ptrdiff_t n = position - mpBegin; // Сохраните это, потому что мы можем перераспределить.
 
@@ -1054,10 +1055,10 @@ namespace corsac
     inline typename vector<T, Allocator>::iterator
     vector<T, Allocator>::erase(const_iterator first, const_iterator last)
     {
-    #if CORSAC_ASSERT_ENABLED
-        if(CORSAC_UNLIKELY((first < mpBegin) || (first > mpEnd) || (last < mpBegin) || (last > mpEnd) || (last < first)))
-                    CORSAC_FAIL_MSG("vector::erase -- invalid position");
-    #endif
+        #if CORSAC_ASSERT_ENABLED
+            if(CORSAC_UNLIKELY((first < mpBegin) || (first > mpEnd) || (last < mpBegin) || (last > mpEnd) || (last < first)))
+                CORSAC_FAIL_MSG("vector::erase -- invalid position");
+        #endif
         if (first != last)
         {
             iterator const position = const_cast<value_type*>(corsac::move(const_cast<value_type*>(last), const_cast<value_type*>(mpEnd), const_cast<value_type*>(first)));
@@ -1073,7 +1074,7 @@ namespace corsac
     {
        #if CORSAC_ASSERT_ENABLED
             if(CORSAC_UNLIKELY((position < mpBegin) || (position >= mpEnd)))
-                        CORSAC_FAIL_MSG("vector::erase -- invalid position");
+                CORSAC_FAIL_MSG("vector::erase -- invalid position");
         #endif
         iterator destPosition = const_cast<value_type*>(position);
         *destPosition = corsac::move(*(mpEnd - 1));

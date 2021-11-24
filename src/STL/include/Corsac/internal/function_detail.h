@@ -7,17 +7,17 @@
 
 #pragma once
 
-#include "internal/base/base.h"
-#include "internal/base/compiler_traits.h"
+#include "Corsac/internal/base/base.h"
+#include "Corsac/internal/base/compiler_traits.h"
 
-#include "internal/config.h"
-#include "internal/functional_base.h"
-#include "internal/move_help.h"
-#include "internal/function_help.h"
+#include "Corsac/internal/config.h"
+#include "functional_base.h"
+#include "move_help.h"
+#include "function_help.h"
 
-#include "type_traits.h"
-#include "utility.h"
-#include "allocator.h"
+#include "Corsac/type_traits.h"
+#include "Corsac/utility.h"
+#include "Corsac/allocator.h"
 
 #if CORSAC_RTTI_ENABLED
     #include <typeinfo>

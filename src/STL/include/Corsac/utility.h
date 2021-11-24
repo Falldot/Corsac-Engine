@@ -1,23 +1,85 @@
-//
-// Created by Falldot on 09.11.2021.
-//
-
+/**
+ * corsac::STL
+ *
+ * utility.h
+ *
+ * Created by Falldot on 09.11.2021.
+ * Copyright (c) 2021 Corsac. All rights reserved.
+ */
 #ifndef CORSAC_UTILITY_H
 #define CORSAC_UTILITY_H
 
 #pragma once
+/**
+ * utility
+ *      https://en.cppreference.com/w/cpp/utility
+ *      https://docs.microsoft.com/ru-ru/cpp/standard-library/utility
+ *
+ *
+ * Определяет типы, функции и операторы стандартной библиотеки C++, которые помогают создавать пары
+ * объектов и управлять ими, что удобно, когда два объекта должны рассматриваться как один.
+ *
+ * ---------------------------------------------------------------------------------------------------
+ * === Классы:
+ *
+ *      tuple_element               Класс, который заключает в оболочку тип элемента pair.
+ *      tuple_size                  Класс, который заключает в оболочку счетчик элементов pair.
+ *
+ * === Объекты:
+ *
+ *      index_sequence              Шаблон псевдонима, определенный для общего случая T , где — corsac::size_t
+ *      index_sequence_for          Шаблон вспомогательного псевдонима для преобразования любого пакета параметров типа в последовательность индекса той же длины.
+ *      make_index_sequence         Шаблон вспомогательного псевдонима для упрощения создания corsac::index_sequence типа.
+ *      make_integer_sequence       Шаблон вспомогательного псевдонима для упрощения создания corsac::integer_sequence типа.
+ *
+ * === Функции:
+ *
+ *      as_const                    Возвращает тип.
+ *      declval                     Вычисление сокращенного выражения.
+ *      exchange                    Присваивает новое значение объекту и возвращает его старое значение.
+ *      forward                     Не позволяет изменить ссылочный тип (lvalue или rvalue) аргумента при точной пересылке.
+ *      get                         Функция, которая возвращает элемент из объекта pair.
+ *      make_pair                   Вспомогательная функция шаблона, которую можно использовать для построения объектов типа pair на основе типов данных, переданных в качестве параметров.
+ *      move                        Возвращает переданный аргумент в виде ссылки rvalue.
+ *      move_if_noexcept            Возвращает переданный аргумент в виде ссылки rvalue, без исключений.
+ *      swap                        Меняет местами элементы двух объектов pair.
+ *
+ * === Шаблоны:
+ *
+ *      identity                    Структура, предоставляющая определение типа как параметр шаблона.
+ *      in_place_t                  Также включает структуры in_place_type_t и in_place_index_t.
+ *      integer_sequence            Представляет последовательность целых чисел.
+ *      pair                        Тип, позволяющий обрабатывать два объекта как один объект.
+ *      piecewise_construct_t       Тип, используемый для сохранения отдельного конструктора и перегрузки функции.
+ *      piecewise_construct         Тип, используемый для устранения неоднозначности функций для частичного построения.
+ *
+ * === Взаимствование с corsac:
+ *
+ *      is_swappable<T, U>             T и U, можно поменять местами с помощью функции corsac::swap
+ *      is_nothrow_swappable<T, U>     T и U, можно поменять местами с помощью функции corsac::swap, без исключений.
+ */
+ /**
+ * === TODO: (С++ 17)
+  *     chars_format                Формат с плавающей запятой для преобразования примитивных чисел.
+  *     to_chars                    Преобразует значение в символьную строку.
+  *     from_chars_result           Структура, используемая для from_chars.
+  *     to_chars_result             Структура, используемая для to_chars.
+  *     apply                       Вызывает функцию с набором аргументов
+  *     make_from_tuple             Создайте объект с кортежем аргументов
+  */
 
-#include "internal/config.h"
-#include "type_traits.h"
-#include "iterator.h"
-#include "internal/functional_base.h"
-#include "internal/move_help.h"
-#include "internal/base/have.h"
 
-#include "internal/integer_sequence.h"
-#include "internal/tuple_fwd_decls.h"
-#include "internal/in_place_t.h"
-#include "internal/piecewise_construct_t.h"
+#include "Corsac/internal/config.h"
+#include "Corsac/type_traits.h"
+#include "Corsac/iterator.h"
+#include "Corsac/internal/functional_base.h"
+#include "Corsac/internal/move_help.h"
+#include "Corsac/internal/base/have.h"
+
+#include "Corsac/internal/integer_sequence.h"
+#include "Corsac/internal/tuple_fwd_decls.h"
+#include "Corsac/internal/in_place_t.h"
+#include "Corsac/internal/piecewise_construct_t.h"
 
 namespace corsac
 {
@@ -43,12 +105,12 @@ namespace corsac
     /**
     * is_swappable
     *
-    * is_swappable Определяет, можно ли поменять местами два типа с помощью функции подкачки.
+    * is_swappable Определяет, можно ли поменять местами два типа с помощью функции corsac::swap.
     * Это определяет только то, есть ли функция подкачки, которая соответствует типам,
     * а не то, действительны ли назначения в реализации подкачки.
     *
     * Это признак типа, но он в настоящее время не встречается в <type_traits.h>,
-    * так как он зависит от алгоритма подкачки, который находится на более высоком уровне, чем признаки типа.
+    * так как он зависит от алгоритма corsac::swap, который находится на более высоком уровне, чем признаки типа.
     *
     *  Пример использования:
     *     static_assert(is_swappable<int>::value, "int should be swappable");
@@ -151,7 +213,6 @@ namespace corsac
         template <typename ForwardIterator1, typename ForwardIterator2>
         static void iter_swap(ForwardIterator1 a, ForwardIterator2 b)
         {
-            // Не используйте префикс swap с помощью corsac::, так как мы хотим разрешить определяемую пользователем замену через поиск, зависящий от аргументов.
             swap(*a, *b);
         }
     };
@@ -201,7 +262,6 @@ namespace corsac
     swap_ranges(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2)
     {
         for(; first1 != last1; ++first1, ++first2)
-            // Не используйте префикс swap с помощью corsac::, так как мы хотим разрешить определяемую пользователем замену через поиск, зависящий от аргументов.
             iter_swap(first1, first2);
         return first2;
     }
@@ -256,7 +316,7 @@ namespace corsac
     /**
     * rel_ops
     *
-    * Rel_ops Разрешить автоматическое поколение операторов! =,>, <=,> = от
+    * Rel_ops Разрешить автоматическое поколение операторов! =,>,<=,> = от
     * просто операторы == и <.Они намеренно в пространстве имен REL_OPS
     * Так что они не противоречат другим подобным операторам.Использовать их
     * Операторы, добавьте «Использование пространства имен STD :: Rel_ops;»в соответствующее место в

@@ -9,7 +9,7 @@
 #ifndef CORSAC_ENGINE_TYPE_TRANSFORMATION_H
 #define CORSAC_ENGINE_TYPE_TRANSFORMATION_H
 
-#include "config.h"
+#include "Corsac/internal/config.h"
 
 namespace corsac
 {

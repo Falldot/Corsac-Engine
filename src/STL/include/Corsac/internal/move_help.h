@@ -11,10 +11,10 @@
 
 #pragma once
 
-#include "internal/base/base.h"
+#include "Corsac/internal/base/base.h"
 
-#include "internal/config.h"
-#include "type_traits.h"
+#include "Corsac/internal/config.h"
+#include "Corsac/type_traits.h"
 
 namespace corsac
 {

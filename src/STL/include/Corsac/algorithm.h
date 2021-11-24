@@ -7,17 +7,17 @@
 
 #pragma once
 
-#include "internal/config.h"
-#include "type_traits.h"
-#include "internal/move_help.h"
-#include "internal/copy_help.h"
-#include "internal/fill_help.h"
-#include "initializer_list.h"
-#include "iterator.h"
-#include "functional.h"
-#include "utility.h"
-#include "internal/generic_iterator.h"
-#include "random.h"
+#include "Corsac/internal/config.h""
+#include "Corsac/type_traits.h"
+#include "Corsac/internal/move_help.h"
+#include "Corsac/internal/copy_help.h"
+#include "Corsac/internal/fill_help.h"
+#include "Corsac/initializer_list.h"
+#include "Corsac/iterator.h"
+#include "Corsac/functional.h"
+#include "Corsac/utility.h"
+#include "Corsac/internal/generic_iterator.h"
+#include "Corsac/random.h"
 
 #if defined(CORSAC_COMPILER_MSVC) && (defined(CORSAC_PROCESSOR_X86) || defined(CORSAC_PROCESSOR_X86_64))
     #include <intrin.h>

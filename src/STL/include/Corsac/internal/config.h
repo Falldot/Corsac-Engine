@@ -5,7 +5,7 @@
 #ifndef CORSAC_ENGINE_CONFIG_H
 #define CORSAC_ENGINE_CONFIG_H
 
-#include "base/base.h"
+#include "Corsac/internal/base/base.h"
 
 /**
 * CORSAC_DEBUG
@@ -245,12 +245,10 @@
 #ifndef CORSAC_ASSERT_MSG
     #if CORSAC_ASSERT_ENABLED
         #define CORSAC_ASSERT_MSG(expression, message) \
-                CORSAC_DISABLE_VC_WARNING(4127) \
                 do { \
                     CORSAC_ANALYSIS_ASSUME(expression); \
                     (void)((expression) || (corsac::AssertionFailure(message), 0)); \
-                } while (0) \
-                CORSAC_RESTORE_VC_WARNING()
+                } while (0)
     #else
         #define CORSAC_ASSERT_MSG(expression, message)
     #endif
@@ -352,8 +350,52 @@
     #define CORSAC_EXCEPTIONS_ENABLED 0
 #endif
 
-#ifndef CORSAC_AllocatorType
-    #define CORSAC_AllocatorType corsac::allocator
+#ifndef CORSAC_ALLOCATOR_TYPE
+    #define CORSAC_ALLOCATOR_TYPE corsac::allocator
+#endif
+
+/**
+* CORSAC_STRING_OPT_XXXX
+*
+* Включает некоторые параметры оптимизации, из-за которых поведение класса строки немного
+* отличается от стандартного C ++ basic_string. Это варианты, с помощью которых вы можете
+* улучшить производительность, избегая операций, которые на практике могут никогда не произойти для вас.
+*/
+#ifndef CORSAC_STRING_OPT_EXPLICIT_CTORS
+    // Определяется как 0 или 1. По умолчанию - 0.
+    // Определяет, должны ли мы реализовывать явность в конструкторах, где стандартная строка C++ этого не делает.
+    // Преимущество включения явных конструкторов в том, что вы можете это сделать: string s = "hello";
+    // в дополнение к строке s("string"); Недостатком включения явных конструкторов является то,
+    // что могут выполняться бесшумные преобразования, которые снижают производительность,
+    // если пользователь не обращает внимания. Стандартные строковые символы C ++ не являются явными.
+    #define CORSAC_STRING_OPT_EXPLICIT_CTORS 0
+#endif
+
+#ifndef CORSAC_STRING_OPT_LENGTH_ERRORS
+    // Определяется как 0 или 1. По умолчанию равно CORSAC_EXCEPTIONS_ENABLED.
+    // Определяет, проверяем ли мы строковые значения, выходящие за пределы kMaxSize
+    // (очень большое значение), и запускаем ли выполнение в этом случае.
+    // Ожидается, что стандартные строки C++ будут выполнять такие проверки.
+    #define CORSAC_STRING_OPT_LENGTH_ERRORS CORSAC_EXCEPTIONS_ENABLED
+#endif
+
+#ifndef CORSAC_STRING_OPT_RANGE_ERRORS
+    // Определяется как 0 или 1. По умолчанию равно CORSAC_EXCEPTIONS_ENABLED.
+    // Определяет, проверяем ли мы ссылки, выходящие за пределы,
+    // на позиции строки и генерируем ли исключения. Правильно настроенный код не должен
+    // отражать позиции, выходящие за пределы, и поэтому не должен нуждаться в этих проверках.
+    // Ожидается, что стандартные строки C++ будут выполнять такие проверки диапазона.
+    #define CORSAC_STRING_OPT_RANGE_ERRORS CORSAC_EXCEPTIONS_ENABLED
+#endif
+
+#ifndef CORSAC_STRING_OPT_ARGUMENT_ERRORS
+    // Определяется как 0 или 1. По умолчанию - 0
+    // Определяет, проверяем ли мы аргументы NULL ptr, переданные строковым функциям пользователем,
+    // и генерируем исключения, если это так. Правильно настроенный код не должен передавать неверные аргументы
+    // и поэтому не нуждается в этих проверках. Кроме того, некоторые пользователи считают,
+    // что строки должны проверять указатели NULL во всех своих аргументах и ​​не выполнять никаких операций,
+    // если это так. Это очень спорно. Стандартные строки C++ не требуются для проверки таких ошибок аргументов.
+    #define CORSAC_STRING_OPT_ARGUMENT_ERRORS 0
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -395,6 +437,21 @@
 #endif
 
 /**
+* CORSAC_OPERATOR_EQUALS_OTHER_ENABLED
+*
+* Определяется как 0 или 1. По умолчанию 0 до тех пор, пока не будет считаться безопасным.
+* Когда включено, включает оператор = для других типов символов, например для такого кода:
+*     corsac::string8  s8;
+*     corsac::string16 s16;
+*     s8 = s16;
+* Этот вариант считается экспериментальным
+ * и может существовать неопределенное время.
+*/
+#if !defined(CORSAC_OPERATOR_EQUALS_OTHER_ENABLED)
+    #define CORSAC_OPERATOR_EQUALS_OTHER_ENABLED 0
+#endif
+
+/**
 * CORSAC_ALLOCATOR_MIN_ALIGNMENT
 *
 * Определяется как интегральная степень двойки, которая >= 1.
@@ -428,6 +485,34 @@
 #ifndef CORSAC_USER_LITERALS_ENABLED
     #define CORSAC_USER_LITERALS_ENABLED 1
 #endif
+
+/**
+* corsac_size_t
+*
+* Определяется как беззнаковый целочисленный тип, обычно size_t или uint32_t.
+* По умолчанию size_t соответствует std STL, если пользователь не указывает явно использовать
+* uint32_t через определение CORSAC_SIZE_T_32BIT
+*
+* Пример использования:
+*     corsac_size_t n = intVector.size();
+*/
+#ifndef CORSAC_SIZE_T_32BIT         // Определяет, использует ли CORSAC_SIZE_T uint32_t/int32_t, а не size_t/ssize_t.
+    #define CORSAC_SIZE_T_32BIT 0   // Это имеет значение на 64-битных платформах, потому что они используют 64-битный size_t.
+#endif                              // По умолчанию мы делаем то же, что и std STL, и используем size_t.
+
+#ifndef CORSAC_SIZE_T
+    #if (CORSAC_SIZE_T_32BIT == 0) || (CORSAC_PLATFORM_WORD_SIZE == 4)
+        #include <stddef.h>
+        #define CORSAC_SIZE_T  size_t
+        #define CORSAC_SSIZE_T intptr_t
+    #else
+        #define CORSAC_SIZE_T  uint32_t
+        #define CORSAC_SSIZE_T int32_t
+    #endif
+#endif
+
+using corsac_size_t = CORSAC_SIZE_T;  // То же, что и у std::size_t.
+using corsac_ssize_t = CORSAC_SSIZE_T; // Концепция аналогична Posix ssize_t.
 
 
 #endif //CORSAC_ENGINE_CONFIG_H

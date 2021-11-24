@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "internal/base/base.h"
+#include "base.h"
 
 // Dinkumware
 #if !defined(CORSAC_LIBRARY_DINKUMWARE)
