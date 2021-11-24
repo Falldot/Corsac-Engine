@@ -1,23 +1,17 @@
 
 
-#include "type_traits.h"
-
-#include "internal/type_fundamental.h"
-#include "internal/type_transformation.h"
-#include "internal/type_compound.h"
-#include "internal/type_pod.h"
-#include "internal/type_properties.h"
-
-
-#include "iterator.h"
-#include "memory.h"
-#include "algorithm.h"
-#include "functional.h"
-#include "random.h"
-#include "vector.h"
-#include "sparse_set.h"
-#include "ratio.h"
-#include "chrono.h"
+#include "Corsac/type_traits.h"
+#include "Corsac/iterator.h"
+#include "Corsac/memory.h"
+#include "Corsac/algorithm.h"
+#include "Corsac/functional.h"
+#include "Corsac/random.h"
+#include "Corsac/vector.h"
+#include "Corsac/sparse_set.h"
+#include "Corsac/ratio.h"
+#include "Corsac/chrono.h"
+#include "Corsac/string_view.h"
+#include "Corsac/compressed_pair.h"
 
 #define CORSAC_TEST_TIME_OFF
 #define CORSAC_TEST_ONLY_RESULT
