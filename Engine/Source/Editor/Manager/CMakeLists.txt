@@ -15,7 +15,7 @@ project(corsac VERSION 0.1.0 LANGUAGES CXX)
 #    )
 #endif()
 
-add_executable(${PROJECT_NAME} Engine/Source/Editor/Manager/manager.cpp)
+add_executable(${PROJECT_NAME} manager.cpp)
 set_target_properties(
         ${PROJECT_NAME} PROPERTIES
         CXX_STANDARD 17
