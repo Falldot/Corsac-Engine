@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{83D3D627-6956-4169-B339-09694B15313B}</ProjectGuid>
+    <RootNamespace>CorsacEngine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Dev\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Dev\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Dev\SDL2_ttf\include;C:\Dev\SDL2_mixer\include;C:\Dev\SDL2_image\include;C:\Dev\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/UTF-8 %(AdditionalOptions)</AdditionalOptions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Dev\SDL2_ttf\lib\x64;C:\Dev\SDL2_mixer\lib\x64;C:\Dev\SDL2_image\lib\x64;C:\Dev\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Dev\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Dev\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Dev\SDL2_ttf\include;C:\Dev\SDL2_mixer\include;C:\Dev\SDL2_image\include;C:\Dev\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/UTF-8 %(AdditionalOptions)</AdditionalOptions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Dev\SDL2_ttf\lib\x64;C:\Dev\SDL2_mixer\lib\x64;C:\Dev\SDL2_image\lib\x64;C:\Dev\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="bin\CRSC\CRSC_App.cpp" />
+    <ClCompile Include="bin\CRSC\CRSC_Collision.cpp" />
+    <ClCompile Include="bin\CRSC\CRSC_Loader.cpp" />
+    <ClCompile Include="bin\CRSC\CRSC_Logs.cpp" />
+    <ClCompile Include="bin\CRSC\CRSC_Scene.cpp" />
+    <ClCompile Include="bin\CRSC\ECS\ECS.cpp" />
+    <ClCompile Include="bin\CRSC_StartPack\Creators\CRSC_Map.cpp" />
+    <ClCompile Include="bin\CRSC\CRSC_Engine.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="bin\CRSC\Modules\Loader.cpp" />
+    <ClCompile Include="bin\CRSC\CRSC_Timer.cpp" />
+    <ClCompile Include="bin\CRSC_StartPack\Types\Vector2D.cpp" />
+    <ClCompile Include="bin\World.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bin\CRSC\CRSC.h" />
+    <ClInclude Include="bin\CRSC\CRSC_App.h" />
+    <ClInclude Include="bin\CRSC\CRSC_Collision.h" />
+    <ClInclude Include="bin\CRSC\CRSC_Loader.h" />
+    <ClInclude Include="bin\CRSC\CRSC_Logs.h" />
+    <ClInclude Include="bin\CRSC\CRSC_Scene.h" />
+    <ClInclude Include="bin\CRSC_StartPack\Types\Animation.h" />
+    <ClInclude Include="bin\CRSC_StartPack\Components\ClickDown.h" />
+    <ClInclude Include="bin\CRSC_StartPack\Components\ClickUp.h" />
+    <ClInclude Include="bin\CRSC_StartPack\Components\Collider.h" />
+    <ClInclude Include="bin\CRSC_StartPack\Components\FixCamera.h" />
+    <ClInclude Include="bin\CRSC_StartPack\Components\Hover.h" />
+    <ClInclude Include="bin\CRSC_StartPack\Components\UILabel.h" />
+    <ClInclude Include="bin\CRSC_StartPack\Components\KeyboardController.h" />
+    <ClInclude Include="bin\CRSC_StartPack\Components\Projectile.h" />
+    <ClInclude Include="bin\CRSC_StartPack\Components\Tile.h" />
+    <ClInclude Include="bin\CRSC\Modules\Loader.h" />
+    <ClInclude Include="bin\CRSC\CRSC_Timer.h" />
+    <ClInclude Include="bin\CRSC_StartPack\Creators\CRSC_Map.h" />
+    <ClInclude Include="bin\CRSC\ECS\ECS.h" />
+    <ClInclude Include="bin\CRSC_StartPack\Components\Transform.h" />
+    <ClInclude Include="bin\CRSC_StartPack\Components\Sprite.h" />
+    <ClInclude Include="bin\CRSC_StartPack\Types\Vector2D.h" />
+    <ClInclude Include="bin\CRSC\CRSC_Engine.h" />
+    <ClInclude Include="bin\CRSC_StartPack\CRSC_StartPack.h" />
+    <ClInclude Include="bin\World.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="bin\data\maps\newmapColl.txt" />
+    <Text Include="bin\data\sprites\pixel_16x16.txt" />
+    <Text Include="Info.txt" />
+    <Text Include="logs.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="bin\data\sprites\background.png" />
+    <Image Include="bin\data\sprites\bolt.png" />
+    <Image Include="bin\data\sprites\collision.png" />
+    <Image Include="bin\data\sprites\coub.png" />
+    <Image Include="bin\data\sprites\dirt.png" />
+    <Image Include="bin\data\sprites\foo.png" />
+    <Image Include="bin\data\sprites\fox.png" />
+    <Image Include="bin\data\sprites\foxv2.png" />
+    <Image Include="bin\data\sprites\grass.png" />
+    <Image Include="bin\data\sprites\mapTites.png" />
+    <Image Include="bin\data\sprites\player.png" />
+    <Image Include="bin\data\sprites\RunRight.png" />
+    <Image Include="bin\data\sprites\slime.png" />
+    <Image Include="bin\data\sprites\tilt.png" />
+    <Image Include="bin\data\sprites\water.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\data\maps\Map.map" />
+    <None Include="bin\data\sprites\lab.map" />
+    <None Include="bin\data\sprites\p_16x16.map" />
+    <None Include="libfreetype-6.dll" />
+    <None Include="libpng16-16.dll" />
+    <None Include="SDL2.dll" />
+    <None Include="SDL2_image.dll" />
+    <None Include="SDL2_ttf.dll" />
+    <None Include="zlib1.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="bin\data\Determination2.ttf" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

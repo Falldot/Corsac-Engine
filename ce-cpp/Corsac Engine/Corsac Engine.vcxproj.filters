@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Файлы заголовков">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Файлы ресурсов</Filter>
+    </ClCompile>
+    <ClCompile Include="bin\CRSC\CRSC_Timer.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bin\CRSC\ECS\ECS.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bin\CRSC\CRSC_Logs.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bin\CRSC\CRSC_App.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bin\World.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bin\CRSC\CRSC_Scene.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bin\CRSC\CRSC_Engine.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bin\CRSC\Modules\Loader.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bin\CRSC\CRSC_Loader.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bin\CRSC_StartPack\Creators\CRSC_Map.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bin\CRSC\CRSC_Collision.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="bin\CRSC_StartPack\Types\Vector2D.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bin\CRSC\ECS\ECS.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC\CRSC_Timer.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC\CRSC_Logs.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC\CRSC_App.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC\CRSC_Scene.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\World.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC\CRSC_Engine.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC\CRSC.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC\Modules\Loader.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC\CRSC_Loader.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC_StartPack\Components\ClickDown.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC_StartPack\Components\ClickUp.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC_StartPack\Components\Collider.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC_StartPack\Components\FixCamera.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC_StartPack\Components\Hover.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC_StartPack\Components\KeyboardController.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC_StartPack\Components\Projectile.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC_StartPack\Components\Sprite.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC_StartPack\Components\Tile.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC_StartPack\Components\Transform.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC_StartPack\Components\UILabel.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC_StartPack\Creators\CRSC_Map.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC_StartPack\CRSC_StartPack.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC\CRSC_Collision.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC_StartPack\Types\Animation.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="bin\CRSC_StartPack\Types\Vector2D.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Info.txt" />
+    <Text Include="bin\data\sprites\pixel_16x16.txt" />
+    <Text Include="bin\data\maps\newmapColl.txt" />
+    <Text Include="logs.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="bin\data\sprites\water.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="bin\data\sprites\background.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="bin\data\sprites\coub.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="bin\data\sprites\dirt.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="bin\data\sprites\foo.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="bin\data\sprites\foxv2.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="bin\data\sprites\grass.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="bin\data\sprites\player.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="bin\data\sprites\RunRight.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="bin\data\sprites\slime.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="bin\data\sprites\tilt.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="bin\data\sprites\mapTites.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="bin\data\sprites\collision.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="bin\data\sprites\bolt.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="bin\data\sprites\fox.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\data\sprites\lab.map" />
+    <None Include="bin\data\sprites\p_16x16.map" />
+    <None Include="bin\data\maps\Map.map" />
+    <None Include="libpng16-16.dll" />
+    <None Include="SDL2.dll" />
+    <None Include="SDL2_image.dll" />
+    <None Include="zlib1.dll" />
+    <None Include="SDL2_ttf.dll" />
+    <None Include="libfreetype-6.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="bin\data\Determination2.ttf" />
+  </ItemGroup>
+</Project>

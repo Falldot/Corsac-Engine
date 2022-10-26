@@ -1,0 +1,10 @@
+package Comp
+
+const (
+	TRANSFORM = iota
+	PLAYER
+	SPRITE
+	ANIMATION
+	COLLIDER
+	WALL
+)

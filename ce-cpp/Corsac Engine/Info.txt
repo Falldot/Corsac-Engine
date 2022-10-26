@@ -1,0 +1,2 @@
+Путь до сохранений игры:
+	C:\Users\surve\AppData\Roaming\Corsac\Corsac Game\

@@ -1,0 +1,5 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea
+cmake-build-debug-mingw-clang/
+cmake-build-debug-mingw-gcc/
+cmake-build-debug-visual-studio/
